@@ -1,0 +1,32 @@
+{
+    "type": "confluence:heavy_work_bench",
+    "pattern": [
+        "  ab",
+        "  ca",
+        " c  ",
+        "c   "
+    ],
+    "key": {
+        "a": {
+            "type": "terra_curio:amount_ingredient",
+            "ingredient": {
+                "item": "confluence:jungle_spore"
+            },
+            "count": 3
+        },
+        "b": {
+            "item": "confluence:ruby"
+        },
+        "c": {
+            "type": "terra_curio:amount_ingredient",
+            "ingredient": {
+                "tag": "minecraft:planks"
+            },
+            "count": 6
+
+        }
+    },
+    "result": {
+        "id": "better_experience:magic_boom_staff"
+    }
+}

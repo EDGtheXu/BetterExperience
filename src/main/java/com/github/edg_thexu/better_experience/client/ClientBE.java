@@ -1,6 +1,7 @@
 package com.github.edg_thexu.better_experience.client;
 
 import com.github.edg_thexu.better_experience.Better_experience;
+import com.github.edg_thexu.better_experience.config.ClientConfig;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -15,7 +16,7 @@ public class ClientBE {
 
     public ClientBE(IEventBus modEventBus, ModContainer container) {
 
-//        container.registerConfig(ModConfig.Type.CLIENT, ClientConfig.init());
+        container.registerConfig(ModConfig.Type.CLIENT, ClientConfig.init());
         container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
     }
 }

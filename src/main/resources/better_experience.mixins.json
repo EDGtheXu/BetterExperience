@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "better_experience.refmap.json",
   "mixins": [
+    "ProjectileWeaponItemMixin"
   ],
   "client": [
   ],

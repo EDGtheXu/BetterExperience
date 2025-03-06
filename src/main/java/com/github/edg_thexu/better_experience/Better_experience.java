@@ -1,11 +1,14 @@
 package com.github.edg_thexu.better_experience;
 
 import com.github.edg_thexu.better_experience.config.ServerConfig;
+import com.github.edg_thexu.better_experience.init.ModItems;
+import com.github.edg_thexu.better_experience.init.ModTabs;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
@@ -41,11 +44,15 @@ public class Better_experience {
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
+    public static ResourceLocation space(String location){
+        return ResourceLocation.fromNamespaceAndPath(Better_experience.MODID, location);
+    }
+
     public Better_experience(IEventBus modEventBus, ModContainer modContainer) {
 
         modContainer.registerConfig(ModConfig.Type.COMMON, ServerConfig.init());
-
-
+        ModItems.ITEMS.register(modEventBus);
+        ModTabs.TABS.register(modEventBus);
 
     }
 

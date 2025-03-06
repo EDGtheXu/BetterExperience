@@ -1,0 +1,15 @@
+package com.github.edg_thexu.better_experience.init;
+
+import com.github.edg_thexu.better_experience.Better_experience;
+import com.github.edg_thexu.better_experience.item.MagicBoomStaff;
+import net.minecraft.world.item.Item;
+import net.neoforged.neoforge.registries.DeferredItem;
+import net.neoforged.neoforge.registries.DeferredRegister;
+
+public class ModItems {
+    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(Better_experience.MODID);
+
+    public static DeferredItem<Item> MagicBoomStaff = ITEMS.register("magic_boom_staff", ()->new MagicBoomStaff(new Item.Properties(), 5));
+
+
+}
