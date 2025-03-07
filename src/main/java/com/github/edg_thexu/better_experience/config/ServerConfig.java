@@ -22,11 +22,11 @@ public class ServerConfig {
 
         // 药水无线续杯
         AUTO_POTION_OPEN = BUILDER
-                .comment("Should the potion automatically open?")
+                .comment("Apply potion automatically without consuming. Support Inventory and Ender Chest.")
                 .define("auto_potion_open", true);
         AUTO_POTION_STACK_SIZE = BUILDER
                 .comment("How many potion stack could apply without consuming automatically?")
-                .defineInRange("auto_potion_stack_size", 10,1,16);
+                .defineInRange("auto_potion_stack_size", 10,1,9999);
 
         // 无限弹药
         INFINITE_AMMO = BUILDER

@@ -1,0 +1,17 @@
+package com.github.edg_thexu.better_experience.init;
+
+import com.github.edg_thexu.better_experience.Better_experience;
+import com.github.edg_thexu.better_experience.attachment.EnderChestAttachment;
+import net.neoforged.neoforge.attachment.AttachmentType;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
+
+import java.util.function.Supplier;
+
+public class ModAttachments {
+    public static final DeferredRegister<AttachmentType<?>> TYPES = DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, Better_experience.MODID);
+
+    public static final Supplier<AttachmentType<EnderChestAttachment>> ENDER_CHEST = TYPES.register("mana", () -> AttachmentType.serializable(EnderChestAttachment::new).copyOnDeath().build());
+
+
+}

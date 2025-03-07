@@ -1,6 +1,6 @@
 package com.github.edg_thexu.better_experience.item;
 
-import com.github.edg_thexu.better_experience.network.BreakBlocksPacketC2S;
+import com.github.edg_thexu.better_experience.network.C2S.BreakBlocksPacketC2S;
 import com.github.edg_thexu.better_experience.utils.ModUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;

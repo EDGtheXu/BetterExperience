@@ -12,11 +12,10 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 @EventBusSubscriber(modid = Better_experience.MODID, bus = EventBusSubscriber.Bus.GAME)
 public class PlayerEvent {
 
-    static PlayerInventoryManager manager = new PlayerInventoryManager();
     @SubscribeEvent
     public static void playerTick(PlayerTickEvent.Post event){
 
-        manager.detect(event.getEntity());
+        PlayerInventoryManager.getInstance().detect(event.getEntity());
 
     }
 

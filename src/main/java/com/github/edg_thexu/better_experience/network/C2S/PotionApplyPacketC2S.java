@@ -1,17 +1,13 @@
-package com.github.edg_thexu.better_experience.network;
+package com.github.edg_thexu.better_experience.network.C2S;
 
 import com.github.edg_thexu.better_experience.module.autopotion.PlayerInventoryManager;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.mod.Confluence;
-import org.confluence.mod.common.item.sword.BaseSwordItem;
 
 public record PotionApplyPacketC2S(ItemStack itemStack) implements CustomPacketPayload {
 

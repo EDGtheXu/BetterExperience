@@ -1,4 +1,4 @@
-package com.github.edg_thexu.better_experience.network;
+package com.github.edg_thexu.better_experience.network.C2S;
 
 import com.github.edg_thexu.better_experience.item.MagicBoomStaff;
 import io.netty.buffer.ByteBuf;
@@ -11,14 +11,12 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.AbstractChestBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.mod.Confluence;
 

@@ -1,6 +1,7 @@
 package com.github.edg_thexu.better_experience;
 
 import com.github.edg_thexu.better_experience.config.ServerConfig;
+import com.github.edg_thexu.better_experience.init.ModAttachments;
 import com.github.edg_thexu.better_experience.init.ModItems;
 import com.github.edg_thexu.better_experience.init.ModTabs;
 import com.mojang.logging.LogUtils;
@@ -16,6 +17,7 @@ import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.EnderChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import net.neoforged.api.distmarker.Dist;
@@ -58,7 +60,7 @@ public class Better_experience {
         ModItems.register(modEventBus);
 
         ModTabs.TABS.register(modEventBus);
-
+        ModAttachments.TYPES.register(modEventBus);
     }
 
 }
