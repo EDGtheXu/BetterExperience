@@ -5,6 +5,8 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "better_experience.refmap.json",
   "mixins": [
+    "BaseSlimeMixin",
+    "BossSummingItemMixin",
     "ProjectileWeaponItemMixin"
   ],
   "client": [

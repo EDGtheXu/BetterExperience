@@ -17,7 +17,9 @@ import java.util.List;
 
 public class MagicBoomStaff extends Item {
 
+    // client
     public int range;
+    public int maxRange = 5;
     public MagicBoomStaff(Properties properties, int range) {
         super(properties);
         this.range = range;

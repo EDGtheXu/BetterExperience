@@ -34,6 +34,10 @@ import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import org.confluence.mod.common.event.game.entity.EntityEvents;
+import org.confluence.mod.common.menu.NPCTradesMenu;
+import org.confluence.mod.mixin.client.gui.DeathScreenMixin;
+import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.slf4j.Logger;
 
 
@@ -51,7 +55,8 @@ public class Better_experience {
     public Better_experience(IEventBus modEventBus, ModContainer modContainer) {
 
         modContainer.registerConfig(ModConfig.Type.COMMON, ServerConfig.init());
-        ModItems.ITEMS.register(modEventBus);
+        ModItems.register(modEventBus);
+
         ModTabs.TABS.register(modEventBus);
 
     }

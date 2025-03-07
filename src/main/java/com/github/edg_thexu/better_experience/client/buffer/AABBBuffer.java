@@ -10,9 +10,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.mod.client.effect.AbstractBufferManager;
 import org.lwjgl.opengl.GL11;
 
+@OnlyIn(Dist.CLIENT)
 public class AABBBuffer extends AbstractBufferManager {
 
     static AABBBuffer instance;
@@ -67,10 +70,10 @@ public class AABBBuffer extends AbstractBufferManager {
         double offsetU = Math.sin(random) * 1f + random * 2;
         double offsetV = Math.cos(random) * 1f  + Math.cos(random * 0.3f) * 0.01f;
 
-        RenderUtil.renderAABB(bufferBuilder,
-                targetPos.getX() -x, targetPos.getY() -y, targetPos.getZ()-z,targetPos.getX() + x, targetPos.getY() + y, targetPos.getZ() + z,
+        RenderUtil.renderAABBOutLine(bufferBuilder,
+                targetPos.getX() -x, targetPos.getY() -y, targetPos.getZ()-z,targetPos.getX() + x+1, targetPos.getY() + y+1, targetPos.getZ() + z+1,
                 255,125,128,255,
-                5, (float)offsetU, (float)offsetV
+                1
         );
     }
 }

@@ -35,5 +35,18 @@ public class ModItemModelProvider extends ItemModelProvider {
             }
         }));
 
+        List<DeferredRegister.Items> TOOLS = new ArrayList<>();
+        TOOLS.add(ModItems.TOOLS);
+
+        TOOLS.forEach(registry -> registry.getEntries().forEach(item -> {
+            String path = item.getId().getPath().toLowerCase();
+            try {
+                withExistingParent("item/"+path, "item/handheld").texture("layer0", Better_experience.space("item/"+path));
+                }
+            catch (Exception e){
+                withExistingParent("item/"+path, MISSING_ITEM);
+            }
+        }));
+
     }
 }

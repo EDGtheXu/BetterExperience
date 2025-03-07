@@ -24,7 +24,7 @@ public class ModUtils {
         Vec3 vec31 = vec3.add(player.calculateViewVector(player.getXRot(), player.getYRot()).scale(player.blockInteractionRange() * 3));
 
         final BlockHitResult result  = player.level().clip(new ClipContext(vec3, vec31, net.minecraft.world.level.ClipContext.Block.OUTLINE, ClipContext.Fluid.SOURCE_ONLY, player));
-        final BlockHitResult raytraceResult = result.withPosition(result.getBlockPos().above());
+        final BlockHitResult raytraceResult = result.withPosition(result.getBlockPos());
         final BlockPos pos = raytraceResult.getBlockPos();
         return pos;
     }

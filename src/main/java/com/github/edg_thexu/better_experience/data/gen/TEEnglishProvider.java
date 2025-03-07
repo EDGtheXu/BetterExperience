@@ -26,12 +26,15 @@ public class TEEnglishProvider extends LanguageProvider {
 
         add("better_experience.welcome_message", "Better Experience has been enabled, press ESC to access the mod's configuration to enable features.");
 
+        add("creativetab.better_experience.item", "Confluence | Better Experience");
+
+
         // items
         add(ModItems.MagicBoomStaff.get(), "Magic Boom Staff");
 
 
         // tooltips
-        add("better_experience.tooltip.magic_boom_staff.info", "power depends on the item in left hand");
+        add("better_experience.tooltip.magic_boom_staff.info", "power depends on the item in left hand [hold shift and scroll mousewheel to adjust size]");
 
         // Config
         add("better_experience.configuration.show_outlines", "Magic Boom Staff Show Outlines");
@@ -45,5 +48,11 @@ public class TEEnglishProvider extends LanguageProvider {
         add("better_experience.configuration.infinite_ammo", "Infinite Ammo");
 
         add("better_experience.configuration.infinite_ammo_stack_size", "Infinite Ammo Stack Size");
+
+        add("better_experience.configuration.no_consume_summoner", "No Consume Summon Item");
+
+        add("better_experience.configuration.slime_die_no_lava", "Slime Dies Without Lava");
+
+
     }
 }
