@@ -19,9 +19,9 @@ public class ModUtils {
         return ProjectileUtil.getEntityHitResult(player.level(), player, from, to, aabb, e-> true, 0.1F);
     }
 
-    public static BlockPos getEyeBlockHitResult(Player player){
+    public static BlockPos getEyeBlockHitResult(Player player, int maxDistance){
         Vec3 vec3 = player.getEyePosition();
-        Vec3 vec31 = vec3.add(player.calculateViewVector(player.getXRot(), player.getYRot()).scale(player.blockInteractionRange() * 3));
+        Vec3 vec31 = vec3.add(player.calculateViewVector(player.getXRot(), player.getYRot()).scale(maxDistance));
 
         final BlockHitResult result  = player.level().clip(new ClipContext(vec3, vec31, net.minecraft.world.level.ClipContext.Block.OUTLINE, ClipContext.Fluid.SOURCE_ONLY, player));
         final BlockHitResult raytraceResult = result.withPosition(result.getBlockPos());

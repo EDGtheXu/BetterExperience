@@ -1,6 +1,7 @@
 package com.github.edg_thexu.better_experience.data.gen;
 
 import com.github.edg_thexu.better_experience.Better_experience;
+import com.github.edg_thexu.better_experience.init.ModBlocks;
 import com.github.edg_thexu.better_experience.init.ModItems;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
@@ -31,6 +32,8 @@ public class TEEnglishProvider extends LanguageProvider {
 
         // items
         add(ModItems.MagicBoomStaff.get(), "Magic Boom Staff");
+        add(ModItems.StarBoomStaff.get(), "Star Boom Staff");
+        add(ModBlocks.AUTO_FISH_BLOCK.get(), "Auto Fish Machine");
 
 
         // tooltips

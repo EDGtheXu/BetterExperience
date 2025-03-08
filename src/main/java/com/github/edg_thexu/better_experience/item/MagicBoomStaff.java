@@ -37,16 +37,17 @@ public class MagicBoomStaff extends Item {
 
     // client
     public int range;
-    public int maxRange = 5;
-    public MagicBoomStaff(Properties properties, int range) {
+    public int maxRange;
+    public MagicBoomStaff(Properties properties, int range, int maxRange) {
         super(properties);
         this.range = range;
+        this.maxRange = maxRange;
     }
 
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
 
         if(level.isClientSide()){
-            BlockPos pos = ModUtils.getEyeBlockHitResult(player);
+            BlockPos pos = ModUtils.getEyeBlockHitResult(player, maxRange);
 
             PacketDistributor.sendToServer(new BreakBlocksPacketC2S(pos.offset(-range,-range,-range), pos.offset(range,range,range)));
             player.startUsingItem(usedHand);

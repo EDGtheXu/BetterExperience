@@ -54,12 +54,11 @@ public class AABBBuffer extends AbstractBufferManager {
         Player player = Minecraft.getInstance().player;
         ItemStack stack = player.getMainHandItem();
         int r;
+        BlockPos targetPos;
         if(stack.getItem() instanceof MagicBoomStaff staff){
             r = staff.range;
+            targetPos = ModUtils.getEyeBlockHitResult(Minecraft.getInstance().player, staff.maxRange * 2);
         }else return;
-
-
-        BlockPos targetPos = ModUtils.getEyeBlockHitResult(Minecraft.getInstance().player);
 
         int x = r;
         int y = r;

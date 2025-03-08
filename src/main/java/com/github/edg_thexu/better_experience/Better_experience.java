@@ -1,10 +1,7 @@
 package com.github.edg_thexu.better_experience;
 
 import com.github.edg_thexu.better_experience.config.ServerConfig;
-import com.github.edg_thexu.better_experience.init.ModAttachments;
-import com.github.edg_thexu.better_experience.init.ModBlocks;
-import com.github.edg_thexu.better_experience.init.ModItems;
-import com.github.edg_thexu.better_experience.init.ModTabs;
+import com.github.edg_thexu.better_experience.init.*;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -63,6 +60,7 @@ public class Better_experience {
         ModTabs.TABS.register(modEventBus);
         ModAttachments.TYPES.register(modEventBus);
         ModBlocks.BLOCKS.register(modEventBus);
+        ModMenus.TYPES.register(modEventBus);
     }
 
 }

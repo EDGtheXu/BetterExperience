@@ -1,6 +1,7 @@
 package com.github.edg_thexu.better_experience.data.gen;
 
 import com.github.edg_thexu.better_experience.Better_experience;
+import com.github.edg_thexu.better_experience.init.ModBlocks;
 import com.github.edg_thexu.better_experience.init.ModItems;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
@@ -21,6 +22,8 @@ public class TEChineseProvider extends LanguageProvider {
 
         // items
         add(ModItems.MagicBoomStaff.get(), "魔爆法杖");
+        add(ModItems.StarBoomStaff.get(), "星爆法杖");
+        add(ModBlocks.AUTO_FISH_BLOCK.get(), "自动钓鱼机");
 
 
         // tooltips

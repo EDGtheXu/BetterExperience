@@ -16,7 +16,7 @@ public class ModBlocks {
 
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(Better_experience.MODID);
 
-    public static final DeferredBlock<AutoFishBlock> AUTO_FISH_BLOCK = registerWithItem("auto_fish_block", ()-> new AutoFishBlock(Block.Properties.ofFullCopy(Blocks.CHEST)));
+    public static final DeferredBlock<AutoFishBlock> AUTO_FISH_BLOCK = registerWithItem("auto_fish_block", ()-> new AutoFishBlock(Block.Properties.ofFullCopy(Blocks.CHEST).lightLevel(state->3)));
     public static final Supplier<BlockEntityType<AutoFishBlock.AutoFishMachineEntity>> AUTO_FISH_BLOCK_ENTITY = BLOCK_ENTITIES.register("auto_fish_block_entity", () -> BlockEntityType.Builder.of(AutoFishBlock.AutoFishMachineEntity::new, AUTO_FISH_BLOCK.get()).build(null));
 
 
