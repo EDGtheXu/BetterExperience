@@ -1,6 +1,7 @@
 package com.github.edg_thexu.better_experience.client.gui;
 
 import com.github.edg_thexu.better_experience.menu.AutoFishMenu;
+import com.github.edg_thexu.better_experience.module.autofish.AutoFishManager;
 import com.github.edg_thexu.better_experience.network.C2S.ServerBoundPacketC2S;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -8,7 +9,10 @@ import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ChestMenu;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.confluence.mod.common.item.fishing.BaitItem;
 
 public class AutoFishScreen extends ContainerScreen {
 
@@ -41,6 +45,13 @@ public class AutoFishScreen extends ContainerScreen {
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
 
+        ItemStack pole = menu.getContainer().getItem(27);
+        Item bait = menu.getContainer().getItem(28).getItem();
+        ItemStack curios = menu.getContainer().getItem(29);
+
+        float power = AutoFishManager.computeFishingPower(null, pole, bait instanceof BaitItem? (BaitItem) bait : null, curios);
+
+        guiGraphics.drawString(font, "Power: " + (int) power, leftPos + 10, topPos , 0xFFFFFFFF);
 
 
     }

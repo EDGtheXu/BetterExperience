@@ -3,11 +3,14 @@ package com.github.edg_thexu.better_experience.utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+
+import java.util.List;
 
 public class ModUtils {
 
@@ -27,5 +30,26 @@ public class ModUtils {
         final BlockHitResult raytraceResult = result.withPosition(result.getBlockPos());
         final BlockPos pos = raytraceResult.getBlockPos();
         return pos;
+    }
+
+    /**
+     * 尝试将新物品堆叠到已有的相同物品槽中
+     * @param item 新物品
+     * @param items 已有物品槽
+     */
+    public static boolean tryAddItemStackToItemStacks(ItemStack item, List<ItemStack> items){
+        // 尝试将新物品堆叠到已有的相同物品槽中
+        for (ItemStack current : items) {
+            if (!current.isEmpty() && current.is(item.getItem()) && current.getCount() < current.getMaxStackSize()) {
+                // 计算可以堆叠的数量
+                int transfer = Math.min(item.getCount(), current.getMaxStackSize() - current.getCount());
+                current.grow(transfer); // 增加当前物品的数量
+                item.shrink(transfer);  // 减少新物品的数量
+                if (item.isEmpty()) {
+                    return true; // 如果新物品被完全堆叠，返回true
+                }
+            }
+        }
+        return false; // 如果没有找到可以堆叠的物品槽，返回false
     }
 }

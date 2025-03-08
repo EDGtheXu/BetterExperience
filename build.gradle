@@ -130,6 +130,8 @@ dependencies {
     implementation "curse.maven:confluence-1209464:6255595"
     compileOnly "curse.maven:terra-entity-1173196:6249871"
     runtimeOnly "curse.maven:terra-entity-1173196:6249871"
+    compileOnly "curse.maven:terra-curio-1027625:6254391"
+    runtimeOnly "curse.maven:terra-curio-1027625:6254391"
     implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}"
 
 }

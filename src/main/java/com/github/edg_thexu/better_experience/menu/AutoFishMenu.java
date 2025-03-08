@@ -8,6 +8,7 @@ import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import org.confluence.mod.common.item.fishing.AbstractFishingPole;
 import org.confluence.mod.common.item.fishing.BaitItem;
+import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
 
 public class AutoFishMenu extends ChestMenu {
     public final ContainerData access;
@@ -38,7 +39,7 @@ public class AutoFishMenu extends ChestMenu {
             @Override
             public boolean mayPlace(ItemStack stack) {
                 // todo: 渔力饰品
-                return stack.getItem() instanceof BaitItem;
+                return stack.getItem() instanceof BaseCurioItem;
             }
         });
 

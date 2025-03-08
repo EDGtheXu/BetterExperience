@@ -18,6 +18,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.List;
+
 @Mixin(FishingHook.class)
 public class FishingHookMixin implements IFishingHook, SelfGetter<FishingHook> {
 
@@ -28,6 +30,10 @@ public class FishingHookMixin implements IFishingHook, SelfGetter<FishingHook> {
     // 钓鱼机的位置
     @Unique
     Vec3 betterExperience$pos = Vec3.ZERO;
+
+    // 钓的物品
+    @Unique
+    List<ItemStack> betterExperience$items = List.of();
 
     @Override
     public Vec3 betterExperience$getPos() {
@@ -47,6 +53,16 @@ public class FishingHookMixin implements IFishingHook, SelfGetter<FishingHook> {
     @Override
     public void betterExperience$setSimulation(boolean simulation) {
         betterExperience$isSimulation = simulation;
+    }
+
+    @Override
+    public List<ItemStack> betterExperience$getItems() {
+        return betterExperience$items;
+    }
+
+    @Override
+    public void betterExperience$setItems(List<ItemStack> items) {
+        betterExperience$items = items;
     }
 
     @Inject(method = "retrieve", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addFreshEntity(Lnet/minecraft/world/entity/Entity;)Z", ordinal = 0))

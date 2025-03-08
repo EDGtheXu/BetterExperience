@@ -1,6 +1,9 @@
 package com.github.edg_thexu.better_experience.mixed;
 
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
+
+import java.util.List;
 
 public interface IFishingHook {
 
@@ -11,5 +14,9 @@ public interface IFishingHook {
     boolean betterExperience$isSimulation();
 
     void betterExperience$setSimulation(boolean simulation);
+
+    List<ItemStack> betterExperience$getItems();
+
+    void betterExperience$setItems(List<ItemStack> items);
 
 }
