@@ -15,7 +15,7 @@ public final class ModTabs {
                     .title(Component.translatable("creativetab.better_experience.item"))
                     .displayItems((parameters, output) -> {
                         ModItems.TOOLS.getEntries().forEach(block -> output.accept(block.get()));
-//                        ModItems.ITEMS.getEntries().forEach(block -> output.accept(block.get()));
+                        ModItems.ITEMS.getEntries().forEach(block -> output.accept(block.get()));
 
                     }).build()
     );
