@@ -37,7 +37,8 @@ public class AABBBuffer extends AbstractBufferManager {
     protected void beforeRender() {
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
+//        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
 
     }
 
@@ -70,7 +71,7 @@ public class AABBBuffer extends AbstractBufferManager {
         double offsetV = Math.cos(random) * 1f  + Math.cos(random * 0.3f) * 0.01f;
 
         RenderUtil.renderAABBOutLine(bufferBuilder,
-                targetPos.getX() -x, targetPos.getY() -y, targetPos.getZ()-z,targetPos.getX() + x+1, targetPos.getY() + y+1, targetPos.getZ() + z+1,
+                targetPos.getX() -x + 0.01f, targetPos.getY() -y + 0.01f, targetPos.getZ()-z + 0.01f,targetPos.getX() + x+1 - 0.01f, targetPos.getY() + y+1 - 0.01f, targetPos.getZ() + z+1 - 0.01f,
                 255,125,128,255,
                 1
         );
