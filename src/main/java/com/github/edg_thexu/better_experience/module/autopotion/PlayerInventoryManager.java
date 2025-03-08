@@ -26,7 +26,7 @@ import java.util.function.Predicate;
 public class PlayerInventoryManager {
 
     public int detectInternal;
-    private static final int _detectInternal = 1000;
+    private static final int _detectInternal = 200;
     public static Predicate<ItemStack> canApply = (stack) -> {
         Item item = stack.getItem();
         if(stack.getCount() < ServerConfig.AUTO_POTION_STACK_SIZE.get())
@@ -37,7 +37,6 @@ public class PlayerInventoryManager {
         {
             var foodProperties = food.getFoodProperties(stack, null);
             if (foodProperties != null) {
-
 
                 return !foodProperties.effects().isEmpty();
             }

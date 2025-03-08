@@ -1,14 +1,14 @@
 package com.github.edg_thexu.better_experience.network.C2S;
 
 import com.github.edg_thexu.better_experience.item.MagicBoomStaff;
+import com.github.edg_thexu.better_experience.module.boomstaff.ExplodeManager;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.util.Tuple;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -19,6 +19,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.mod.Confluence;
+
+import java.util.LinkedList;
+import java.util.Queue;
 
 public record BreakBlocksPacketC2S(BlockPos p1, BlockPos p2) implements CustomPacketPayload {
 
@@ -53,12 +56,15 @@ public record BreakBlocksPacketC2S(BlockPos p1, BlockPos p2) implements CustomPa
             int centerZ = (z2 + z1) / 2;
             ServerPlayer player = (ServerPlayer) context.player();
             Level level = player.level();
-            for(int x = x1; x <= x2; x++){
-                for(int y = y1; y <= y2; y++){
+
+            Queue<Tuple<BlockPos, Boolean>> blocks = new LinkedList<>();
+            for(int y = y2; y >= y1; y--){
+                for(int x = x1; x <= x2; x++){
                     for(int z = z1; z <= z2; z++){
                         BlockPos pos = new BlockPos(x, y, z);
                         BlockState state = level.getBlockState(pos);
                         Block block = state.getBlock();
+                        if(state.isAir()) continue;
                         boolean isDrop = true;
                         if(state.requiresCorrectToolForDrops() && !player.getOffhandItem().isCorrectToolForDrops(state)){
                             if(block != Blocks.SNOW_BLOCK){
@@ -70,21 +76,12 @@ public record BreakBlocksPacketC2S(BlockPos p1, BlockPos p2) implements CustomPa
                         if(entity2 instanceof ChestBlockEntity entity1 && !entity1.isEmpty()){
                             continue;
                         }
-                        player.gameMode.destroyAndAck(pos, 0, "destroyed");
-
-                        if(isDrop) {
-                            var drops = Block.getDrops(state, (ServerLevel) level, pos, entity2, player, player.getOffhandItem());
-                            for (var drop : drops) {
-                                ItemEntity entity = new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), drop);
-                                Vec3 center = new Vec3(centerX - x, centerY - y, centerZ - z);
-                                entity.setDeltaMovement(center.normalize().scale(0.1));
-                                level.addFreshEntity(entity);
-                            }
-                        }
-
+                        blocks.add(new Tuple<>(pos, isDrop));
                     }
                 }
             }
+            ExplodeManager.BlockQueue queue = new ExplodeManager.BlockQueue(blocks, new Vec3(centerX, centerY, centerZ), player);
+            ExplodeManager.getInstance().addBlockToQueue(queue);
 
         });
     }

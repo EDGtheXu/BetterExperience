@@ -65,11 +65,6 @@ public class AABBBuffer extends AbstractBufferManager {
         int y = r;
         int z = r;
 
-//            RenderSystem.setShaderTexture(0, Rhyme.space("textures/block/card_up_level_block.png"));
-        float random = System.currentTimeMillis() % 1000000 * 0.00008f;
-        double offsetU = Math.sin(random) * 1f + random * 2;
-        double offsetV = Math.cos(random) * 1f  + Math.cos(random * 0.3f) * 0.01f;
-
         RenderUtil.renderAABBOutLine(bufferBuilder,
                 targetPos.getX() -x + 0.01f, targetPos.getY() -y + 0.01f, targetPos.getZ()-z + 0.01f,targetPos.getX() + x+1 - 0.01f, targetPos.getY() + y+1 - 0.01f, targetPos.getZ() + z+1 - 0.01f,
                 255,125,128,255,
