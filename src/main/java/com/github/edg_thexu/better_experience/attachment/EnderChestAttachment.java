@@ -1,7 +1,5 @@
 package com.github.edg_thexu.better_experience.attachment;
 
-import com.github.edg_thexu.better_experience.config.ServerConfig;
-import com.github.edg_thexu.better_experience.init.ModAttachments;
 import com.github.edg_thexu.better_experience.module.autopotion.PlayerInventoryManager;
 import com.github.edg_thexu.better_experience.network.S2C.EnderChestItemsS2C;
 import net.minecraft.core.HolderLookup;
@@ -54,7 +52,7 @@ public class EnderChestAttachment implements INBTSerializable<CompoundTag> {
         var items = player.getEnderChestInventory().getItems();
         List<Item> itemList = new ArrayList<>();
         for (ItemStack stack : items) {
-            if(stack.getCount() >= ServerConfig.AUTO_POTION_STACK_SIZE.get() && PlayerInventoryManager.canApply.test(stack.getItem())){
+            if(PlayerInventoryManager.canApply.test(stack)){
                 itemList.add(stack.getItem());
             }
         }

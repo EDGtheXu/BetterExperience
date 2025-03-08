@@ -8,6 +8,7 @@
     "BaseSlimeMixin",
     "BossSummingItemMixin",
     "ChestMenuMixin",
+    "FishingHookMixin",
     "ProjectileWeaponItemMixin"
   ],
   "client": [

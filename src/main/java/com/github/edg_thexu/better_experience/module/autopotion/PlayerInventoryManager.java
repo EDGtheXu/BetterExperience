@@ -3,7 +3,6 @@ package com.github.edg_thexu.better_experience.module.autopotion;
 import com.github.edg_thexu.better_experience.config.ServerConfig;
 import com.github.edg_thexu.better_experience.init.ModAttachments;
 import com.github.edg_thexu.better_experience.network.C2S.PotionApplyPacketC2S;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
@@ -28,7 +27,23 @@ public class PlayerInventoryManager {
 
     public int detectInternal;
     private static final int _detectInternal = 1000;
-    public static Predicate<Item> canApply = (item) -> item instanceof EffectPotionItem || item instanceof BaseFoodItem;
+    public static Predicate<ItemStack> canApply = (stack) -> {
+        Item item = stack.getItem();
+        if(stack.getCount() < ServerConfig.AUTO_POTION_STACK_SIZE.get())
+            return false;
+        if(item instanceof EffectPotionItem potion)
+            return true;
+        if(item instanceof BaseFoodItem food)
+        {
+            var foodProperties = food.getFoodProperties(stack, null);
+            if (foodProperties != null) {
+
+
+                return !foodProperties.effects().isEmpty();
+            }
+        }
+        return false;
+    };
 
     private static PlayerInventoryManager instance;
 
@@ -38,7 +53,10 @@ public class PlayerInventoryManager {
         return instance;
     }
 
-
+    /**
+     * 检测可以作用的容器
+     * @param player
+     */
     public void detect(Player player){
         // 客户端检测，配置是否启用，检测间隔
         if(!player.level().isClientSide() || !ServerConfig.AUTO_POTION_OPEN.get() || --detectInternal > 0)
@@ -67,11 +85,16 @@ public class PlayerInventoryManager {
     }
 
     private void checkItem(ItemStack stack, Player player){
-        if(stack.getCount() >= ServerConfig.AUTO_POTION_STACK_SIZE.get() && canApply.test(stack.getItem())){
+        if(canApply.test(stack)){
             PacketDistributor.sendToServer(new PotionApplyPacketC2S(stack));
         }
     }
 
+    /**
+     * 应用效果
+     * @param stack
+     * @param player
+     */
     public static void apply(ItemStack stack, Player player){
         try {
             Level level = player.level();
@@ -98,6 +121,15 @@ public class PlayerInventoryManager {
         }
     }
 
+    /**
+     * 渲染物品应用的背景
+     * @param screen
+     * @param stack
+     * @param guiGraphics
+     * @param x
+     * @param y
+     * @param partialTick
+     */
     public static void renderApply(AbstractContainerScreen screen,ItemStack stack,  GuiGraphics guiGraphics, int x, int y, float partialTick){
 
         if((
@@ -105,9 +137,9 @@ public class PlayerInventoryManager {
                 screen instanceof CreativeModeInventoryScreen ||
                 screen instanceof ContainerScreen && screen.getTitle().toString().contains("enderchest")
         )
-                && stack.getCount() >= ServerConfig.AUTO_POTION_STACK_SIZE.get() && canApply.test(stack.getItem())){
+                && canApply.test(stack)){
 
-            guiGraphics.fillGradient(RenderType.guiOverlay(), x, y, x + 16, y + 16, 0x00200800, 0xf0008000, 0);
+            guiGraphics.fillGradient(RenderType.guiOverlay(), x, y, x + 16, y + 16, 0x00200800, 0xf020FFF0, 0);
 
         }
     }
