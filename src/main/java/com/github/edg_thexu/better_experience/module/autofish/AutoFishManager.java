@@ -24,16 +24,15 @@ public class AutoFishManager {
      * @return
      */
     public static float computeFishingPower(@Nullable Player player, @Nullable ItemStack pole, @Nullable BaitItem bait, @Nullable ItemStack curios){
-        float base = 2 + EnchantmentUtil.getEnchantmentLevel(Enchantments.LUCK_OF_THE_SEA, pole); // 0 1 2 3
 
         // 人物属性
+        float base = 2 + EnchantmentUtil.getEnchantmentLevel(Enchantments.LUCK_OF_THE_SEA, pole); // 0 1 2 3
         if (player != null) {
             base += TCUtils.getAccessoriesValue(player, AccessoryItems.FISHING$POWER);
         }
 
-        float multiplier = 1;
-
         // 鱼竿加成
+        float multiplier = 0;
         if (pole != null) {
             List<AttributeModifier> mul = new ArrayList<>();
             for(var modify : pole.getAttributeModifiers().modifiers()){
@@ -60,7 +59,7 @@ public class AutoFishManager {
                 curiosBonus = component.get(AccessoryItems.FISHING$POWER).get();
             }
         }
-        return (base )* bounds * multiplier + curiosBonus;
+        return (base + curiosBonus * 0.1f) * (bounds + multiplier);
     }
 
 }

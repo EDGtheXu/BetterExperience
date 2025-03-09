@@ -157,6 +157,7 @@ public class AutoFishBlock extends BaseEntityBlock {
                     List<ItemStack> items = ((IFishingHook)hook).betterExperience$getItems();
 
                     for(ItemStack item : items){
+                        // 尝试堆叠
                         for(int i=0;i<27;i++){
                             ItemStack current = entity.getItem(i);
                             if(current.isEmpty()){
@@ -174,13 +175,14 @@ public class AutoFishBlock extends BaseEntityBlock {
                                 }
                             }
                         }
+                        // 溢出
                         if(!item.isEmpty()){
                             var f = state.getValue(FACING);
                             float dir = f.getRotation().angle();
-                            float r = 1;
+                            float r = 0.1f;
                             ItemEntity itemEntity = new ItemEntity(level,
                                     pos.getX() + 0.5 + r * Math.sin(dir),
-                                    pos.getY(),
+                                    pos.getY() + 1,
                                     pos.getZ() + 0.5 + r * Math.cos(dir), item);
                             level.addFreshEntity(itemEntity);
                         }
@@ -190,7 +192,7 @@ public class AutoFishBlock extends BaseEntityBlock {
 
                     // TODO 消耗鱼饵, 计算下一次上钩时间  ( 20 tick )
 
-                    entity.fishingTime = (int) (20 * entity.cdReduce);
+                    entity.fishingTime = (int) (20 * 10 * entity.cdReduce);
 
                 }
             }
@@ -230,17 +232,19 @@ public class AutoFishBlock extends BaseEntityBlock {
                 public int get(int id) {
                     return switch (id) {
                         case 0 -> isStarted;
+                        case 1->  (lastTick + fishingTime - ticks) / 20;
                         default -> 0;
                     };
                 }
                 public void set(int id, int value) {
                     switch (id) {
                         case 0 -> isStarted = value;
+                        case 1 -> cdReduce = value * 0.01f;
                     }
 
                 }
                 public int getCount() {
-                    return 1;
+                    return 2;
                 }
             };
 

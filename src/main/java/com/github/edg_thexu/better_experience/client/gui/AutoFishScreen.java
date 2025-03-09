@@ -51,8 +51,9 @@ public class AutoFishScreen extends ContainerScreen {
 
         float power = AutoFishManager.computeFishingPower(null, pole, bait instanceof BaitItem? (BaitItem) bait : null, curios);
 
-        guiGraphics.drawString(font, "Power: " + (int) power, leftPos + 10, topPos , 0xFFFFFFFF);
+        guiGraphics.drawString(font, "Power: " + (int) power, leftPos + 30, topPos + 5 , 0xFFFFFFFF);
 
+        guiGraphics.drawString(font, "Remain: " +( (AutoFishMenu)menu).access.get(1), leftPos + 100, topPos + 5 , 0xFFFFFFFF);
 
     }
 
