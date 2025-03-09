@@ -25,6 +25,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.item.FishingRodItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
@@ -124,16 +125,22 @@ public class AutoFishBlock extends BaseEntityBlock {
                 ItemStack bait = entity.getItem(28);
                 ItemStack curios = entity.getItem(29);
 
-                if(poleStack.getItem() instanceof AbstractFishingPole pole) {
+                if(poleStack.getItem() instanceof FishingRodItem pole) {
                     FishingHook hook;
+
                     try {
-                        Method funcField = AbstractFishingPole.class.getDeclaredMethod("getHook", ItemStack.class, Player.class, Level.class, int.class, int.class);
-                        funcField.setAccessible(true);
-                        // todo : 计算渔力
-                        float power = AutoFishManager.computeFishingPower(null , poleStack,
+                        float power = AutoFishManager.computeFishingPower(null, poleStack,
                                 bait.getItem() instanceof BaitItem ? (BaitItem) bait.getItem() : null,
                                 curios);
-                        hook = (FishingHook) funcField.invoke(pole, poleStack, player, level, (int) power, 5);
+
+                        if(pole instanceof  AbstractFishingPole pole1) {
+                            Method funcField = AbstractFishingPole.class.getDeclaredMethod("getHook", ItemStack.class, Player.class, Level.class, int.class, int.class);
+                            funcField.setAccessible(true);
+                            hook = (FishingHook) funcField.invoke(pole, poleStack, player, level, (int) power, 5);
+                        }
+                        else{
+                            hook = new FishingHook(player, level, (int) power, 5);
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                         return;
@@ -194,6 +201,9 @@ public class AutoFishBlock extends BaseEntityBlock {
 
                     entity.fishingTime = (int) (20 * 10 * entity.cdReduce);
 
+                }else{
+                    // 没有钓竿，终止
+                    entity.dataAccess.set(0, 0);
                 }
             }
 

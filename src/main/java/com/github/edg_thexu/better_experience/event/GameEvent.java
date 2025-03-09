@@ -48,7 +48,7 @@ public class GameEvent {
 
             Player player = hook.getPlayerOwner();
             float chance = player!=null && player.hasEffect(ModEffects.CRATE) ? 0.25f : 0.1f;
-            chance += luck / 50f;
+            chance += luck / 30f;
             List<ItemStack> items = event.getDrops();
             if(level.random.nextFloat() < chance) {
                 items = serverLevel.getServer().reloadableRegistries().getLootTable(ModLootTables.CRATE)

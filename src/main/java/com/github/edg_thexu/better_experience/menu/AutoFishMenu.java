@@ -5,6 +5,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.*;
+import net.minecraft.world.item.FishingRodItem;
 import net.minecraft.world.item.ItemStack;
 import org.confluence.mod.common.item.fishing.AbstractFishingPole;
 import org.confluence.mod.common.item.fishing.BaitItem;
@@ -26,7 +27,7 @@ public class AutoFishMenu extends ChestMenu {
         addSlot(new Slot(container, 27, 50, -16){
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return stack.getItem() instanceof AbstractFishingPole;
+                return stack.getItem() instanceof FishingRodItem;
             }
         });
         addSlot(new Slot(container, 28, 70, -16){
