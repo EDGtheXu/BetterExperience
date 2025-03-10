@@ -33,6 +33,10 @@ public class TEChineseProvider extends LanguageProvider {
         add("better_experience.configuration.Player", "玩家");
         add("better_experience.configuration.World", "世界");
         add("better_experience.configuration.Entity", "生物");
+        add("better_experience.configuration.Item", "物品");
+
+
+
         add("better_experience.configuration.show_outlines", "法爆魔杖显示边框");
         add("better_experience.configuration.auto_potion_open", "药水 无限续杯");
         add("better_experience.configuration.auto_potion_stack_size", "药水 无限续杯 需求量");

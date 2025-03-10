@@ -43,6 +43,7 @@ public class TEEnglishProvider extends LanguageProvider {
         add("better_experience.configuration.Player", "Player");
         add("better_experience.configuration.World", "World");
         add("better_experience.configuration.Entity", "Entity");
+        add("better_experience.configuration.Item", "Item");
 
 
 

@@ -9,13 +9,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.FishingRodItem;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
-import org.confluence.mod.common.block.natural.herbs.DeathWeed;
-import org.confluence.mod.common.block.natural.sapling.StoneSaplingBlock;
 
 @EventBusSubscriber(modid = Better_experience.MODID, bus = EventBusSubscriber.Bus.GAME)
 public class PlayerEvent {
@@ -24,7 +23,8 @@ public class PlayerEvent {
     public static void playerTick(PlayerTickEvent.Post event){
 
         PlayerInventoryManager.getInstance().detect(event.getEntity());
-
+        if(!event.getEntity().level().isClientSide)
+            event.getEntity().sendSystemMessage(Component.literal(String.valueOf(event.getEntity().fishing)));
     }
 
     @SubscribeEvent

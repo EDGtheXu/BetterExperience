@@ -157,7 +157,7 @@ public class AutoFishBlock extends BaseEntityBlock {
 
                 if(poleStack.getItem() instanceof FishingRodItem pole) {
                     FishingHook hook;
-
+                    var oldHook = player.fishing;
                     try {
                         float power = AutoFishManager.computeFishingPower(null, poleStack,
                                 bait.getItem() instanceof BaitItem ? (BaitItem) bait.getItem() : null,
@@ -175,7 +175,7 @@ public class AutoFishBlock extends BaseEntityBlock {
                         e.printStackTrace();
                         return;
                     }
-
+                    player.fishing = oldHook;
                     ((IFishingHook) hook).betterExperience$setPos(new Vec3(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5));
                     ((IFishingHook) hook).betterExperience$setSimulation(true);
 

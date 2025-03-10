@@ -16,8 +16,10 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 @Mixin(FishingHook.class)
@@ -86,11 +88,20 @@ public class FishingHookMixin implements IFishingHook, SelfGetter<FishingHook> {
         return true;
     }
 
+    // 模拟钓鱼可通过
     @Inject(method = "shouldStopFishing", at = @At(value = "HEAD"), cancellable = true)
     private void onShouldStopFishingMixin(CallbackInfoReturnable<Boolean> cir) {
         if(betterExperience$isSimulation){
             cir.setReturnValue(false);
         }
-
     }
+
+    // 取消更新Player.fishing
+    @Inject(method = "updateOwnerInfo", at = @At(value = "HEAD"),cancellable = true)
+    private void updateOwnerInfoMixin(FishingHook fishingHook, CallbackInfo ci) {
+        if(betterExperience$isSimulation){
+            ci.cancel();
+        }
+    }
+
 }
