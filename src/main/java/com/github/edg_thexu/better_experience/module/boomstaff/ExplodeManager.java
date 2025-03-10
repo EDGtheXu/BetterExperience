@@ -13,6 +13,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ExplodeManager {
     private int maxTickToHandle = 20;
@@ -23,7 +24,7 @@ public class ExplodeManager {
     public static ExplodeManager getInstance() {
         if (instance == null) {
             instance = new ExplodeManager();
-            instance.playerBlockQueneList = new LinkedList<>();
+            instance.playerBlockQueneList = new CopyOnWriteArrayList<>();
         }
         return instance;
     }

@@ -2,6 +2,7 @@ package com.github.edg_thexu.better_experience.data.gen.recipe;
 
 
 import com.github.edg_thexu.better_experience.Better_experience;
+import com.github.edg_thexu.better_experience.init.ModBlocks;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
@@ -27,6 +28,16 @@ public class ModRecipeProvider extends RecipeProvider {
     @Override
     protected void buildRecipes(RecipeOutput recipeOutput) {
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.AUTO_FISH_BLOCK)
+                .pattern("aaa")
+                .pattern("bcb")
+                .pattern("ddd")
+                .define('a',Items.GOLD_INGOT)
+                .define('b',Items.REDSTONE)
+                .define('c',Items.CHEST)
+                .define('d',Items.IRON_INGOT)
+                .unlockedBy("has_gold_ingot",has(Items.GOLD_INGOT))
+                .save(recipeOutput);
     }
 
     protected static <T extends AbstractCookingRecipe> void cookRecipes(

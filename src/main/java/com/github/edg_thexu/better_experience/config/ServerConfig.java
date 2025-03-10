@@ -3,22 +3,61 @@ package com.github.edg_thexu.better_experience.config;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class ServerConfig {
+    /**
+     * 是否开启药水无线续杯
+     */
     public static ModConfigSpec.ConfigValue<Boolean> AUTO_POTION_OPEN;
 
+    /**
+     * 无线续杯数量
+     */
     public static ModConfigSpec.ConfigValue<Integer> AUTO_POTION_STACK_SIZE;
 
+    /**
+     * 是否开启药水无线续杯
+     */
     public static ModConfigSpec.ConfigValue<Boolean> INFINITE_AMMO;
 
+    /**
+     * 无限弹药数量
+     */
     public static ModConfigSpec.ConfigValue<Integer> INFINITE_AMMO_STACK_SIZE;
 
+    /**
+     * 召唤BOSS无需消耗召唤物品
+     */
     public static ModConfigSpec.ConfigValue<Boolean> NO_CONSUME_SUMMONER;
 
+    /**
+     * 禁止史莱姆死亡时生成熔岩
+     */
     public static ModConfigSpec.ConfigValue<Boolean> SLIME_DIE_NO_LAVA;
 
-
+    /**
+     * 额外的摔落免疫
+     */
+    public static ModConfigSpec.ConfigValue<Integer> ADDITIONAL_FALL_DISTANCE;
+    /**
+     * 宝石树种植无限制
+     */
+    public static ModConfigSpec.ConfigValue<Boolean> STONE_SAPLING_TREE_NO_STRICT;
+    /**
+     * 草药种植无限制
+     */
+    public static ModConfigSpec.ConfigValue<Boolean> HERB_GROWTH_NO_STRICT;
+    /**
+     * 重生时填满生命值
+     */
+    public static ModConfigSpec.ConfigValue<Boolean> FILL_LIFE_ON_RESPAWN;
+    /**
+     * 更好的重铸
+     */
+    public static ModConfigSpec.ConfigValue<Boolean> BETTER_REINFORCED_TOOL;
 
     public static ModConfigSpec init(){
         final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
+
+        BUILDER.push("Item");
 
         // 药水无线续杯
         AUTO_POTION_OPEN = BUILDER
@@ -36,14 +75,46 @@ public class ServerConfig {
                 .comment("How many ammo stack could apply without consuming automatically?")
                 .defineInRange("infinite_ammo_stack_size", 3996,64,9999);
 
-
         NO_CONSUME_SUMMONER = BUILDER
                 .comment("Not consume summon item?")
                 .define("no_consume_summoner", false);
 
+        BETTER_REINFORCED_TOOL = BUILDER
+                .comment("Better reinforced tool.")
+                .define("better_reinforced_tool", false);
+
+        BUILDER.pop();
+        BUILDER.push("Player");
+
+        FILL_LIFE_ON_RESPAWN = BUILDER
+                .comment("Fill life on respawn.")
+                .define("fill_life_on_respawn", false);
+
+        ADDITIONAL_FALL_DISTANCE = BUILDER
+                .comment("Additional fall distance for players.")
+                .defineInRange("additional_fall_distance", 0,0,100);
+
+        BUILDER.pop();
+        BUILDER.push("World");
+
+
+        STONE_SAPLING_TREE_NO_STRICT = BUILDER
+                .comment("Stone sapling tree grows without strict conditions.")
+                .define("stone_sapling_tree_no_strict", false);
+
+        HERB_GROWTH_NO_STRICT = BUILDER
+                .comment("Herb growth without strict conditions.")
+                .define("herb_growth_no_strict", false);
+
+        BUILDER.pop();
+        BUILDER.push("Entity");
+
         SLIME_DIE_NO_LAVA = BUILDER
                 .comment("Forbidden slime to generate lava?")
                 .define("slime_die_no_lava", true);
+
+        BUILDER.pop();
+
 
         return BUILDER.build();
     }

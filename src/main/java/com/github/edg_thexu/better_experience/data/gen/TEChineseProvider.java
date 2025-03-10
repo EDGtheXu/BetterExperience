@@ -30,22 +30,27 @@ public class TEChineseProvider extends LanguageProvider {
         add("better_experience.tooltip.magic_boom_staff.info", "左手物品决定镐力 [按住shift+鼠标滚轮调整大小]");
 
         // config
-
+        add("better_experience.configuration.Player", "玩家");
+        add("better_experience.configuration.World", "世界");
+        add("better_experience.configuration.Entity", "生物");
         add("better_experience.configuration.show_outlines", "法爆魔杖显示边框");
-
-
-
         add("better_experience.configuration.auto_potion_open", "药水 无限续杯");
-
         add("better_experience.configuration.auto_potion_stack_size", "药水 无限续杯 需求量");
-
         add("better_experience.configuration.infinite_ammo", "无限弹药");
-
         add("better_experience.configuration.infinite_ammo_stack_size", "无限弹药 需求量");
-
         add("better_experience.configuration.no_consume_summoner", "不消耗BOSS召唤物");
-
         add("better_experience.configuration.slime_die_no_lava", "岩浆史莱姆死亡不生成岩浆");
+        add("better_experience.configuration.additional_fall_distance", "额外的摔落免疫高度");
+        add("better_experience.configuration.stone_sapling_tree_no_strict", "宝石树生长无限制");
+        add("better_experience.configuration.fill_life_on_respawn", "重生时回满生命值");
+        add("better_experience.configuration.herb_growth_no_strict", "草生长无限制");
+        add("better_experience.configuration.better_reinforced_tool", "更好的重铸");
 
+
+        // info
+        add("better_experience.autofish.info.lack", "自动钓鱼机缺少方块连接：");
+
+        // container
+        add("block.better_experience.autofish_machine", "自动钓鱼机");
     }
 }

@@ -9,8 +9,17 @@
     "BossSummingItemMixin",
     "ChestMenuMixin",
     "FishingHookMixin",
+    "NPCReforgeMenuMixin",
     "PlayerMixin",
-    "ProjectileWeaponItemMixin"
+    "ProjectileWeaponItemMixin",
+    "StoneSaplingBlockMixin",
+    "herbs.BlinkrootMixin",
+    "herbs.DaybloomMixin",
+    "herbs.DeathWeedMixin",
+    "herbs.FireblossomMixin",
+    "herbs.MoonglowMixin",
+    "herbs.ShiveringThornMixin",
+    "herbs.WaterleafMixin"
   ],
   "client": [
     "AbstractContainerScreenMixin"

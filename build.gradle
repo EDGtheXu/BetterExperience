@@ -22,6 +22,13 @@ repositories {
         name = "Curios"
         url = uri("https://maven.theillusivec4.top/")
     }
+    maven {
+        name = 'GeckoLib'
+        url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+        content {
+            includeGroup("software.bernie.geckolib")
+        }
+    }
 }
 
 base {
@@ -127,13 +134,17 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
-    implementation "curse.maven:confluence-1209464:6255595"
+    implementation "curse.maven:confluence-1209464:6283844"
     compileOnly "curse.maven:terra-entity-1173196:6249871"
-    runtimeOnly "curse.maven:terra-entity-1173196:6249871"
+//    runtimeOnly "curse.maven:terra-entity-1173196:6249871"
     compileOnly "curse.maven:terra-curio-1027625:6254391"
-    runtimeOnly "curse.maven:terra-curio-1027625:6254391"
+//    runtimeOnly "curse.maven:terra-curio-1027625:6254391"
     implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}"
 
+    implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
+
+    compileOnly "curse.maven:jade-324717:6011258"
+    runtimeOnly "curse.maven:jade-324717:6011258"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

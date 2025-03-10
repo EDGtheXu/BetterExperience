@@ -4,6 +4,9 @@ import com.github.edg_thexu.better_experience.Better_experience;
 import com.github.edg_thexu.better_experience.data.gen.ModItemModelProvider;
 import com.github.edg_thexu.better_experience.data.gen.TEChineseProvider;
 import com.github.edg_thexu.better_experience.data.gen.TEEnglishProvider;
+import com.github.edg_thexu.better_experience.data.gen.loot.ModLootTableProvider;
+import com.github.edg_thexu.better_experience.data.gen.recipe.ModRecipeProvider;
+import com.github.edg_thexu.better_experience.data.gen.tag.ModBlockTagsProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
@@ -28,6 +31,10 @@ public class DataGenerator {
 
         CompletableFuture<HolderLookup.Provider> lookup = event.getLookupProvider();
         boolean server = event.includeServer();
+        ModBlockTagsProvider blockTagsProvider = new ModBlockTagsProvider(output, lookup, helper);
+        generator.addProvider(server, blockTagsProvider);
+        generator.addProvider(server,new ModRecipeProvider(output,lookup));
+        generator.addProvider(server, ModLootTableProvider.getProvider(output, lookup));
 
 
 

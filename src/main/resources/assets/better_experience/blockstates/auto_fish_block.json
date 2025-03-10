@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "better_experience:block/auto_fish_block",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "better_experience:block/auto_fish_block"
+    },
+    "facing=south": {
+      "model": "better_experience:block/auto_fish_block",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "better_experience:block/auto_fish_block",
+      "y": 270
+    }
+  }
+}

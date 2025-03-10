@@ -47,7 +47,7 @@ public class MagicBoomStaff extends Item {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
 
         if(level.isClientSide()){
-            BlockPos pos = ModUtils.getEyeBlockHitResult(player, maxRange);
+            BlockPos pos = ModUtils.getEyeBlockHitResult(player, maxRange * 2);
 
             PacketDistributor.sendToServer(new BreakBlocksPacketC2S(pos.offset(-range,-range,-range), pos.offset(range,range,range)));
             player.startUsingItem(usedHand);

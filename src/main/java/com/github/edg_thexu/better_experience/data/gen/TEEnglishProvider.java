@@ -40,22 +40,31 @@ public class TEEnglishProvider extends LanguageProvider {
         add("better_experience.tooltip.magic_boom_staff.info", "power depends on the item in left hand [hold shift and scroll mousewheel to adjust size]");
 
         // Config
+        add("better_experience.configuration.Player", "Player");
+        add("better_experience.configuration.World", "World");
+        add("better_experience.configuration.Entity", "Entity");
+
+
+
         add("better_experience.configuration.show_outlines", "Magic Boom Staff Show Outlines");
-
-
-
         add("better_experience.configuration.auto_potion_open", "Open Auto-Potion");
-
         add("better_experience.configuration.auto_potion_stack_size", "Auto-Potion Stack Size");
-
         add("better_experience.configuration.infinite_ammo", "Infinite Ammo");
-
         add("better_experience.configuration.infinite_ammo_stack_size", "Infinite Ammo Stack Size");
-
         add("better_experience.configuration.no_consume_summoner", "No Consume Summon Item");
-
         add("better_experience.configuration.slime_die_no_lava", "Slime Dies Without Lava");
+        add("better_experience.configuration.additional_fall_distance", "Additional Fall Distance");
+        add("better_experience.configuration.stone_sapling_tree_no_strict", "Stone Sapling Tree No Strict");
+        add("better_experience.configuration.fill_life_on_respawn", "Fill Life on Respawn");
+        add("better_experience.configuration.herb_growth_no_strict", "Herb Growth No Strict");
+        add("better_experience.configuration.better_reinforced_tool", "Better Reinforced");
 
+
+        // info
+        add("better_experience.autofish.info.lack", "Auto Fish Machine Lacks connection: ");
+
+        // container
+        add("block.better_experience.autofish_machine", "Auto Fish Machine");
 
     }
 }
