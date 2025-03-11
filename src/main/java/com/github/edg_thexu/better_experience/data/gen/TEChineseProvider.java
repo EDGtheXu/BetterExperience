@@ -49,7 +49,8 @@ public class TEChineseProvider extends LanguageProvider {
         add("better_experience.configuration.fill_life_on_respawn", "重生时回满生命值");
         add("better_experience.configuration.herb_growth_no_strict", "草生长无限制");
         add("better_experience.configuration.better_reinforced_tool", "更好的重铸");
-
+        add("better_experience.configuration.client_multi_fishing", "客户端 抡锤子钓鱼bug");
+        add("better_experience.configuration.server_multi_fishing", "服务器 抡锤子钓鱼bug");
 
         // info
         add("better_experience.autofish.info.lack", "自动钓鱼机缺少方块连接：");

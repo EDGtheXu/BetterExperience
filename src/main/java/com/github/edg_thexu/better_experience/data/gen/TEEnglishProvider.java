@@ -59,6 +59,9 @@ public class TEEnglishProvider extends LanguageProvider {
         add("better_experience.configuration.fill_life_on_respawn", "Fill Life on Respawn");
         add("better_experience.configuration.herb_growth_no_strict", "Herb Growth No Strict");
         add("better_experience.configuration.better_reinforced_tool", "Better Reinforced");
+        add("better_experience.configuration.client_multi_fishing", "Client Multi-Fishing Using Hammers");
+        add("better_experience.configuration.server_multi_fishing", "Server Multi-Fishing Using Hammers");
+
 
 
         // info

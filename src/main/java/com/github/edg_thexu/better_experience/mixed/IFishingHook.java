@@ -19,4 +19,7 @@ public interface IFishingHook {
 
     void betterExperience$setItems(List<ItemStack> items);
 
+    boolean betterExperience$isAutoCatch();
+
+    void betterExperience$setAutoCatch(boolean autoCatch);
 }

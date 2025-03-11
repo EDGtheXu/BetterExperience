@@ -52,6 +52,10 @@ public class ServerConfig {
     /**
      * 更好的重铸
      */
+    public static ModConfigSpec.ConfigValue<Boolean> MULTI_FISH;
+    /**
+     * 更好的重铸
+     */
     public static ModConfigSpec.ConfigValue<Boolean> BETTER_REINFORCED_TOOL;
 
     public static ModConfigSpec init(){
@@ -93,6 +97,10 @@ public class ServerConfig {
         ADDITIONAL_FALL_DISTANCE = BUILDER
                 .comment("Additional fall distance for players.")
                 .defineInRange("additional_fall_distance", 0,0,100);
+
+        MULTI_FISH = BUILDER
+                .comment("Multi fish.")
+                .define("server_multi_fishing", true);
 
         BUILDER.pop();
         BUILDER.push("World");

@@ -2,6 +2,7 @@ package com.github.edg_thexu.better_experience.mixin;
 
 import com.github.edg_thexu.better_experience.mixed.IFishingHook;
 import com.llamalad7.mixinextras.sugar.Local;
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -12,6 +13,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.mixinauxiliary.SelfGetter;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -23,8 +25,16 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 @Mixin(FishingHook.class)
-public class FishingHookMixin implements IFishingHook, SelfGetter<FishingHook> {
+public abstract class FishingHookMixin implements IFishingHook, SelfGetter<FishingHook> {
 
+    @Shadow private int nibble;
+
+    @Shadow public abstract int retrieve(ItemStack stack);
+
+    @Shadow @Nullable public abstract Player getPlayerOwner();
+
+    @Shadow private boolean openWater;
+    @Shadow private boolean biting;
     // 是否是钓鱼机
     @Unique
     boolean betterExperience$isSimulation = false;
@@ -36,6 +46,10 @@ public class FishingHookMixin implements IFishingHook, SelfGetter<FishingHook> {
     // 钓的物品
     @Unique
     List<ItemStack> betterExperience$items = List.of();
+
+    // 自动捕获
+    @Unique
+    boolean betterExperience$autoCatch = false;
 
     @Override
     public Vec3 betterExperience$getPos() {
@@ -65,6 +79,16 @@ public class FishingHookMixin implements IFishingHook, SelfGetter<FishingHook> {
     @Override
     public void betterExperience$setItems(List<ItemStack> items) {
         betterExperience$items = items;
+    }
+
+    @Override
+    public boolean betterExperience$isAutoCatch() {
+        return betterExperience$autoCatch;
+    }
+
+    @Override
+    public void betterExperience$setAutoCatch(boolean autoCatch) {
+        betterExperience$autoCatch = autoCatch;
     }
 
     @Inject(method = "retrieve", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addFreshEntity(Lnet/minecraft/world/entity/Entity;)Z", ordinal = 0))
@@ -101,6 +125,14 @@ public class FishingHookMixin implements IFishingHook, SelfGetter<FishingHook> {
     private void updateOwnerInfoMixin(FishingHook fishingHook, CallbackInfo ci) {
         if(betterExperience$isSimulation){
             ci.cancel();
+        }
+    }
+
+    @Inject(method = "tick", at = @At(value = "RETURN"))
+    private void tickMixin(CallbackInfo ci) {
+        if(this.biting && betterExperience$autoCatch){
+            if(getPlayerOwner() != null)
+                this.retrieve(getPlayerOwner().getMainHandItem());
         }
     }
 
