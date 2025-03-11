@@ -1,5 +1,6 @@
 package com.github.edg_thexu.better_experience.network.C2S;
 
+import com.github.edg_thexu.better_experience.Better_experience;
 import com.github.edg_thexu.better_experience.item.MagicBoomStaff;
 import com.github.edg_thexu.better_experience.module.boomstaff.ExplodeManager;
 import io.netty.buffer.ByteBuf;
@@ -18,7 +19,6 @@ import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
-import org.confluence.mod.Confluence;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -32,7 +32,7 @@ public record BreakBlocksPacketC2S(BlockPos p1, BlockPos p2) implements CustomPa
             );
 
     public static final Type<BreakBlocksPacketC2S> TYPE =
-            new Type<>(ResourceLocation.fromNamespaceAndPath(Confluence.MODID, "break_blocks_packet_c2s"));
+            new Type<>(ResourceLocation.fromNamespaceAndPath(Better_experience.MODID, "break_blocks_packet_c2s"));
 
     public Type<? extends CustomPacketPayload> type() {
         return TYPE;

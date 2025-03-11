@@ -1,5 +1,6 @@
 package com.github.edg_thexu.better_experience.network.C2S;
 
+import com.github.edg_thexu.better_experience.Better_experience;
 import com.github.edg_thexu.better_experience.block.AutoFishBlock;
 import com.github.edg_thexu.better_experience.mixed.IPlayer;
 import io.netty.buffer.ByteBuf;
@@ -13,7 +14,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
-import org.confluence.mod.Confluence;
 import org.jetbrains.annotations.NotNull;
 
 public record ServerBoundPacketC2S(int code) implements CustomPacketPayload {
@@ -22,7 +22,7 @@ public record ServerBoundPacketC2S(int code) implements CustomPacketPayload {
             ByteBufCodecs.INT.map(ServerBoundPacketC2S::new, ServerBoundPacketC2S::code);
 
     public static final Type<ServerBoundPacketC2S> TYPE =
-            new Type<>(ResourceLocation.fromNamespaceAndPath(Confluence.MODID, "serverbound_packet_c2s"));
+            new Type<>(ResourceLocation.fromNamespaceAndPath(Better_experience.MODID, "serverbound_packet_c2s"));
 
     public @NotNull Type<? extends CustomPacketPayload> type() {
         return TYPE;
