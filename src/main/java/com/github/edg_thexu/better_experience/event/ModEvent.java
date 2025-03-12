@@ -1,12 +1,18 @@
 package com.github.edg_thexu.better_experience.event;
 
 import com.github.edg_thexu.better_experience.Better_experience;
+import com.github.edg_thexu.better_experience.config.ServerConfig;
+import com.github.edg_thexu.better_experience.module.autopotion.PlayerAttribute;
 import com.github.edg_thexu.better_experience.network.C2S.BreakBlocksPacketC2S;
 import com.github.edg_thexu.better_experience.network.C2S.PotionApplyPacketC2S;
 import com.github.edg_thexu.better_experience.network.C2S.ServerBoundPacketC2S;
 import com.github.edg_thexu.better_experience.network.S2C.EnderChestItemsS2C;
+import net.minecraft.client.Minecraft;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.ServerTickRateManager;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
@@ -25,5 +31,12 @@ public class ModEvent {
 
 
     }
+    @SubscribeEvent
+    public static void registerPayloadHandlers(ModConfigEvent.Reloading event) {
+        if(event.getConfig().getSpec() == ServerConfig.SPEC){
+            // 重新加载人物属性
+            PlayerAttribute.dirty = true;
+        }
 
+    }
 }

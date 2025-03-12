@@ -9,6 +9,10 @@ import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.core.Holder;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -16,6 +20,8 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.confluence.mod.common.item.food.BaseFoodItem;
 import org.confluence.mod.common.item.potion.EffectPotionItem;
@@ -27,18 +33,43 @@ public class PlayerInventoryManager {
 
     public int detectInternal;
     private static final int _detectInternal = 200;
+    /**
+     * 食物类 effectInstance 过滤器
+     */
+    private static final Predicate<MobEffectInstance> canApplyEffect = (effect) -> {
+        Holder<MobEffect> effect1 = effect.getEffect();
+        int time = effect.getDuration();
+        if(effect1 == MobEffects.SATURATION || effect1 == MobEffects.ABSORPTION || effect1 == MobEffects.REGENERATION){
+            // 饱和效果不应该应用，过于超模
+            return false;
+        }
+        return true;
+    };
+    /**
+     * 物品过滤器
+     */
     public static Predicate<ItemStack> canApply = (stack) -> {
         Item item = stack.getItem();
-        if(stack.getCount() < ServerConfig.AUTO_POTION_STACK_SIZE.get())
+        if(stack.getCount() < ServerConfig.AUTO_POTION_STACK_SIZE.get()) {
+            // 配置文件
             return false;
-        if(item instanceof EffectPotionItem potion)
+        }
+        if(item instanceof EffectPotionItem potion) {
+            // 效果类药水
             return true;
-        if(item instanceof BaseFoodItem food)
+        }
+        if(item instanceof Item food)
         {
+            //食物类
             var foodProperties = food.getFoodProperties(stack, null);
             if (foodProperties != null) {
-
-                return !foodProperties.effects().isEmpty();
+                for (FoodProperties.PossibleEffect foodproperties$possibleeffect : foodProperties.effects()) {
+                    var mobEffect = foodproperties$possibleeffect.effect();
+                    if (canApplyEffect.test(mobEffect)) {
+                        // 只要有一个可以应用的效果就返回true
+                        return !foodProperties.effects().isEmpty();
+                    }
+                }
             }
         }
         return false;
@@ -53,7 +84,7 @@ public class PlayerInventoryManager {
     }
 
     /**
-     * 检测可以作用的容器
+     * 客户端 检测可以作用的容器
      * @param player
      */
     public void detect(Player player){
@@ -89,8 +120,10 @@ public class PlayerInventoryManager {
         }
     }
 
+
+
     /**
-     * 应用效果
+     * 服务端 应用效果
      * @param stack
      * @param player
      */
@@ -103,17 +136,16 @@ public class PlayerInventoryManager {
                 method.setAccessible(true);
                 method.invoke(potion, stack, player.level(), player);
             }
-            else if(item instanceof BaseFoodItem food){
+            else if(item instanceof Item food){
                 FoodProperties foodproperties = food.getFoodProperties(stack, player);
                 if(foodproperties != null){
                     for (FoodProperties.PossibleEffect foodproperties$possibleeffect : foodproperties.effects()) {
-                        if (player.getRandom().nextFloat() < foodproperties$possibleeffect.probability()) {
-                            player.addEffect(foodproperties$possibleeffect.effect());
+                        var mobEffect = foodproperties$possibleeffect.effect();
+                        if (canApplyEffect.test(mobEffect)) {
+                            player.addEffect(mobEffect);
                         }
                     }
                 }
-
-
             }
         }catch (Exception ignored){
 
@@ -129,6 +161,7 @@ public class PlayerInventoryManager {
      * @param y
      * @param partialTick
      */
+    @OnlyIn(Dist.CLIENT)
     public static void renderApply(AbstractContainerScreen screen,ItemStack stack,  GuiGraphics guiGraphics, int x, int y, float partialTick){
 
         if((

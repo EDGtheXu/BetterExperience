@@ -139,6 +139,8 @@ dependencies {
 //    runtimeOnly "curse.maven:terra-entity-1173196:6249871"
     compileOnly "curse.maven:terra-curio-1027625:6254391"
 //    runtimeOnly "curse.maven:terra-curio-1027625:6254391"
+    compileOnly "curse.maven:touhou-little-maid-355044:6266244"
+
     implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}"
 
     implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"

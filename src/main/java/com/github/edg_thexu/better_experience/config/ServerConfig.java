@@ -123,7 +123,9 @@ public class ServerConfig {
 
         BUILDER.pop();
 
-
-        return BUILDER.build();
+        SPEC = BUILDER.build();
+        return SPEC;
     }
+
+    public static ModConfigSpec SPEC;
 }

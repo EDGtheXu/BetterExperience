@@ -6,9 +6,11 @@ import com.github.edg_thexu.better_experience.config.ServerConfig;
 import com.github.edg_thexu.better_experience.mixed.IFishingHook;
 import com.github.edg_thexu.better_experience.mixed.IPlayer;
 import com.github.edg_thexu.better_experience.module.autofish.AutoFishManager;
+import com.github.edg_thexu.better_experience.module.autopotion.PlayerAttribute;
 import com.github.edg_thexu.better_experience.module.autopotion.PlayerInventoryManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -20,6 +22,7 @@ import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import org.confluence.mod.common.item.fishing.AbstractFishingPole;
@@ -31,9 +34,10 @@ public class PlayerEvent {
 
     @SubscribeEvent
     public static void playerTick(PlayerTickEvent.Post event){
-
         PlayerInventoryManager.getInstance().detect(event.getEntity());
-
+        Player player1 = event.getEntity();
+        if(player1.level() instanceof  ServerLevel sl)
+            PlayerAttribute.notifyDirty(sl);
         // 复刻钓鱼bug
         if(!event.getEntity().level().isClientSide && ServerConfig.MULTI_FISH.get()) {
             IPlayer player = (IPlayer) event.getEntity();
@@ -62,8 +66,6 @@ public class PlayerEvent {
                     ((IFishingHook)hook).betterExperience$setAutoCatch(true);
                     level.addFreshEntity(hook);
                 }
-                
-//                    System.out.println("hammer using ticks: " + ((IPlayer) event.getEntity()).betterExperience$getHammerUsingTicks());
             }
         }
     }
@@ -75,15 +77,6 @@ public class PlayerEvent {
         if(event.getEntity() instanceof ServerPlayer player){
             if(player.connection.tickCount == 0 )
                 player.sendSystemMessage(Component.translatable("better_experience.welcome_message"));
-
-            // 增加摔落高度
-            ResourceLocation location = Better_experience.space("fall_distance_modifier");
-            if(player.getAttribute(Attributes.SAFE_FALL_DISTANCE).hasModifier(location)){
-                player.getAttribute(Attributes.SAFE_FALL_DISTANCE).removeModifier(location);
-            }
-            player.getAttribute(Attributes.SAFE_FALL_DISTANCE).addPermanentModifier(
-                    new AttributeModifier(location, ServerConfig.ADDITIONAL_FALL_DISTANCE.get(), AttributeModifier.Operation.ADD_VALUE));
-
         }
 
     }
@@ -95,6 +88,7 @@ public class PlayerEvent {
             EnderChestAttachment.sync(player);
             if(ServerConfig.FILL_LIFE_ON_RESPAWN.get())
                 player.setHealth(player.getMaxHealth());
+            PlayerAttribute.applyAdditionalAttributes(player);
         }
     }
 

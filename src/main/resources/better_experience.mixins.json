@@ -19,7 +19,8 @@
     "herbs.FireblossomMixin",
     "herbs.MoonglowMixin",
     "herbs.ShiveringThornMixin",
-    "herbs.WaterleafMixin"
+    "herbs.WaterleafMixin",
+    "integration.MaidFishingHookMixin"
   ],
   "client": [
     "AbstractContainerScreenMixin"
