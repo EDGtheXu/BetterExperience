@@ -3,6 +3,7 @@ package com.github.edg_thexu.better_experience.client.event;
 import com.github.edg_thexu.better_experience.Better_experience;
 import com.github.edg_thexu.better_experience.client.buffer.AABBBuffer;
 import com.github.edg_thexu.better_experience.config.ClientConfig;
+import com.github.edg_thexu.better_experience.init.ModAttachments;
 import com.github.edg_thexu.better_experience.item.MagicBoomStaff;
 import com.github.edg_thexu.better_experience.network.C2S.ServerBoundPacketC2S;
 import net.minecraft.client.Minecraft;
@@ -12,9 +13,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.confluence.mod.client.gui.container.ExtraInventoryScreen;
 import org.confluence.mod.common.item.hammer.HammerItem;
-import org.confluence.mod.common.item.hook.FishHookItem;
 
 @EventBusSubscriber(modid = Better_experience.MODID, bus = EventBusSubscriber.Bus.GAME,value = Dist.CLIENT)
 public class ClientGameEvent {
@@ -49,5 +51,14 @@ public class ClientGameEvent {
             PacketDistributor.sendToServer(new ServerBoundPacketC2S(3));
         }
 
+    }
+
+    @SubscribeEvent
+    public static void closeScreen(ScreenEvent.Closing event){
+        if(event.getScreen() instanceof ExtraInventoryScreen){
+            if (Minecraft.getInstance().player != null) {
+                Minecraft.getInstance().player.getData(ModAttachments.AUTO_POTION).sync(true);
+            }
+        }
     }
 }

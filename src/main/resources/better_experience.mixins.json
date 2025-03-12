@@ -19,11 +19,11 @@
     "herbs.FireblossomMixin",
     "herbs.MoonglowMixin",
     "herbs.ShiveringThornMixin",
-    "herbs.WaterleafMixin",
-    "integration.MaidFishingHookMixin"
+    "herbs.WaterleafMixin"
   ],
   "client": [
-    "AbstractContainerScreenMixin"
+    "AbstractContainerScreenMixin",
+    "client.ExtraInventoryScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

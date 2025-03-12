@@ -1,4 +1,4 @@
-package com.github.edg_thexu.better_experience.client.gui;
+package com.github.edg_thexu.better_experience.client.gui.container;
 
 import com.github.edg_thexu.better_experience.Better_experience;
 import com.github.edg_thexu.better_experience.menu.AutoFishMenu;
@@ -8,12 +8,10 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CyclingSlotBackground;
-import net.minecraft.client.gui.screens.inventory.SmithingScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ChestMenu;
-import net.minecraft.world.inventory.SmithingMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;

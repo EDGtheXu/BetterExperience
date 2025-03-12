@@ -9,11 +9,8 @@ import com.github.edg_thexu.better_experience.module.autofish.AutoFishManager;
 import com.github.edg_thexu.better_experience.module.autopotion.PlayerAttribute;
 import com.github.edg_thexu.better_experience.module.autopotion.PlayerInventoryManager;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.item.FishingRodItem;
@@ -22,7 +19,6 @@ import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import org.confluence.mod.common.item.fishing.AbstractFishingPole;
@@ -77,6 +73,7 @@ public class PlayerEvent {
         if(event.getEntity() instanceof ServerPlayer player){
             if(player.connection.tickCount == 0 )
                 player.sendSystemMessage(Component.translatable("better_experience.welcome_message"));
+            EnderChestAttachment.sync(player);
         }
 
     }

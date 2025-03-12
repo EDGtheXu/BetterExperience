@@ -1,8 +1,8 @@
 package com.github.edg_thexu.better_experience.module.autopotion;
 
+import com.github.edg_thexu.better_experience.attachment.AutoPotionAttachment;
 import com.github.edg_thexu.better_experience.config.ServerConfig;
 import com.github.edg_thexu.better_experience.init.ModAttachments;
-import com.github.edg_thexu.better_experience.network.C2S.PotionApplyPacketC2S;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
@@ -13,20 +13,20 @@ import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.network.PacketDistributor;
-import org.confluence.mod.common.item.food.BaseFoodItem;
+import org.confluence.mod.client.gui.container.ExtraInventoryScreen;
 import org.confluence.mod.common.item.potion.EffectPotionItem;
+import oshi.util.tuples.Pair;
 
-import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class PlayerInventoryManager {
@@ -48,15 +48,17 @@ public class PlayerInventoryManager {
     /**
      * 物品过滤器
      */
-    public static Predicate<ItemStack> canApply = (stack) -> {
+    public static Function<ItemStack, List<Pair<Holder<MobEffect>, Integer>>> getApplyEffect = (stack) -> {
         Item item = stack.getItem();
+        List<Pair<Holder<MobEffect>, Integer>> effects = new ArrayList<>();
         if(stack.getCount() < ServerConfig.AUTO_POTION_STACK_SIZE.get()) {
             // 配置文件
-            return false;
+            return effects;
         }
         if(item instanceof EffectPotionItem potion) {
             // 效果类药水
-            return true;
+            effects.add(new Pair<>(potion.mobEffect, potion.amplifier));
+            return effects;
         }
         if(item instanceof Item food)
         {
@@ -67,13 +69,18 @@ public class PlayerInventoryManager {
                     var mobEffect = foodproperties$possibleeffect.effect();
                     if (canApplyEffect.test(mobEffect)) {
                         // 只要有一个可以应用的效果就返回true
-                        return !foodProperties.effects().isEmpty();
+                        return foodProperties.effects().stream().map(eff->{
+                            var ins = eff.effect();
+                            return new Pair<>(ins.getEffect(), ins.getAmplifier());
+                        }).toList();
                     }
                 }
             }
         }
-        return false;
+        return effects;
     };
+
+    public static Predicate<ItemStack> canApply = (stack) -> !getApplyEffect.apply(stack).isEmpty();
 
     private static PlayerInventoryManager instance;
 
@@ -92,61 +99,54 @@ public class PlayerInventoryManager {
         if(!player.level().isClientSide() || !ServerConfig.AUTO_POTION_OPEN.get() || --detectInternal > 0)
             return;
 
-        detectInternal = _detectInternal;
+        detectInternal = (int) (_detectInternal * 0.1f);
 
+        // 背包的药水
+        List<Pair<Holder<MobEffect>, Integer>> effects = new ArrayList<>();
         Inventory inventory = player.getInventory();
         for(int i = 0; i < inventory.getContainerSize(); i++) {
             try {
-                checkItem(inventory.getItem(i), player);
+                ItemStack stack = inventory.getItem(i);
+                effects.addAll(getApplyEffect.apply(stack));
             }catch (Exception ignored){
 
             }
         }
 
+        // 末影箱的药水
         var items = player.getData(ModAttachments.ENDER_CHEST).getItems();
-
         for (Item item : items) {
             try {
-                PacketDistributor.sendToServer(new PotionApplyPacketC2S(item.getDefaultInstance()));
-            } catch (Exception ignored) {
+                ItemStack stack = new ItemStack(item, ServerConfig.AUTO_POTION_STACK_SIZE.get());
+                effects.addAll(getApplyEffect.apply(stack));
+            }catch (Exception ignored){
 
             }
         }
+
+        // 重新生成缓存
+        var data = player.getData(ModAttachments.AUTO_POTION);
+        data.getPotions().clear();
+        effects.forEach(effect_amp -> {
+            data.addPotion(effect_amp.getA(), effect_amp.getB());
+        });
+
+        // 同步数据
+        data.sync();
     }
-
-    private void checkItem(ItemStack stack, Player player){
-        if(canApply.test(stack)){
-            PacketDistributor.sendToServer(new PotionApplyPacketC2S(stack));
-        }
-    }
-
-
 
     /**
      * 服务端 应用效果
-     * @param stack
      * @param player
      */
-    public static void apply(ItemStack stack, Player player){
+    public static void apply(AutoPotionAttachment attachment, Player player){
         try {
-            Level level = player.level();
-            Item item = stack.getItem();
-            if(item instanceof EffectPotionItem potion){
-                Method method = potion.getClass().getDeclaredMethod("apply", ItemStack.class, Level.class, LivingEntity.class);
-                method.setAccessible(true);
-                method.invoke(potion, stack, player.level(), player);
-            }
-            else if(item instanceof Item food){
-                FoodProperties foodproperties = food.getFoodProperties(stack, player);
-                if(foodproperties != null){
-                    for (FoodProperties.PossibleEffect foodproperties$possibleeffect : foodproperties.effects()) {
-                        var mobEffect = foodproperties$possibleeffect.effect();
-                        if (canApplyEffect.test(mobEffect)) {
-                            player.addEffect(mobEffect);
-                        }
-                    }
-                }
-            }
+            var data = player.getData(ModAttachments.AUTO_POTION);
+            data.getPotions().forEach((effect1, amp1) -> player.removeEffect(effect1));
+            attachment.getPotions().forEach((effect,amp)->{
+                player.addEffect(new MobEffectInstance(effect, -1, amp, false, false));
+            });
+            player.setData(ModAttachments.AUTO_POTION, attachment);
         }catch (Exception ignored){
 
         }
@@ -167,7 +167,8 @@ public class PlayerInventoryManager {
         if((
                 screen instanceof InventoryScreen ||
                 screen instanceof CreativeModeInventoryScreen ||
-                screen instanceof ContainerScreen && screen.getTitle().toString().contains("enderchest")
+                screen instanceof ContainerScreen && screen.getTitle().toString().contains("enderchest") ||
+                        screen instanceof ExtraInventoryScreen
         )
                 && canApply.test(stack)){
 

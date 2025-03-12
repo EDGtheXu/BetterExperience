@@ -1,7 +1,7 @@
 package com.github.edg_thexu.better_experience.client.event;
 
 import com.github.edg_thexu.better_experience.Better_experience;
-import com.github.edg_thexu.better_experience.client.gui.AutoFishScreen;
+import com.github.edg_thexu.better_experience.client.gui.container.AutoFishScreen;
 import com.github.edg_thexu.better_experience.client.renderer.AutoFishBlockRenderer;
 import com.github.edg_thexu.better_experience.init.ModBlocks;
 import com.github.edg_thexu.better_experience.init.ModMenus;
