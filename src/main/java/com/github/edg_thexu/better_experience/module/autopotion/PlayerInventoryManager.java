@@ -23,6 +23,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.mod.client.gui.container.ExtraInventoryScreen;
 import org.confluence.mod.common.item.potion.EffectPotionItem;
 import oshi.util.tuples.Pair;
+import top.theillusivec4.curios.client.gui.CuriosScreen;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -142,7 +143,10 @@ public class PlayerInventoryManager {
     public static void apply(AutoPotionAttachment attachment, Player player){
         try {
             var data = player.getData(ModAttachments.AUTO_POTION);
-            data.getPotions().forEach((effect1, amp1) -> player.removeEffect(effect1));
+            data.getPotions().forEach((effect1, amp1) ->{
+                if(!attachment.getPotions().containsKey(effect1))
+                    player.removeEffect(effect1);
+            } );
             attachment.getPotions().forEach((effect,amp)->{
                 player.addEffect(new MobEffectInstance(effect, -1, amp, false, false));
             });
@@ -168,7 +172,8 @@ public class PlayerInventoryManager {
                 screen instanceof InventoryScreen ||
                 screen instanceof CreativeModeInventoryScreen ||
                 screen instanceof ContainerScreen && screen.getTitle().toString().contains("enderchest") ||
-                        screen instanceof ExtraInventoryScreen
+                        screen instanceof ExtraInventoryScreen||
+                        screen instanceof CuriosScreen
         )
                 && canApply.test(stack)){
 

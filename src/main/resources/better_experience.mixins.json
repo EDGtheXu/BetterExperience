@@ -23,7 +23,8 @@
   ],
   "client": [
     "AbstractContainerScreenMixin",
-    "client.ExtraInventoryScreenMixin"
+    "client.ExtraInventoryScreenMixin",
+    "client.ScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

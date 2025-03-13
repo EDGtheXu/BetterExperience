@@ -49,6 +49,7 @@ public class ClientGameEvent {
     public static void event(InputEvent.MouseButton.Pre event){
         if (ClientConfig.MULTI_FISHING.get() && Minecraft.getInstance().player != null && event.getButton() == 0 && event.getAction() == 1 && Minecraft.getInstance().player.getMainHandItem().getItem() instanceof HammerItem) {
             PacketDistributor.sendToServer(new ServerBoundPacketC2S(3));
+
         }
 
     }

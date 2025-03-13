@@ -4,24 +4,31 @@ import com.github.edg_thexu.better_experience.config.ServerConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
 import org.confluence.mod.common.block.natural.sapling.StoneSaplingBlock;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(StoneSaplingBlock.class)
 public class StoneSaplingBlockMixin {
 
 
     @Inject(method = "randomTick", at = @At("HEAD"), cancellable = true)
-    private void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random, CallbackInfo ci) {
+    private void randomTickMixin(BlockState state, ServerLevel level, BlockPos pos, RandomSource random, CallbackInfo ci) {
         if(ServerConfig.STONE_SAPLING_TREE_NO_STRICT.get()){
             if (level.isAreaLoaded(pos, 1)) {
                 ((StoneSaplingBlock)(Object)this).advanceTree(level, pos, state, random);
             }
             ci.cancel();
         }
+    }
+    @Inject(method = "isValidBonemealTarget", at = @At("RETURN"), cancellable = true)
+    private void isValidBonemealTargetMixin(LevelReader level, BlockPos pos, BlockState state, CallbackInfoReturnable<Boolean> cir) {
+        if(ServerConfig.VALID_BONEMEAL_TARGET.get())
+            cir.setReturnValue(true);
     }
 }

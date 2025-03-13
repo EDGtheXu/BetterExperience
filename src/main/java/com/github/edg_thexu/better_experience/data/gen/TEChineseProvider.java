@@ -28,6 +28,7 @@ public class TEChineseProvider extends LanguageProvider {
 
         // tooltips
         add("better_experience.tooltip.magic_boom_staff.info", "左手物品决定镐力 [按住shift+鼠标滚轮调整大小]");
+        add("better_experience.gui.fast_storage", "一键存储");
 
         // config
         add("better_experience.configuration.Player", "玩家");
@@ -51,6 +52,7 @@ public class TEChineseProvider extends LanguageProvider {
         add("better_experience.configuration.better_reinforced_tool", "更好的重铸");
         add("better_experience.configuration.client_multi_fishing", "客户端 抡锤子钓鱼bug");
         add("better_experience.configuration.server_multi_fishing", "服务器 抡锤子钓鱼bug");
+        add("better_experience.configuration.valid_bonemeal_target", "骨粉可以催熟宝石树");
 
         // info
         add("better_experience.autofish.info.lack", "自动钓鱼机缺少方块连接：");

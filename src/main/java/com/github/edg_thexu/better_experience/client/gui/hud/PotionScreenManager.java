@@ -1,9 +1,12 @@
 package com.github.edg_thexu.better_experience.client.gui.hud;
 
 import com.github.edg_thexu.better_experience.init.ModAttachments;
+import com.github.edg_thexu.better_experience.network.C2S.ServerBoundPacketC2S;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.MobEffectTextureManager;
 import net.minecraft.core.Holder;
@@ -15,8 +18,11 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.confluence.mod.client.gui.container.ExtraInventoryScreen;
 
 import java.util.Collection;
@@ -41,6 +47,11 @@ public class PotionScreenManager {
     MobEffectInstance selectedEffect = null;
 
     static PotionScreenManager instance;
+    public ImageButton fastStorageBtn;
+    public static final WidgetSprites RECIPE_BUTTON_SPRITES = new WidgetSprites(
+            ResourceLocation.withDefaultNamespace("advancements/task_frame_unobtained"),
+            ResourceLocation.withDefaultNamespace("advancements/task_frame_obtained")
+    );
 
     public PotionScreenManager(ExtraInventoryScreen screen){
         this.screen = screen;
@@ -51,15 +62,28 @@ public class PotionScreenManager {
         this.width = screen.getXSize();
         this.font = Minecraft.getInstance().font;
         instance = this;
+        this.fastStorageBtn = new ImageButton(20,20,RECIPE_BUTTON_SPRITES,p->{
+            PacketDistributor.sendToServer(new ServerBoundPacketC2S(4));
+        },Component.empty());
+
     }
 
     public static PotionScreenManager getInstance(){
         return instance;
     }
 
+
     public void render(GuiGraphics g, int mousex,int mousey, float partialTicks){
         this.leftPos = screen.getGuiLeft();
         this.topPos = screen.getGuiTop();
+        if(fastStorageBtn != null){
+            fastStorageBtn.setPosition(leftPos, topPos + 165);
+            fastStorageBtn.render(g, mousex, mousey, partialTicks);
+            g.renderItem(Items.CHEST.getDefaultInstance(), leftPos + 2, topPos + 167);
+            if(mousex >= leftPos && mousex <= leftPos + 20 && mousey >= topPos + 165 && mousey <= topPos + 165 + 20){
+                g.drawString(font, Component.translatable("better_experience.gui.fast_storage"+": 5"), leftPos - 15, topPos + 165 + 20, 0xFFFFFF);
+            }
+        }
 
         renderEffects(g, mousex, mousey);
     }

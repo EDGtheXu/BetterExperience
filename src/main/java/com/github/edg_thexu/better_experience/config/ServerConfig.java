@@ -57,6 +57,10 @@ public class ServerConfig {
      * 更好的重铸
      */
     public static ModConfigSpec.ConfigValue<Boolean> BETTER_REINFORCED_TOOL;
+    /**
+     * 骨粉催熟
+     */
+    public static ModConfigSpec.ConfigValue<Boolean> VALID_BONEMEAL_TARGET;
 
     public static ModConfigSpec init(){
         final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
@@ -113,6 +117,10 @@ public class ServerConfig {
         HERB_GROWTH_NO_STRICT = BUILDER
                 .comment("Herb growth without strict conditions.")
                 .define("herb_growth_no_strict", false);
+
+        VALID_BONEMEAL_TARGET = BUILDER
+                .comment("Valid bonemeal target.")
+                .define("valid_bonemeal_target", true);
 
         BUILDER.pop();
         BUILDER.push("Entity");

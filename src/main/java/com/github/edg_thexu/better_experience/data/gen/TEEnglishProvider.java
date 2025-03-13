@@ -38,6 +38,8 @@ public class TEEnglishProvider extends LanguageProvider {
 
         // tooltips
         add("better_experience.tooltip.magic_boom_staff.info", "power depends on the item in left hand [hold shift and scroll mousewheel to adjust size]");
+        add("better_experience.gui.fast_storage", "Fast Storage");
+
 
         // Config
         add("better_experience.configuration.Player", "Player");
@@ -61,6 +63,7 @@ public class TEEnglishProvider extends LanguageProvider {
         add("better_experience.configuration.better_reinforced_tool", "Better Reinforced");
         add("better_experience.configuration.client_multi_fishing", "Client Multi-Fishing Using Hammers");
         add("better_experience.configuration.server_multi_fishing", "Server Multi-Fishing Using Hammers");
+        add("better_experience.configuration.valid_bonemeal_target", "Bonemeal Can Be Used On Stone Saplings");
 
 
 
@@ -69,6 +72,8 @@ public class TEEnglishProvider extends LanguageProvider {
 
         // container
         add("block.better_experience.autofish_machine", "Auto Fish Machine");
+
+
 
     }
 }
