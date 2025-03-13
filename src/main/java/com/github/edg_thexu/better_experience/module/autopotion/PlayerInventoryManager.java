@@ -11,6 +11,7 @@ import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Inventory;
@@ -40,8 +41,13 @@ public class PlayerInventoryManager {
     private static final Predicate<MobEffectInstance> canApplyEffect = (effect) -> {
         Holder<MobEffect> effect1 = effect.getEffect();
         int time = effect.getDuration();
-        if(effect1 == MobEffects.SATURATION || effect1 == MobEffects.ABSORPTION || effect1 == MobEffects.REGENERATION){
-            // 饱和效果不应该应用，过于超模
+        if(
+                // 饱和效果不应该应用，过于超模
+                effect1 == MobEffects.SATURATION || effect1 == MobEffects.ABSORPTION || effect1 == MobEffects.REGENERATION){
+            return false;
+        }
+        if(effect1.value().getCategory() == MobEffectCategory.HARMFUL){
+            // 负面效果不应该应用
             return false;
         }
         return true;
@@ -97,40 +103,44 @@ public class PlayerInventoryManager {
      */
     public void detect(Player player){
         // 客户端检测，配置是否启用，检测间隔
-        if(!player.level().isClientSide() || !ServerConfig.AUTO_POTION_OPEN.get() || --detectInternal > 0)
+        if(!player.level().isClientSide() ||  --detectInternal > 0)
             return;
 
         detectInternal = (int) (_detectInternal * 0.1f);
 
         // 背包的药水
         List<Pair<Holder<MobEffect>, Integer>> effects = new ArrayList<>();
-        Inventory inventory = player.getInventory();
-        for(int i = 0; i < inventory.getContainerSize(); i++) {
-            try {
-                ItemStack stack = inventory.getItem(i);
-                effects.addAll(getApplyEffect.apply(stack));
-            }catch (Exception ignored){
-
-            }
-        }
-
-        // 末影箱的药水
-        var items = player.getData(ModAttachments.ENDER_CHEST).getItems();
-        for (Item item : items) {
-            try {
-                ItemStack stack = new ItemStack(item, ServerConfig.AUTO_POTION_STACK_SIZE.get());
-                effects.addAll(getApplyEffect.apply(stack));
-            }catch (Exception ignored){
-
-            }
-        }
-
-        // 重新生成缓存
         var data = player.getData(ModAttachments.AUTO_POTION);
         data.getPotions().clear();
-        effects.forEach(effect_amp -> {
-            data.addPotion(effect_amp.getA(), effect_amp.getB());
-        });
+        if(ServerConfig.AUTO_POTION_OPEN.get()) {
+
+            Inventory inventory = player.getInventory();
+            for (int i = 0; i < inventory.getContainerSize(); i++) {
+                try {
+                    ItemStack stack = inventory.getItem(i);
+                    effects.addAll(getApplyEffect.apply(stack));
+                } catch (Exception ignored) {
+
+                }
+            }
+
+            // 末影箱的药水
+            var items = player.getData(ModAttachments.ENDER_CHEST).getItems();
+            for (Item item : items) {
+                try {
+                    ItemStack stack = new ItemStack(item, ServerConfig.AUTO_POTION_STACK_SIZE.get());
+                    effects.addAll(getApplyEffect.apply(stack));
+                } catch (Exception ignored) {
+
+                }
+            }
+
+            // 重新生成缓存
+
+            effects.forEach(effect_amp -> {
+                data.addPotion(effect_amp.getA(), effect_amp.getB());
+            });
+        }
 
         // 同步数据
         data.sync();
