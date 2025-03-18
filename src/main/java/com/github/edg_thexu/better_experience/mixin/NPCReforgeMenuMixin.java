@@ -1,6 +1,6 @@
 package com.github.edg_thexu.better_experience.mixin;
 
-import com.github.edg_thexu.better_experience.config.ServerConfig;
+import com.github.edg_thexu.better_experience.config.CommonConfig;
 import com.github.edg_thexu.better_experience.module.reforge.BetterReforgeManager;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.world.Container;
@@ -23,7 +23,7 @@ public class NPCReforgeMenuMixin {
 
     @Inject(method = "slotsChanged", at = @At(value = "INVOKE", target = "Lorg/confluence/mod/util/PrefixUtils;getReforgeCost(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;)I"))
     private void slotsChanged(Container container, CallbackInfo ci, @Local PrefixType prefixType, @Local ItemStack itemStack) {
-        if(ServerConfig.BETTER_REINFORCED_TOOL.get()) {
+        if(CommonConfig.BETTER_REINFORCED_TOOL.get()) {
             data[1] = BetterReforgeManager.getBetterPrefix(prefixType, itemStack);
         }
     }

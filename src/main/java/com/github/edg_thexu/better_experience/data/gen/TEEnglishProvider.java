@@ -52,6 +52,7 @@ public class TEEnglishProvider extends LanguageProvider {
         add("better_experience.configuration.show_outlines", "Magic Boom Staff Show Outlines");
         add("better_experience.configuration.auto_potion_open", "Open Auto-Potion");
         add("better_experience.configuration.auto_potion_stack_size", "Auto-Potion Stack Size");
+        add("better_experience.configuration.instantly_drink", "Instantly Drink");
         add("better_experience.configuration.infinite_ammo", "Infinite Ammo");
         add("better_experience.configuration.infinite_ammo_stack_size", "Infinite Ammo Stack Size");
         add("better_experience.configuration.no_consume_summoner", "No Consume Summon Item");

@@ -1,6 +1,6 @@
 package com.github.edg_thexu.better_experience.mixin;
 
-import com.github.edg_thexu.better_experience.config.ServerConfig;
+import com.github.edg_thexu.better_experience.config.CommonConfig;
 import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -12,7 +12,7 @@ public class BaseSlimeMixin {
 
     @Inject(method = "tickDeath", at = @At(value = "INVOKE", target = "Lorg/confluence/terraentity/entity/monster/slime/BaseSlime;level()Lnet/minecraft/world/level/Level;"), cancellable = true)
     private void tickDeathMixin(CallbackInfo ci) {
-        if(ServerConfig.SLIME_DIE_NO_LAVA.get())
+        if(CommonConfig.SLIME_DIE_NO_LAVA.get())
             ci.cancel();
     }
 }

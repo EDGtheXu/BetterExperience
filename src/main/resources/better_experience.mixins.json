@@ -1,32 +1,33 @@
 {
-  "required": true,
-  "minVersion": "0.8",
-  "package": "com.github.edg_thexu.better_experience.mixin",
-  "compatibilityLevel": "JAVA_8",
-  "refmap": "better_experience.refmap.json",
-  "mixins": [
-    "BaseSlimeMixin",
-    "BossSummingItemMixin",
-    "ChestMenuMixin",
-    "FishingHookMixin",
-    "NPCReforgeMenuMixin",
-    "PlayerMixin",
-    "ProjectileWeaponItemMixin",
-    "StoneSaplingBlockMixin",
-    "herbs.BlinkrootMixin",
-    "herbs.DaybloomMixin",
-    "herbs.DeathWeedMixin",
-    "herbs.FireblossomMixin",
-    "herbs.MoonglowMixin",
-    "herbs.ShiveringThornMixin",
-    "herbs.WaterleafMixin"
-  ],
-  "client": [
-    "AbstractContainerScreenMixin",
-    "client.ExtraInventoryScreenMixin",
-    "client.ScreenMixin"
-  ],
-  "injectors": {
-    "defaultRequire": 1
-  }
+    "required": true,
+    "minVersion": "0.8",
+    "package": "com.github.edg_thexu.better_experience.mixin",
+    "compatibilityLevel": "JAVA_21",
+    "refmap": "better_experience.refmap.json",
+    "mixins": [
+        "BaseSlimeMixin",
+        "BossSummingItemMixin",
+        "ChestMenuMixin",
+        "FishingHookMixin",
+        "NPCReforgeMenuMixin",
+        "PlayerMixin",
+        "ProjectileWeaponItemMixin",
+        "StoneSaplingBlockMixin",
+        "herbs.BlinkrootMixin",
+        "herbs.DaybloomMixin",
+        "herbs.DeathWeedMixin",
+        "herbs.FireblossomMixin",
+        "herbs.MoonglowMixin",
+        "herbs.ShiveringThornMixin",
+        "herbs.WaterleafMixin",
+        "potion.AbstractPotionItemMixin"
+    ],
+    "client": [
+        "AbstractContainerScreenMixin",
+        "client.ExtraInventoryScreenMixin",
+        "client.ScreenMixin"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
 }

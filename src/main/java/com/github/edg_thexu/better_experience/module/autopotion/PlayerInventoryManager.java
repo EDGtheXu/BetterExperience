@@ -1,7 +1,7 @@
 package com.github.edg_thexu.better_experience.module.autopotion;
 
 import com.github.edg_thexu.better_experience.attachment.AutoPotionAttachment;
-import com.github.edg_thexu.better_experience.config.ServerConfig;
+import com.github.edg_thexu.better_experience.config.CommonConfig;
 import com.github.edg_thexu.better_experience.init.ModAttachments;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -58,7 +58,7 @@ public class PlayerInventoryManager {
     public static Function<ItemStack, List<Pair<Holder<MobEffect>, Integer>>> getApplyEffect = (stack) -> {
         Item item = stack.getItem();
         List<Pair<Holder<MobEffect>, Integer>> effects = new ArrayList<>();
-        if(stack.getCount() < ServerConfig.AUTO_POTION_STACK_SIZE.get()) {
+        if(stack.getCount() < CommonConfig.AUTO_POTION_STACK_SIZE.get()) {
             // 配置文件
             return effects;
         }
@@ -112,7 +112,7 @@ public class PlayerInventoryManager {
         List<Pair<Holder<MobEffect>, Integer>> effects = new ArrayList<>();
         var data = player.getData(ModAttachments.AUTO_POTION);
         data.getPotions().clear();
-        if(ServerConfig.AUTO_POTION_OPEN.get()) {
+        if(CommonConfig.AUTO_POTION_OPEN.get()) {
 
             Inventory inventory = player.getInventory();
             for (int i = 0; i < inventory.getContainerSize(); i++) {
@@ -128,7 +128,7 @@ public class PlayerInventoryManager {
             var items = player.getData(ModAttachments.ENDER_CHEST).getItems();
             for (Item item : items) {
                 try {
-                    ItemStack stack = new ItemStack(item, ServerConfig.AUTO_POTION_STACK_SIZE.get());
+                    ItemStack stack = new ItemStack(item, CommonConfig.AUTO_POTION_STACK_SIZE.get());
                     effects.addAll(getApplyEffect.apply(stack));
                 } catch (Exception ignored) {
 

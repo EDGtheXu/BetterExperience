@@ -2,7 +2,7 @@ package com.github.edg_thexu.better_experience.event;
 
 import com.github.edg_thexu.better_experience.Better_experience;
 import com.github.edg_thexu.better_experience.attachment.EnderChestAttachment;
-import com.github.edg_thexu.better_experience.config.ServerConfig;
+import com.github.edg_thexu.better_experience.config.CommonConfig;
 import com.github.edg_thexu.better_experience.mixed.IFishingHook;
 import com.github.edg_thexu.better_experience.mixed.IPlayer;
 import com.github.edg_thexu.better_experience.module.autofish.AutoFishManager;
@@ -35,7 +35,7 @@ public class PlayerEvent {
         if(player1.level() instanceof  ServerLevel sl)
             PlayerAttribute.notifyDirty(sl);
         // 复刻钓鱼bug
-        if(!event.getEntity().level().isClientSide && ServerConfig.MULTI_FISH.get()) {
+        if(!event.getEntity().level().isClientSide && CommonConfig.MULTI_FISH.get()) {
             IPlayer player = (IPlayer) event.getEntity();
             if (player.betterExperience$getHammerUsingTicks() > 0) {
                 player.betterExperience$setHammerUsingTicks(player.betterExperience$getHammerUsingTicks() - 1);
@@ -83,7 +83,7 @@ public class PlayerEvent {
         if(event.getEntity() instanceof ServerPlayer player) {
             // 同步末影箱
             EnderChestAttachment.sync(player);
-            if(ServerConfig.FILL_LIFE_ON_RESPAWN.get())
+            if(CommonConfig.FILL_LIFE_ON_RESPAWN.get())
                 player.setHealth(player.getMaxHealth());
             PlayerAttribute.applyAdditionalAttributes(player);
         }

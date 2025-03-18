@@ -41,6 +41,7 @@ public class TEChineseProvider extends LanguageProvider {
         add("better_experience.configuration.show_outlines", "法爆魔杖显示边框");
         add("better_experience.configuration.auto_potion_open", "药水 无限续杯");
         add("better_experience.configuration.auto_potion_stack_size", "药水 无限续杯 需求量");
+        add("better_experience.configuration.instantly_drink", "瞬间喝药");
         add("better_experience.configuration.infinite_ammo", "无限弹药");
         add("better_experience.configuration.infinite_ammo_stack_size", "无限弹药 需求量");
         add("better_experience.configuration.no_consume_summoner", "不消耗BOSS召唤物");

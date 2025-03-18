@@ -1,7 +1,7 @@
 package com.github.edg_thexu.better_experience.module.autopotion;
 
 import com.github.edg_thexu.better_experience.Better_experience;
-import com.github.edg_thexu.better_experience.config.ServerConfig;
+import com.github.edg_thexu.better_experience.config.CommonConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -22,7 +22,7 @@ public class PlayerAttribute {
             player.getAttribute(Attributes.SAFE_FALL_DISTANCE).removeModifier(location);
         }
         player.getAttribute(Attributes.SAFE_FALL_DISTANCE).addTransientModifier(
-                new AttributeModifier(location, ServerConfig.ADDITIONAL_FALL_DISTANCE.get(), AttributeModifier.Operation.ADD_VALUE));
+                new AttributeModifier(location, CommonConfig.ADDITIONAL_FALL_DISTANCE.get(), AttributeModifier.Operation.ADD_VALUE));
     }
 
     /**

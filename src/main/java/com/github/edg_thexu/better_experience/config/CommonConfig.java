@@ -2,65 +2,69 @@ package com.github.edg_thexu.better_experience.config;
 
 import net.neoforged.neoforge.common.ModConfigSpec;
 
-public class ServerConfig {
+public class CommonConfig {
     /**
      * 是否开启药水无线续杯
      */
-    public static ModConfigSpec.ConfigValue<Boolean> AUTO_POTION_OPEN;
+    public static ModConfigSpec.BooleanValue AUTO_POTION_OPEN;
 
     /**
      * 无线续杯数量
      */
-    public static ModConfigSpec.ConfigValue<Integer> AUTO_POTION_STACK_SIZE;
+    public static ModConfigSpec.IntValue AUTO_POTION_STACK_SIZE;
+    /**
+     * 瞬间喝药
+     */
+    public static ModConfigSpec.BooleanValue INSTANTLY_DRINK;
 
     /**
      * 是否开启药水无线续杯
      */
-    public static ModConfigSpec.ConfigValue<Boolean> INFINITE_AMMO;
+    public static ModConfigSpec.BooleanValue INFINITE_AMMO;
 
     /**
      * 无限弹药数量
      */
-    public static ModConfigSpec.ConfigValue<Integer> INFINITE_AMMO_STACK_SIZE;
+    public static ModConfigSpec.IntValue INFINITE_AMMO_STACK_SIZE;
 
     /**
      * 召唤BOSS无需消耗召唤物品
      */
-    public static ModConfigSpec.ConfigValue<Boolean> NO_CONSUME_SUMMONER;
+    public static ModConfigSpec.BooleanValue NO_CONSUME_SUMMONER;
 
     /**
      * 禁止史莱姆死亡时生成熔岩
      */
-    public static ModConfigSpec.ConfigValue<Boolean> SLIME_DIE_NO_LAVA;
+    public static ModConfigSpec.BooleanValue SLIME_DIE_NO_LAVA;
 
     /**
      * 额外的摔落免疫
      */
-    public static ModConfigSpec.ConfigValue<Integer> ADDITIONAL_FALL_DISTANCE;
+    public static ModConfigSpec.IntValue ADDITIONAL_FALL_DISTANCE;
     /**
      * 宝石树种植无限制
      */
-    public static ModConfigSpec.ConfigValue<Boolean> STONE_SAPLING_TREE_NO_STRICT;
+    public static ModConfigSpec.BooleanValue STONE_SAPLING_TREE_NO_STRICT;
     /**
      * 草药种植无限制
      */
-    public static ModConfigSpec.ConfigValue<Boolean> HERB_GROWTH_NO_STRICT;
+    public static ModConfigSpec.BooleanValue HERB_GROWTH_NO_STRICT;
     /**
      * 重生时填满生命值
      */
-    public static ModConfigSpec.ConfigValue<Boolean> FILL_LIFE_ON_RESPAWN;
+    public static ModConfigSpec.BooleanValue FILL_LIFE_ON_RESPAWN;
     /**
      * 更好的重铸
      */
-    public static ModConfigSpec.ConfigValue<Boolean> MULTI_FISH;
+    public static ModConfigSpec.BooleanValue MULTI_FISH;
     /**
      * 更好的重铸
      */
-    public static ModConfigSpec.ConfigValue<Boolean> BETTER_REINFORCED_TOOL;
+    public static ModConfigSpec.BooleanValue BETTER_REINFORCED_TOOL;
     /**
      * 骨粉催熟
      */
-    public static ModConfigSpec.ConfigValue<Boolean> VALID_BONEMEAL_TARGET;
+    public static ModConfigSpec.BooleanValue VALID_BONEMEAL_TARGET;
 
     public static ModConfigSpec init(){
         final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
@@ -74,6 +78,9 @@ public class ServerConfig {
         AUTO_POTION_STACK_SIZE = BUILDER
                 .comment("How many potion stack could apply without consuming automatically?")
                 .defineInRange("auto_potion_stack_size", 10,1,9999);
+        INSTANTLY_DRINK = BUILDER
+                .comment("Instantly Drink")
+                .define("instantly_drink", false);
 
         // 无限弹药
         INFINITE_AMMO = BUILDER

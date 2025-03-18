@@ -18,7 +18,7 @@ public class AbstractContainerScreenMixin {
 
         int x = slot.x;
         int y = slot.y;
-        PlayerInventoryManager.renderApply((AbstractContainerScreen) (Object) this,slot.getItem() , guiGraphics, x, y, partialTick);
+        PlayerInventoryManager.renderApply((AbstractContainerScreen<?>) (Object) this,slot.getItem() , guiGraphics, x, y, partialTick);
 
     }
 

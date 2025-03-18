@@ -1,6 +1,6 @@
 package com.github.edg_thexu.better_experience.mixin;
 
-import com.github.edg_thexu.better_experience.config.ServerConfig;
+import com.github.edg_thexu.better_experience.config.CommonConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -19,7 +19,7 @@ public class StoneSaplingBlockMixin {
 
     @Inject(method = "randomTick", at = @At("HEAD"), cancellable = true)
     private void randomTickMixin(BlockState state, ServerLevel level, BlockPos pos, RandomSource random, CallbackInfo ci) {
-        if(ServerConfig.STONE_SAPLING_TREE_NO_STRICT.get()){
+        if(CommonConfig.STONE_SAPLING_TREE_NO_STRICT.get()){
             if (level.isAreaLoaded(pos, 1)) {
                 ((StoneSaplingBlock)(Object)this).advanceTree(level, pos, state, random);
             }
@@ -28,7 +28,7 @@ public class StoneSaplingBlockMixin {
     }
     @Inject(method = "isValidBonemealTarget", at = @At("RETURN"), cancellable = true)
     private void isValidBonemealTargetMixin(LevelReader level, BlockPos pos, BlockState state, CallbackInfoReturnable<Boolean> cir) {
-        if(ServerConfig.VALID_BONEMEAL_TARGET.get())
+        if(CommonConfig.VALID_BONEMEAL_TARGET.get())
             cir.setReturnValue(true);
     }
 }
