@@ -44,6 +44,7 @@ public class TEChineseProvider extends LanguageProvider {
         add("better_experience.configuration.instantly_drink", "瞬间喝药");
         add("better_experience.configuration.infinite_ammo", "无限弹药");
         add("better_experience.configuration.infinite_ammo_stack_size", "无限弹药 需求量");
+        add("better_experience.configuration.modify_max_stack_size", "调整 物品 最大堆叠");
         add("better_experience.configuration.no_consume_summoner", "不消耗BOSS召唤物");
         add("better_experience.configuration.slime_die_no_lava", "岩浆史莱姆死亡不生成岩浆");
         add("better_experience.configuration.additional_fall_distance", "额外的摔落免疫高度");

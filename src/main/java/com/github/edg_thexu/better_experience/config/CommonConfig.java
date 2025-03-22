@@ -7,7 +7,6 @@ public class CommonConfig {
      * 是否开启药水无线续杯
      */
     public static ModConfigSpec.BooleanValue AUTO_POTION_OPEN;
-
     /**
      * 无线续杯数量
      */
@@ -26,6 +25,11 @@ public class CommonConfig {
      * 无限弹药数量
      */
     public static ModConfigSpec.IntValue INFINITE_AMMO_STACK_SIZE;
+
+    /**
+     * 修改物品最大堆叠
+     */
+    public static ModConfigSpec.BooleanValue MODIFY_MAX_STACK_SIZE;
 
     /**
      * 召唤BOSS无需消耗召唤物品
@@ -66,7 +70,7 @@ public class CommonConfig {
      */
     public static ModConfigSpec.BooleanValue VALID_BONEMEAL_TARGET;
 
-    public static ModConfigSpec init(){
+    public static ModConfigSpec init() {
         final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
         BUILDER.push("Item");
@@ -77,7 +81,7 @@ public class CommonConfig {
                 .define("auto_potion_open", true);
         AUTO_POTION_STACK_SIZE = BUILDER
                 .comment("How many potion stack could apply without consuming automatically?")
-                .defineInRange("auto_potion_stack_size", 10,1,9999);
+                .defineInRange("auto_potion_stack_size", 10, 1, 9999);
         INSTANTLY_DRINK = BUILDER
                 .comment("Instantly Drink")
                 .define("instantly_drink", false);
@@ -88,7 +92,7 @@ public class CommonConfig {
                 .define("infinite_ammo", false);
         INFINITE_AMMO_STACK_SIZE = BUILDER
                 .comment("How many ammo stack could apply without consuming automatically?")
-                .defineInRange("infinite_ammo_stack_size", 3996,64,9999);
+                .defineInRange("infinite_ammo_stack_size", 3996, 64, 9999);
 
         NO_CONSUME_SUMMONER = BUILDER
                 .comment("Not consume summon item?")
@@ -97,6 +101,10 @@ public class CommonConfig {
         BETTER_REINFORCED_TOOL = BUILDER
                 .comment("Better reinforced tool.")
                 .define("better_reinforced_tool", false);
+
+        MODIFY_MAX_STACK_SIZE = BUILDER
+                .comment("Modify Max Stack Size")
+                .define("modify_max_stack_size", false);
 
         BUILDER.pop();
         BUILDER.push("Player");
@@ -107,7 +115,7 @@ public class CommonConfig {
 
         ADDITIONAL_FALL_DISTANCE = BUILDER
                 .comment("Additional fall distance for players.")
-                .defineInRange("additional_fall_distance", 0,0,100);
+                .defineInRange("additional_fall_distance", 0, 0, 100);
 
         MULTI_FISH = BUILDER
                 .comment("Multi fish.")
