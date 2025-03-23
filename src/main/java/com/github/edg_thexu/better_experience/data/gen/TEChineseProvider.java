@@ -55,6 +55,7 @@ public class TEChineseProvider extends LanguageProvider {
         add("better_experience.configuration.client_multi_fishing", "客户端 抡锤子钓鱼bug");
         add("better_experience.configuration.server_multi_fishing", "服务器 抡锤子钓鱼bug");
         add("better_experience.configuration.valid_bonemeal_target", "骨粉可以催熟宝石树");
+        add("better_experience.configuration.block_break_speed_multiplier", "方块 破坏速度 倍率");
 
         // info
         add("better_experience.autofish.info.lack", "自动钓鱼机缺少方块连接：");

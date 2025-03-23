@@ -65,6 +65,7 @@ public class TEEnglishProvider extends LanguageProvider {
         add("better_experience.configuration.client_multi_fishing", "Client Multi-Fishing Using Hammers");
         add("better_experience.configuration.server_multi_fishing", "Server Multi-Fishing Using Hammers");
         add("better_experience.configuration.valid_bonemeal_target", "Bonemeal Can Be Used On Stone Saplings");
+        add("better_experience.configuration.block_break_speed_multiplier", "Block Break Speed Multiplier");
 
 
 
