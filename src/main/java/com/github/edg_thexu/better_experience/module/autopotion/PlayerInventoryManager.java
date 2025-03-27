@@ -3,6 +3,7 @@ package com.github.edg_thexu.better_experience.module.autopotion;
 import com.github.edg_thexu.better_experience.attachment.AutoPotionAttachment;
 import com.github.edg_thexu.better_experience.config.CommonConfig;
 import com.github.edg_thexu.better_experience.init.ModAttachments;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
@@ -105,6 +106,12 @@ public class PlayerInventoryManager {
         // 客户端检测，配置是否启用，检测间隔
         if(!player.level().isClientSide() ||  --detectInternal > 0)
             return;
+        try {
+            if(Minecraft.getInstance().player != player) return;
+        }catch (NoClassDefFoundError ignored){
+
+        }
+
 
         detectInternal = (int) (_detectInternal * 0.1f);
 

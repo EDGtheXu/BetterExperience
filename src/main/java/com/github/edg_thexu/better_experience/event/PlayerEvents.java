@@ -68,7 +68,7 @@ public class PlayerEvents {
             if (player.connection.tickCount == 0)
                 player.sendSystemMessage(Component.translatable("better_experience.welcome_message"));
             EnderChestAttachment.sync(player);
-            player.getInventory().add(ModItems.MagicBoomStaff.toStack());
+//            player.getInventory().add(ModItems.MagicBoomStaff.toStack());
         }
     }
 

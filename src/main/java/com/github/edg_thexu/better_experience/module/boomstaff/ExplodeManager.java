@@ -75,6 +75,7 @@ public class ExplodeManager {
             }
             ModUtils.unionItemStacks(allDrops);
             for (var drop : allDrops) {
+                if(drop.isEmpty()) continue;
                 ItemEntity entity = new ItemEntity(level, center.x,  ymax+1, center.z, drop);
                 entity.setDeltaMovement(center.normalize().scale(0.1));
                 level.addFreshEntity(entity);
