@@ -1,11 +1,13 @@
 package com.github.edg_thexu.better_experience.module.boomstaff;
 
+import com.github.edg_thexu.better_experience.utils.ModUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -45,12 +47,15 @@ public class ExplodeManager {
             Vec3 center = blockPosQueue.center;
             Level level = player.level();
 
+            List<ItemStack> allDrops = new ArrayList<>();
+            double ymax = center.y;
             for (int i = 0; i < maxTickToHandle; i++) {
                 if (blockQueue.isEmpty()) {
                     break;
                 }
                 Tuple<BlockPos, Boolean> blockPos = blockQueue.poll();
                 BlockPos pos = blockPos.getA();
+                ymax = pos.getY();
                 boolean isDrop = blockPos.getB();
                 BlockState state = level.getBlockState(pos);
                 Block block = state.getBlock();
@@ -59,13 +64,20 @@ public class ExplodeManager {
                     sp.gameMode.destroyAndAck(pos, 0, "destroyed");
                     if(isDrop) {
                         var drops = Block.getDrops(state, (ServerLevel) level, pos, entity2, player, player.getOffhandItem());
-                        for (var drop : drops) {
-                            ItemEntity entity = new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), drop);
-                            entity.setDeltaMovement(center.normalize().scale(0.1));
-                            level.addFreshEntity(entity);
-                        }
+//                        for (var drop : drops) {
+//                            ItemEntity entity = new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), drop);
+//                            entity.setDeltaMovement(center.normalize().scale(0.1));
+//                            level.addFreshEntity(entity);
+//                        }
+                        allDrops.addAll(drops);
                     }
                 }
+            }
+            ModUtils.unionItemStacks(allDrops);
+            for (var drop : allDrops) {
+                ItemEntity entity = new ItemEntity(level, center.x,  ymax+1, center.z, drop);
+                entity.setDeltaMovement(center.normalize().scale(0.1));
+                level.addFreshEntity(entity);
             }
             if (blockQueue.isEmpty()) {
                 playerBlockQueneList.remove(player);

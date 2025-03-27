@@ -1,10 +1,12 @@
 package com.github.edg_thexu.better_experience.network.C2S;
 
 import com.github.edg_thexu.better_experience.Better_experience;
+import com.github.edg_thexu.better_experience.config.CommonConfig;
 import com.github.edg_thexu.better_experience.item.MagicBoomStaff;
 import com.github.edg_thexu.better_experience.module.boomstaff.ExplodeManager;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
@@ -42,9 +44,13 @@ public record BreakBlocksPacketC2S(BlockPos p1, BlockPos p2) implements CustomPa
 
     public static void handle(BreakBlocksPacketC2S packet, final IPayloadContext context) {
         context.enqueueWork(() -> {
+            if(CommonConfig.FORBIDDEN_MAGIC_BOOM_STAFF.get()){
+                context.player().sendSystemMessage(Component.translatable("better_experience.info.forbidden_magic_boom_staff").withColor(0xbc6538));
+                return;
+            }
             ItemStack stack = context.player().getMainHandItem();
             if(stack.getItem() instanceof MagicBoomStaff staff){
-                context.player().getCooldowns().addCooldown(staff, 10);
+                context.player().getCooldowns().addCooldown(staff, 20);
             }
             int x1 = Math.min(packet.p1().getX(), packet.p2().getX());
             int y1 = Math.min(packet.p1().getY(), packet.p2().getY());

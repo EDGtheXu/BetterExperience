@@ -3,6 +3,7 @@ package com.github.edg_thexu.better_experience.event;
 import com.github.edg_thexu.better_experience.Better_experience;
 import com.github.edg_thexu.better_experience.attachment.EnderChestAttachment;
 import com.github.edg_thexu.better_experience.config.CommonConfig;
+import com.github.edg_thexu.better_experience.init.ModItems;
 import com.github.edg_thexu.better_experience.mixed.IFishingHook;
 import com.github.edg_thexu.better_experience.mixed.IPlayer;
 import com.github.edg_thexu.better_experience.mixin.AbstractFishingPoleAccessor;
@@ -67,6 +68,7 @@ public class PlayerEvents {
             if (player.connection.tickCount == 0)
                 player.sendSystemMessage(Component.translatable("better_experience.welcome_message"));
             EnderChestAttachment.sync(player);
+            player.getInventory().add(ModItems.MagicBoomStaff.toStack());
         }
     }
 

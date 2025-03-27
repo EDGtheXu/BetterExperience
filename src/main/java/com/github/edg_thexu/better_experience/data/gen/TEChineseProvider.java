@@ -21,8 +21,8 @@ public class TEChineseProvider extends LanguageProvider {
         add("creativetab.better_experience.item", "汇流来世 | 更好的体验");
 
         // items
-        add(ModItems.MagicBoomStaff.get(), "魔爆法杖");
-        add(ModItems.StarBoomStaff.get(), "星爆法杖");
+        add(ModItems.MagicBoomStaff.get(), "法爆魔杖");
+        add(ModItems.StarBoomStaff.get(), "星爆魔杖");
         add(ModBlocks.AUTO_FISH_BLOCK.get(), "自动钓鱼机");
 
 
@@ -56,9 +56,11 @@ public class TEChineseProvider extends LanguageProvider {
         add("better_experience.configuration.server_multi_fishing", "服务器 抡锤子钓鱼bug");
         add("better_experience.configuration.valid_bonemeal_target", "骨粉可以催熟宝石树");
         add("better_experience.configuration.block_break_speed_multiplier", "方块 破坏速度 倍率");
+        add("better_experience.configuration.forbidden_magic_boom_staff", "禁用法爆魔杖");
 
         // info
         add("better_experience.autofish.info.lack", "自动钓鱼机缺少方块连接：");
+        add("better_experience.info.forbidden_magic_boom_staff", "你不能在这个世界使用法爆魔杖，请在ESC-MOD-better_experience-config-Item中打开功能");
 
         // container
         add("block.better_experience.autofish_machine", "自动钓鱼机");

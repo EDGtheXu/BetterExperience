@@ -27,7 +27,6 @@ public class GameEvent {
 
     @SubscribeEvent
     public static void entitySpawn(FinalizeSpawnEvent event){
-
     }
 
     @SubscribeEvent

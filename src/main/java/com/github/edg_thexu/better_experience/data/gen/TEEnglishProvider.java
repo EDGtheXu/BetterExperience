@@ -66,11 +66,14 @@ public class TEEnglishProvider extends LanguageProvider {
         add("better_experience.configuration.server_multi_fishing", "Server Multi-Fishing Using Hammers");
         add("better_experience.configuration.valid_bonemeal_target", "Bonemeal Can Be Used On Stone Saplings");
         add("better_experience.configuration.block_break_speed_multiplier", "Block Break Speed Multiplier");
+        add("better_experience.configuration.forbidden_magic_boom_staff", "Forbidden Magic Boom Staff");
 
 
 
         // info
         add("better_experience.autofish.info.lack", "Auto Fish Machine Lacks connection: ");
+        add("better_experience.info.forbidden_magic_boom_staff", "You can't use magic boom staff in this world, please open function in ESC-MOD-better_experience-config-Item");
+
 
         // container
         add("block.better_experience.autofish_machine", "Auto Fish Machine");

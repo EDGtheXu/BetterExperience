@@ -37,6 +37,12 @@ public class CommonConfig {
      */
     public static ModConfigSpec.BooleanValue MODIFY_MAX_STACK_SIZE;
 
+    /**
+     * 服务器禁用法爆魔杖
+     */
+    public static ModConfigSpec.BooleanValue FORBIDDEN_MAGIC_BOOM_STAFF;
+
+
     //************************** Player ****************************
     /**
      * 重生时填满生命值
@@ -107,6 +113,9 @@ public class CommonConfig {
         MODIFY_MAX_STACK_SIZE = BUILDER
                 .comment("Modify Max Stack Size")
                 .define("modify_max_stack_size", false);
+        FORBIDDEN_MAGIC_BOOM_STAFF = BUILDER
+                .comment("Forbidden magic boom staff.")
+                .define("forbidden_magic_boom_staff", false);
 
         BUILDER.pop();
         BUILDER.push("Player");
