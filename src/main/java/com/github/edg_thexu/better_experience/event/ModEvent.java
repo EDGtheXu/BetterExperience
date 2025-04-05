@@ -3,10 +3,11 @@ package com.github.edg_thexu.better_experience.event;
 import com.github.edg_thexu.better_experience.Better_experience;
 import com.github.edg_thexu.better_experience.config.CommonConfig;
 import com.github.edg_thexu.better_experience.module.autopotion.PlayerAttribute;
-import com.github.edg_thexu.better_experience.network.C2S.BreakBlocksPacketC2S;
-import com.github.edg_thexu.better_experience.network.C2S.PotionApplyPacketC2S;
-import com.github.edg_thexu.better_experience.network.C2S.ServerBoundPacketC2S;
-import com.github.edg_thexu.better_experience.network.S2C.EnderChestItemsS2C;
+import com.github.edg_thexu.better_experience.networks.c2s.BreakBlocksPacketC2S;
+import com.github.edg_thexu.better_experience.networks.c2s.PotionApplyPacketC2S;
+import com.github.edg_thexu.better_experience.networks.c2s.ServerBoundPacketC2S;
+import com.github.edg_thexu.better_experience.networks.s2c.ClientBoundConfigPacket;
+import com.github.edg_thexu.better_experience.networks.s2c.EnderChestItemsS2C;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -33,6 +34,8 @@ public class ModEvent {
         registrar.playToServer(ServerBoundPacketC2S.TYPE, ServerBoundPacketC2S.STREAM_CODEC, ServerBoundPacketC2S::handle);
 
         registrar.playToClient(EnderChestItemsS2C.TYPE, EnderChestItemsS2C.STREAM_CODEC, EnderChestItemsS2C::handle);
+        registrar.playToClient(ClientBoundConfigPacket.TYPE, ClientBoundConfigPacket.STREAM_CODEC, ClientBoundConfigPacket::handle);
+
     }
 
     @SubscribeEvent
@@ -69,5 +72,15 @@ public class ModEvent {
         } catch (IllegalStateException ignored) {
 
         }
+    }
+    @SubscribeEvent
+    public static void registerConfig(ModConfigEvent.Reloading event) {
+//        try{
+            if(event.getConfig().getSpec() == CommonConfig.SPEC){
+                ClientBoundConfigPacket.syncAll();
+            }
+//        }catch(Exception ignored){
+//        }
+
     }
 }

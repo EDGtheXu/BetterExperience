@@ -5,7 +5,7 @@ import com.github.edg_thexu.better_experience.client.buffer.AABBBuffer;
 import com.github.edg_thexu.better_experience.config.ClientConfig;
 import com.github.edg_thexu.better_experience.init.ModAttachments;
 import com.github.edg_thexu.better_experience.item.MagicBoomStaff;
-import com.github.edg_thexu.better_experience.network.C2S.ServerBoundPacketC2S;
+import com.github.edg_thexu.better_experience.networks.c2s.ServerBoundPacketC2S;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;

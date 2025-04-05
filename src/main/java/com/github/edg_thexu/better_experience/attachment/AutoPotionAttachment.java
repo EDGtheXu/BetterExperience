@@ -1,6 +1,6 @@
 package com.github.edg_thexu.better_experience.attachment;
 
-import com.github.edg_thexu.better_experience.network.C2S.PotionApplyPacketC2S;
+import com.github.edg_thexu.better_experience.networks.c2s.PotionApplyPacketC2S;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;

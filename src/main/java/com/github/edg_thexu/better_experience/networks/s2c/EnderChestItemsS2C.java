@@ -1,4 +1,4 @@
-package com.github.edg_thexu.better_experience.network.S2C;
+package com.github.edg_thexu.better_experience.networks.s2c;
 
 import com.github.edg_thexu.better_experience.Better_experience;
 import com.github.edg_thexu.better_experience.attachment.EnderChestAttachment;

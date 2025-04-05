@@ -23,6 +23,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.mod.client.gui.container.ExtraInventoryScreen;
+import org.confluence.mod.common.init.item.FoodItems;
 import org.confluence.mod.common.item.potion.EffectPotionItem;
 import oshi.util.tuples.Pair;
 import top.theillusivec4.curios.client.gui.CuriosScreen;
@@ -32,10 +33,14 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+/**
+ * 客户端遍历玩家背包，检测药水续杯等效果
+ */
 public class PlayerInventoryManager {
 
     public int detectInternal;
     private static final int _detectInternal = 200;
+    public boolean serverOpenAutoPotion = true;
     /**
      * 食物类 effectInstance 过滤器
      */
@@ -71,6 +76,9 @@ public class PlayerInventoryManager {
         if(item instanceof Item food)
         {
             //食物类
+                // 排除飘飘麦
+            if(food == FoodItems.FLOATING_WHEAT_SEED.get()) return effects;
+
             var foodProperties = food.getFoodProperties(stack, null);
             if (foodProperties != null) {
                 for (FoodProperties.PossibleEffect foodproperties$possibleeffect : foodProperties.effects()) {
@@ -111,7 +119,9 @@ public class PlayerInventoryManager {
         }catch (NoClassDefFoundError ignored){
 
         }
-
+        if(!serverOpenAutoPotion){
+            return;
+        }
 
         detectInternal = (int) (_detectInternal * 0.1f);
 
@@ -119,7 +129,7 @@ public class PlayerInventoryManager {
         List<Pair<Holder<MobEffect>, Integer>> effects = new ArrayList<>();
         var data = player.getData(ModAttachments.AUTO_POTION);
         data.getPotions().clear();
-        if(CommonConfig.AUTO_POTION_OPEN.get()) {
+        if(CommonConfig.AUTO_POTION_OPEN.get()) { // 客户端可自行选择是否启用
 
             Inventory inventory = player.getInventory();
             for (int i = 0; i < inventory.getContainerSize(); i++) {

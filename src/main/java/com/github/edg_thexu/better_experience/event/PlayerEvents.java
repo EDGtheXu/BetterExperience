@@ -3,13 +3,13 @@ package com.github.edg_thexu.better_experience.event;
 import com.github.edg_thexu.better_experience.Better_experience;
 import com.github.edg_thexu.better_experience.attachment.EnderChestAttachment;
 import com.github.edg_thexu.better_experience.config.CommonConfig;
-import com.github.edg_thexu.better_experience.init.ModItems;
 import com.github.edg_thexu.better_experience.mixed.IFishingHook;
 import com.github.edg_thexu.better_experience.mixed.IPlayer;
 import com.github.edg_thexu.better_experience.mixin.AbstractFishingPoleAccessor;
 import com.github.edg_thexu.better_experience.module.autofish.AutoFishManager;
 import com.github.edg_thexu.better_experience.module.autopotion.PlayerAttribute;
 import com.github.edg_thexu.better_experience.module.autopotion.PlayerInventoryManager;
+import com.github.edg_thexu.better_experience.networks.s2c.ClientBoundConfigPacket;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -69,6 +69,7 @@ public class PlayerEvents {
                 player.sendSystemMessage(Component.translatable("better_experience.welcome_message"));
             EnderChestAttachment.sync(player);
 //            player.getInventory().add(ModItems.MagicBoomStaff.toStack());
+            ClientBoundConfigPacket.sync(player);
         }
     }
 

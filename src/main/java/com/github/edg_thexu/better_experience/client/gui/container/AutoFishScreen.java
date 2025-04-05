@@ -3,7 +3,7 @@ package com.github.edg_thexu.better_experience.client.gui.container;
 import com.github.edg_thexu.better_experience.Better_experience;
 import com.github.edg_thexu.better_experience.menu.AutoFishMenu;
 import com.github.edg_thexu.better_experience.module.autofish.AutoFishManager;
-import com.github.edg_thexu.better_experience.network.C2S.ServerBoundPacketC2S;
+import com.github.edg_thexu.better_experience.networks.c2s.ServerBoundPacketC2S;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;

@@ -1,7 +1,8 @@
-package com.github.edg_thexu.better_experience.network.C2S;
+package com.github.edg_thexu.better_experience.networks.c2s;
 
 import com.github.edg_thexu.better_experience.Better_experience;
 import com.github.edg_thexu.better_experience.attachment.AutoPotionAttachment;
+import com.github.edg_thexu.better_experience.config.CommonConfig;
 import com.github.edg_thexu.better_experience.module.autopotion.PlayerInventoryManager;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.CompoundTag;
@@ -30,7 +31,9 @@ public record PotionApplyPacketC2S(AutoPotionAttachment attachment) implements C
 
     public static void handle(PotionApplyPacketC2S packet, final IPayloadContext context) {
         context.enqueueWork(() -> {
-            PlayerInventoryManager.apply(packet.attachment, context.player());
+            if(CommonConfig.AUTO_POTION_OPEN.get()) { // 在服务端进行判断
+                PlayerInventoryManager.apply(packet.attachment, context.player());
+            }
         });
     }
 }

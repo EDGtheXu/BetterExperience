@@ -1,7 +1,7 @@
 package com.github.edg_thexu.better_experience.attachment;
 
 import com.github.edg_thexu.better_experience.module.autopotion.PlayerInventoryManager;
-import com.github.edg_thexu.better_experience.network.S2C.EnderChestItemsS2C;
+import com.github.edg_thexu.better_experience.networks.s2c.EnderChestItemsS2C;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;

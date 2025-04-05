@@ -1,4 +1,4 @@
-package com.github.edg_thexu.better_experience.network.C2S;
+package com.github.edg_thexu.better_experience.networks.c2s;
 
 import com.github.edg_thexu.better_experience.Better_experience;
 import com.github.edg_thexu.better_experience.block.AutoFishBlock;

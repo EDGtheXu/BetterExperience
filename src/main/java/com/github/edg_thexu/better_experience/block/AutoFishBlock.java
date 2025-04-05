@@ -150,70 +150,88 @@ public class AutoFishBlock extends BaseEntityBlock {
 
 
             if(level instanceof ServerLevel serverLevel && player!= null && entity.target != null && entity.lastTick + entity.fishingTime < ++entity.ticks){
+//                for(int ii=0;ii<100;ii++) {
 
-                ItemStack poleStack = entity.getItem(27);
-                ItemStack bait = entity.getItem(28);
-                ItemStack curios = entity.getItem(29);
+                    ItemStack poleStack = entity.getItem(27);
+                    ItemStack bait = entity.getItem(28);
+                    ItemStack curios = entity.getItem(29);
 
-                if(poleStack.getItem() instanceof FishingRodItem pole) {
-                    FishingHook hook;
-                    var oldHook = player.fishing;
-                    try {
-                        float power = AutoFishManager.computeFishingPower(null, poleStack,
-                                bait.getItem() instanceof BaitItem ? (BaitItem) bait.getItem() : null,
-                                curios);
+                    if (poleStack.getItem() instanceof FishingRodItem pole) {
+                        FishingHook hook;
+                        var oldHook = player.fishing;
 
-                        if(pole instanceof  AbstractFishingPole pole1) {
-                            Method funcField = AbstractFishingPole.class.getDeclaredMethod("getHook", ItemStack.class, Player.class, Level.class, int.class, int.class);
-                            funcField.setAccessible(true);
-                            hook = (FishingHook) funcField.invoke(pole, poleStack, player, level, (int) power, 5);
-                        }
-                        else{
-                            hook = new FishingHook(player, level, (int) power, 5);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        return;
-                    }
-                    player.fishing = oldHook;
-                    ((IFishingHook) hook).betterExperience$setPos(new Vec3(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5));
-                    ((IFishingHook) hook).betterExperience$setSimulation(true);
+                        try {
+                            float power = AutoFishManager.computeFishingPower(null, poleStack,
+                                    bait.getItem() instanceof BaitItem ? (BaitItem) bait.getItem() : null,
+                                    curios);
 
-                    hook.setPos(entity.target);
-
-                    try {
-                        Field nibbleField = FishingHook.class.getDeclaredField("nibble");
-                        nibbleField.setAccessible(true);
-                        nibbleField.setInt(hook, 10);
-                    } catch (NoSuchFieldException | IllegalAccessException e) {
-                        e.printStackTrace();
-                    }
-
-                    // 模拟收杆
-                    hook.retrieve(poleStack);
-                    List<ItemStack> items = ((IFishingHook)hook).betterExperience$getItems();
-
-                    for(ItemStack item : items){
-                        // 尝试堆叠
-                        for(int i=0;i<27;i++){
-                            ItemStack current = entity.getItem(i);
-                            if(current.isEmpty()){
-                                entity.setItem(i, item.copy());
-                                item.setCount(0);
-                                break;
+                            if (pole instanceof AbstractFishingPole pole1) {
+                                Method funcField = AbstractFishingPole.class.getDeclaredMethod("getHook", ItemStack.class, Player.class, Level.class, int.class, int.class);
+                                funcField.setAccessible(true);
+                                hook = (FishingHook) funcField.invoke(pole, poleStack, player, level, (int) power, 5);
+                            } else {
+                                hook = new FishingHook(player, level, (int) power, 5);
                             }
-                            if (current.is(item.getItem()) && current.getCount() < current.getMaxStackSize()) {
-                                // 计算可以堆叠的数量
-                                int transfer = Math.min(item.getCount(), current.getMaxStackSize() - current.getCount());
-                                current.grow(transfer); // 增加当前物品的数量
-                                item.shrink(transfer);  // 减少新物品的数量
-                                if (item.isEmpty()) {
-                                    break; // 如果新物品被完全堆叠，返回true
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            return;
+                        }
+                        player.fishing = oldHook;
+                        ((IFishingHook) hook).betterExperience$setPos(new Vec3(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5));
+                        ((IFishingHook) hook).betterExperience$setSimulation(true);
+
+                        hook.setPos(entity.target);
+
+                        try {
+                            Field nibbleField = FishingHook.class.getDeclaredField("nibble");
+                            nibbleField.setAccessible(true);
+                            nibbleField.setInt(hook, 10);
+                        } catch (NoSuchFieldException | IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+
+                        // 模拟收杆
+                        hook.retrieve(poleStack);
+                        List<ItemStack> items = ((IFishingHook) hook).betterExperience$getItems();
+
+                        for (ItemStack item : items) {
+
+//                            if (item.getItem() != Items.ENCHANTED_BOOK) {
+//                                item.setCount(0);
+//                                continue;
+//                            }
+//                            boolean keep = false;
+//                            var keys = item.getComponents().get(DataComponents.STORED_ENCHANTMENTS).keySet();
+//                            for (var key : keys) {
+//                                if(key.getKey().location().getNamespace().equals(TerraEntity.MODID)){
+//                                    keep = true;
+//                                }
+//                            }
+//                            if(!keep){
+//                                item.setCount(0);
+//                                continue;
+//                            }
+
+                            // 尝试堆叠
+                            for (int i = 0; i < 27; i++) {
+                                ItemStack current = entity.getItem(i);
+                                if (current.isEmpty()) {
+                                    entity.setItem(i, item.copy());
+                                    item.setCount(0);
+                                    break;
+                                }
+                                if (current.is(item.getItem()) && current.getCount() < current.getMaxStackSize()) {
+                                    // 计算可以堆叠的数量
+                                    int transfer = Math.min(item.getCount(), current.getMaxStackSize() - current.getCount());
+                                    current.grow(transfer); // 增加当前物品的数量
+                                    item.shrink(transfer);  // 减少新物品的数量
+                                    if (item.isEmpty()) {
+                                        break; // 如果新物品被完全堆叠，返回true
+                                    }
                                 }
                             }
-                        }
-                        // 溢出
-                        if(!item.isEmpty()){
+                            // 溢出
+                            if (!item.isEmpty()) {
 //                            var f = state.getValue(FACING);
 //                            float dir = f.getRotation().angle();
 //                            float r = 0.1f;
@@ -221,33 +239,34 @@ public class AutoFishBlock extends BaseEntityBlock {
 //                                    pos.getX() + 0.5 + r * Math.sin(dir),
 //                                    pos.getY() + 1,
 //                                    pos.getZ() + 0.5 + r * Math.cos(dir), item);
-                            ItemEntity itemEntity = new ItemEntity(level,
-                                pos.getX() + 0.5 ,
-                                pos.getY() + 1 ,
-                                pos.getZ() + 0.5, item);
-                            level.addFreshEntity(itemEntity);
+                                ItemEntity itemEntity = new ItemEntity(level,
+                                        pos.getX() + 0.5,
+                                        pos.getY() + 1,
+                                        pos.getZ() + 0.5, item);
+                                level.addFreshEntity(itemEntity);
+                            }
                         }
+                        // TODO 消耗鱼饵
+                        if (!bait.isEmpty() && level.random.nextFloat() < 0.1f) {
+                            bait.shrink(1);
+                        }
+                        if (!entity.tryStart(entity.owner)) {
+                            return;
+                        }
+
+                        entity.lastTick = entity.ticks;
+
+                        entity.fishingTime = (int) (20 * 10 * entity.cdReduce * 0.01f);
+                        entity.updateState();
+
+                    } else {
+                        // 没有钓竿，终止
+                        entity.dataAccess.set(0, 0);
+                        entity.updateState();
+
                     }
-                    // TODO 消耗鱼饵
-                    if(!bait.isEmpty() && level.random.nextFloat() < 0.1f){
-                        bait.shrink(1);
-                    }
-                    if(!entity.tryStart(entity.owner)){
-                        return;
-                    }
-
-                    entity.lastTick = entity.ticks;
-
-                    entity.fishingTime = (int) (20 * 10 * entity.cdReduce);
-                    entity.updateState();
-
-                }else{
-                    // 没有钓竿，终止
-                    entity.dataAccess.set(0, 0);
-                    entity.updateState();
-
                 }
-            }
+//            }
 
         });
     }
