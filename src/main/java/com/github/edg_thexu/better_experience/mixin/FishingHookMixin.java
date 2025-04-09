@@ -1,8 +1,8 @@
 package com.github.edg_thexu.better_experience.mixin;
 
 import com.github.edg_thexu.better_experience.mixed.IFishingHook;
+import com.github.edg_thexu.better_experience.mixed.SelfGetter;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -11,7 +11,6 @@ import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.mixinauxiliary.SelfGetter;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;

@@ -1,12 +1,12 @@
 package com.github.edg_thexu.better_experience.mixin.client;
 
 import com.github.edg_thexu.better_experience.client.gui.hud.PotionScreenManager;
+import com.github.edg_thexu.better_experience.mixed.SelfGetter;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
 import org.confluence.mod.client.gui.container.ExtraInventoryScreen;
-import org.confluence.terra_curio.mixed.SelfGetter;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -20,7 +20,7 @@ public abstract class ScreenMixin  implements SelfGetter<Screen> {
 
     @Inject(method = "init(Lnet/minecraft/client/Minecraft;II)V", at = @At(value = "RETURN"))
     private void initMixin(CallbackInfo ci) {
-        if(self() instanceof ExtraInventoryScreen){
+        if(te$getSelf() instanceof ExtraInventoryScreen){
             addRenderableWidget(PotionScreenManager.getInstance().fastStorageBtn);
         }
     }
