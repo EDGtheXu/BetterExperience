@@ -8,6 +8,7 @@ import com.github.edg_thexu.better_experience.mixed.IPlayer;
 import com.github.edg_thexu.better_experience.module.autofish.AutoFishManager;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -17,10 +18,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.Containers;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
-import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.*;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -36,10 +34,7 @@ import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import net.minecraft.world.level.block.entity.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -67,6 +62,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
+import java.util.stream.IntStream;
 
 import static net.minecraft.world.level.block.BarrelBlock.FACING;
 
@@ -246,8 +242,9 @@ public class AutoFishBlock extends BaseEntityBlock {
                                 level.addFreshEntity(itemEntity);
                             }
                         }
-                        // TODO 消耗鱼饵
-                        if (!bait.isEmpty() && level.random.nextFloat() < 0.1f) {
+
+                        // 消耗鱼饵, 根据运气降低消耗概率
+                        if (!bait.isEmpty() && level.random.nextFloat() < 0.33f - entity.owner.getLuck() * 0.2f) {
                             bait.shrink(1);
                         }
                         if (!entity.tryStart(entity.owner)) {
@@ -256,7 +253,10 @@ public class AutoFishBlock extends BaseEntityBlock {
 
                         entity.lastTick = entity.ticks;
 
-                        entity.fishingTime = (int) (20 * 10 * entity.cdReduce * 0.01f);
+                        if(bait.getItem() instanceof BaitItem bait1){
+                            entity.cdReduce = (1 - bait1.getBaitBonus() * 0.5f);
+                        }
+                        entity.fishingTime = (int) (20 * 10 * entity.cdReduce);
                         entity.updateState();
 
                     } else {
@@ -271,7 +271,7 @@ public class AutoFishBlock extends BaseEntityBlock {
         });
     }
 
-    public static class AutoFishMachineEntity extends ChestBlockEntity  implements GeoBlockEntity {
+    public static class AutoFishMachineEntity extends ChestBlockEntity  implements GeoBlockEntity,  WorldlyContainer{
 
 
         int ticks = 0;
@@ -295,6 +295,8 @@ public class AutoFishBlock extends BaseEntityBlock {
          */
         public int isStarted = 0;
         private final ContainerData dataAccess;
+
+        int [] face;
 
         public int getState(){
             return isStarted;
@@ -326,6 +328,7 @@ public class AutoFishBlock extends BaseEntityBlock {
             if(this.getItems().size() < getContainerSize()){
                 this.setItems(NonNullList.withSize(getContainerSize(), ItemStack.EMPTY));
             }
+            face = IntStream.range(0, 27).toArray();
         }
 
         public boolean tryStart(Player player){
@@ -335,8 +338,8 @@ public class AutoFishBlock extends BaseEntityBlock {
                     this.getBlockPos().offset(0,0,-1),
                     this.getBlockPos().offset(1,0,0),
                     this.getBlockPos().offset(-1,0,0),
-                    this.getBlockPos().offset(0,1,0),
-                    this.getBlockPos().offset(0,-1,0)
+                    this.getBlockPos().offset(0,1,0)
+//                    this.getBlockPos().offset(0,-1,0)
             };
             boolean hasConduit = false;
             for(int i=0;i<6;i++){
@@ -459,13 +462,37 @@ public class AutoFishBlock extends BaseEntityBlock {
         public AnimatableInstanceCache getAnimatableInstanceCache() {
             return CACHE;
         }
+
+        @Override
+        public int[] getSlotsForFace(Direction direction) {
+            if(direction == Direction.UP){
+                return new int[]{28};
+            }
+            return face;
+        }
+
+        @Override
+        public boolean canPlaceItemThroughFace(int i, ItemStack itemStack, @Nullable Direction direction) {
+            if(direction == Direction.UP){
+                return itemStack.getItem() instanceof BaitItem;
+            }
+            return true;
+        }
+
+        @Override
+        public boolean canTakeItemThroughFace(int i, ItemStack itemStack, Direction direction) {
+            return i < 27;
+        }
     }
 
     public static class Item extends BlockItem implements GeoItem {
         private final AnimatableInstanceCache CACHE = GeckoLibUtil.createInstanceCache(this);
 
         public Item(AutoFishBlock pBlock) {
-            super(pBlock, new Properties().component(TCDataComponentTypes.MOD_RARITY, ModRarity.BLUE));
+            super(pBlock, new Properties()
+                    // todo
+//                    .component(TCDataComponentTypes.MOD_RARITY, ModRarity.BLUE)
+            );
         }
 
         @Override

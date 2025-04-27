@@ -125,12 +125,13 @@ public class PlayerInventoryManager {
 
         detectInternal = (int) (_detectInternal * 0.1f);
 
-        // 背包的药水
+
         List<Pair<Holder<MobEffect>, Integer>> effects = new ArrayList<>();
         var data = player.getData(ModAttachments.AUTO_POTION);
         data.getPotions().clear();
         if(CommonConfig.AUTO_POTION_OPEN.get()) { // 客户端可自行选择是否启用
 
+            // 背包的药水
             Inventory inventory = player.getInventory();
             for (int i = 0; i < inventory.getContainerSize(); i++) {
                 try {
@@ -161,6 +162,22 @@ public class PlayerInventoryManager {
 
         // 同步数据
         data.sync();
+    }
+
+    /**
+     * 添加扫描列表
+     * @param items 列表
+     * @param to 应用于
+     */
+    private void addApplyItemList(List<ItemStack> items, List<Pair<Holder<MobEffect>, Integer>> to){
+        for (ItemStack item : items) {
+            try {
+                ItemStack stack = item.copy();
+                to.addAll(getApplyEffect.apply(stack));
+            } catch (Exception ignored) {
+
+            }
+        }
     }
 
     /**
