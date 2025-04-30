@@ -5,9 +5,9 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantments;
+import org.confluence.lib.util.EnchantmentUtil;
 import org.confluence.mod.common.init.item.AccessoryItems;
 import org.confluence.mod.common.item.fishing.BaitItem;
-import org.confluence.mod.util.EnchantmentUtil;
 import org.confluence.terra_curio.util.TCUtils;
 
 import javax.annotation.Nullable;

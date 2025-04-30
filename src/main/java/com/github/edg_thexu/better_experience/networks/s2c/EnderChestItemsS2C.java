@@ -5,22 +5,24 @@ import com.github.edg_thexu.better_experience.attachment.EnderChestAttachment;
 import com.github.edg_thexu.better_experience.init.ModAttachments;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public record EnderChestItemsS2C(EnderChestAttachment attachment) implements CustomPacketPayload {
+public record EnderChestItemsS2C(EnderChestAttachment attachment, TypeIndex typeIndex) implements CustomPacketPayload {
+    public enum TypeIndex {
+        ENDER,
+        PIG,
+        SAFE
+    }
 
-    public static final StreamCodec<ByteBuf, EnderChestItemsS2C> STREAM_CODEC = ByteBufCodecs.fromCodec(
-            CompoundTag.CODEC.xmap(tag->{
-                EnderChestAttachment attachment1 = new EnderChestAttachment();
-                        attachment1.deserializeNBT(null,tag);
-                        return new EnderChestItemsS2C(attachment1);
-                    }, packet -> packet.attachment().serializeNBT(null)
-            ));
+    public static final StreamCodec<ByteBuf, EnderChestItemsS2C> STREAM_CODEC = StreamCodec.composite(
+            EnderChestAttachment.STREAM_CODEC, EnderChestItemsS2C::attachment,
+            ByteBufCodecs.INT.map(j->TypeIndex.values()[j], Enum::ordinal), EnderChestItemsS2C::typeIndex,
+            EnderChestItemsS2C::new
+    );
 
     public static final Type<EnderChestItemsS2C> TYPE =
             new Type<>(ResourceLocation.fromNamespaceAndPath(Better_experience.MODID, "ender_chest_items_packet_s2c"));
@@ -32,7 +34,13 @@ public record EnderChestItemsS2C(EnderChestAttachment attachment) implements Cus
 
     public static void handle(EnderChestItemsS2C packet, final IPayloadContext context) {
         context.enqueueWork(() -> {
-            Minecraft.getInstance().player.getData(ModAttachments.ENDER_CHEST).refresh(packet.attachment);
+            if(packet.typeIndex == TypeIndex.ENDER) {
+                Minecraft.getInstance().player.getData(ModAttachments.ENDER_CHEST).refresh(packet.attachment);
+            }else if(packet.typeIndex == TypeIndex.PIG){
+                Minecraft.getInstance().player.getData(ModAttachments.PIG_CHEST).refresh(packet.attachment);
+            }else if(packet.typeIndex == TypeIndex.SAFE){
+                Minecraft.getInstance().player.getData(ModAttachments.SAFE_CHEST).refresh(packet.attachment);
+            }
         });
     }
 }

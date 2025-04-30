@@ -96,6 +96,13 @@ neoForge {
             // You can set various levels here.
             // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
             logLevel = org.slf4j.event.Level.DEBUG
+
+            jvmArguments.addAll([
+                    // 忽略无效指令，避免有的人没安装 JetBrain Runtime 无法启动游戏
+                    "-XX:+IgnoreUnrecognizedVMOptions",
+                    // 启用 JetBrain Runtime 热重载功能
+                    "-XX:+AllowEnhancedClassRedefinition"
+            ])
         }
     }
 
@@ -115,9 +122,13 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 
 dependencies {
-    compileOnly "mezz.jei:jei-1.21-common-api:${jei_version}"
-    compileOnly "mezz.jei:jei-1.21-neoforge-api:${jei_version}"
-    runtimeOnly "mezz.jei:jei-1.21-neoforge:${jei_version}"
+
+    compileOnly "curse.maven:jade-324717:6011258"
+    runtimeOnly "curse.maven:jade-324717:6011258"
+
+    compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
+    compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
+    runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
 
     // Example mod dependency using a mod jar from ./libs with a flat dir repository
     // This maps to ./libs/coolmod-${mc_version}-${coolmod_version}.jar
@@ -134,11 +145,15 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
-    implementation "curse.maven:confluence-1209464:6343042"
-//    compileOnly "curse.maven:confluence-1209464:6343042"
+    implementation(jarJar(files("libs/ConfluenceOtherworld-1.1.0.jar")))
+    implementation(jarJar(files("libs/terra_entity-1.1.14.jar")))
+    implementation(jarJar(files("libs/confluence_magic_lib-0.0.1.jar")))
 
-    compileOnly "curse.maven:terra-entity-1173196:6249871"
-//    runtimeOnly "curse.maven:terra-entity-1173196:6249871"
+//    implementation "curse.maven:confluence-1209464:6343042"
+////    compileOnly "curse.maven:confluence-1209464:6343042"
+//    compileOnly "curse.maven:terra-entity-1173196:6249871"
+////    runtimeOnly "curse.maven:terra-entity-1173196:6249871"
+
     compileOnly "curse.maven:terra-curio-1027625:6254391"
 //    runtimeOnly "curse.maven:terra-curio-1027625:6254391"
     compileOnly "curse.maven:touhou-little-maid-355044:6266244"

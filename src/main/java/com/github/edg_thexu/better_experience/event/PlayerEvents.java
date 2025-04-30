@@ -67,7 +67,7 @@ public class PlayerEvents {
         if (event.getEntity() instanceof ServerPlayer player) {
             if (player.connection.tickCount == 0)
                 player.sendSystemMessage(Component.translatable("better_experience.welcome_message"));
-            EnderChestAttachment.sync(player);
+            EnderChestAttachment.syncAll(player);
 //            player.getInventory().add(ModItems.MagicBoomStaff.toStack());
             ClientBoundConfigPacket.sync(player);
         }
@@ -76,8 +76,8 @@ public class PlayerEvents {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void playerRespawn(PlayerEvent.PlayerRespawnEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
-            // 同步末影箱
-            EnderChestAttachment.sync(player);
+            // 同步所有相关容器
+            EnderChestAttachment.syncAll(player);
             if (CommonConfig.FILL_LIFE_ON_RESPAWN.get())
                 player.setHealth(player.getMaxHealth());
             PlayerAttribute.applyAdditionalAttributes(player);

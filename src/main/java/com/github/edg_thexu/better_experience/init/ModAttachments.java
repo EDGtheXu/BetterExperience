@@ -14,6 +14,8 @@ public class ModAttachments {
 
     public static final Supplier<AttachmentType<EnderChestAttachment>> ENDER_CHEST = TYPES.register("ender_chest", () -> AttachmentType.serializable(EnderChestAttachment::new).copyOnDeath().build());
     public static final Supplier<AttachmentType<AutoPotionAttachment>> AUTO_POTION = TYPES.register("auto_potion", () -> AttachmentType.serializable(AutoPotionAttachment::new).copyOnDeath().build());
+    public static final Supplier<AttachmentType<EnderChestAttachment>> PIG_CHEST = TYPES.register("pig_chest", () -> AttachmentType.serializable(EnderChestAttachment::new).copyOnDeath().build());
+    public static final Supplier<AttachmentType<EnderChestAttachment>> SAFE_CHEST = TYPES.register("safe_chest", () -> AttachmentType.serializable(EnderChestAttachment::new).copyOnDeath().build());
 
 
 }

@@ -11,6 +11,7 @@ import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Holder;
+import net.minecraft.world.Container;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -22,9 +23,13 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import org.confluence.lib.common.PlayerContainer;
 import org.confluence.mod.client.gui.container.ExtraInventoryScreen;
+import org.confluence.mod.common.init.ModAttachmentTypes;
 import org.confluence.mod.common.init.item.FoodItems;
 import org.confluence.mod.common.item.potion.EffectPotionItem;
+import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeHealth;
+import org.jetbrains.annotations.Nullable;
 import oshi.util.tuples.Pair;
 import top.theillusivec4.curios.client.gui.CuriosScreen;
 
@@ -143,15 +148,14 @@ public class PlayerInventoryManager {
             }
 
             // 末影箱的药水
-            var items = player.getData(ModAttachments.ENDER_CHEST).getItems();
-            for (Item item : items) {
-                try {
-                    ItemStack stack = new ItemStack(item, CommonConfig.AUTO_POTION_STACK_SIZE.get());
-                    effects.addAll(getApplyEffect.apply(stack));
-                } catch (Exception ignored) {
+            addApplyItemList(player.getData(ModAttachments.ENDER_CHEST).getItems(), effects);
 
-                }
-            }
+            // 存钱罐
+            addApplyItemList(player.getData(ModAttachments.PIG_CHEST.get()).getItems(), effects);
+
+            // 保险箱
+            addApplyItemList(player.getData(ModAttachments.PIG_CHEST.get()).getItems(), effects);
+
 
             // 重新生成缓存
 
@@ -169,10 +173,10 @@ public class PlayerInventoryManager {
      * @param items 列表
      * @param to 应用于
      */
-    private void addApplyItemList(List<ItemStack> items, List<Pair<Holder<MobEffect>, Integer>> to){
-        for (ItemStack item : items) {
+    private void addApplyItemList(List<Item> items, List<Pair<Holder<MobEffect>, Integer>> to){
+        for (Item item : items) {
             try {
-                ItemStack stack = item.copy();
+                ItemStack stack = new ItemStack(item, CommonConfig.AUTO_POTION_STACK_SIZE.get());
                 to.addAll(getApplyEffect.apply(stack));
             } catch (Exception ignored) {
 
@@ -210,14 +214,16 @@ public class PlayerInventoryManager {
      * @param partialTick
      */
     @OnlyIn(Dist.CLIENT)
-    public static void renderApply(AbstractContainerScreen screen,ItemStack stack,  GuiGraphics guiGraphics, int x, int y, float partialTick){
+    public static void renderApply(AbstractContainerScreen screen, @Nullable Container container, ItemStack stack, GuiGraphics guiGraphics, int x, int y, float partialTick){
 
+        String title = screen.getTitle().toString();
         if((
-                screen instanceof InventoryScreen ||
-                screen instanceof CreativeModeInventoryScreen ||
-                screen instanceof ContainerScreen && screen.getTitle().toString().contains("enderchest") ||
-                        screen instanceof ExtraInventoryScreen||
-                        screen instanceof CuriosScreen
+                container instanceof PlayerContainer<?> ||  // 猪猪存钱罐和保险箱
+                screen instanceof InventoryScreen || // 背包
+                screen instanceof CreativeModeInventoryScreen || // 创造栏
+                screen instanceof ContainerScreen && (title.contains("enderchest") || title.contains("piggy_bank") || title.contains("safe")) ||
+                        screen instanceof ExtraInventoryScreen||  // 额外栏
+                        screen instanceof CuriosScreen  // 饰品栏
         )
                 && canApply.test(stack)){
 

@@ -80,12 +80,12 @@ public class AutoFishBlock extends BaseEntityBlock {
     protected @NotNull MapCodec<AutoFishBlock> codec() {return CODEC;}
 
     @Override
-    public RenderShape getRenderShape(BlockState pState) {
+    public @NotNull RenderShape getRenderShape(@NotNull BlockState pState) {
         return RenderShape.MODEL;
     }
 
     @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
+    protected void onRemove(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState newState, boolean isMoving) {
         Containers.dropContentsOnDestroy(state, newState, level, pos);
         super.onRemove(state, level, pos, newState, isMoving);
     }
@@ -105,12 +105,12 @@ public class AutoFishBlock extends BaseEntityBlock {
     }
 
     @Override
-    public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
+    public @Nullable BlockEntity newBlockEntity(@NotNull BlockPos blockPos, @NotNull BlockState blockState) {
         return new AutoFishMachineEntity(blockPos, blockState);
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+    protected @NotNull ItemInteractionResult useItemOn(@NotNull ItemStack stack, BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hitResult) {
         if(state.hasBlockEntity()){
             BlockEntity entity = level.getBlockEntity(pos);
             ((IPlayer)player).betterExperience$setInteractBlockEntity(entity);
@@ -122,7 +122,7 @@ public class AutoFishBlock extends BaseEntityBlock {
     }
 
     @Override
-    public <T extends BlockEntity> BlockEntityTicker getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
         return pLevel.isClientSide ? createTickerHelper(pBlockEntityType, ModBlocks.AUTO_FISH_BLOCK_ENTITY.get(),  (level, pos, state, entity)-> {
             entity.cacheTime = Math.max(0, entity.cacheTime - 1);
 //            System.out.println(entity.cacheTime);
@@ -169,7 +169,7 @@ public class AutoFishBlock extends BaseEntityBlock {
                                 hook = new FishingHook(player, level, (int) power, 5);
                             }
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            Better_experience.LOGGER.error("Failed to create fishing hook", e);
                             return;
                         }
                         player.fishing = oldHook;
@@ -183,7 +183,7 @@ public class AutoFishBlock extends BaseEntityBlock {
                             nibbleField.setAccessible(true);
                             nibbleField.setInt(hook, 10);
                         } catch (NoSuchFieldException | IllegalAccessException e) {
-                            e.printStackTrace();
+                            Better_experience.LOGGER.error("Failed to set nibble field for fishing hook", e);
                         }
 
                         // 模拟收杆
@@ -343,7 +343,7 @@ public class AutoFishBlock extends BaseEntityBlock {
             };
             boolean hasConduit = false;
             for(int i=0;i<6;i++){
-                if(level.getBlockState(around[i]).is(Blocks.CONDUIT)){
+                if (level != null && level.getBlockState(around[i]).is(Blocks.CONDUIT)) {
                     hasConduit = true;
                     break;
                 }
@@ -388,7 +388,7 @@ public class AutoFishBlock extends BaseEntityBlock {
             BlockPos pos = this.getBlockPos();
             // 水下正下方
             for(int i = 1; i < 4; i++){
-                if(this.getLevel().getBlockState(pos.below(i)).is(Blocks.WATER)){
+                if (this.level != null && this.level.getBlockState(pos.below(i)).is(Blocks.WATER)) {
                     target = new Vec3(pos.getX() + 0.5, pos.getY() + i, pos.getZ() + 0.5);
                     return true;
                 }
@@ -403,7 +403,7 @@ public class AutoFishBlock extends BaseEntityBlock {
         }
 
         @Override
-        protected AbstractContainerMenu createMenu(int id, Inventory inventory) {
+        protected @NotNull AbstractContainerMenu createMenu(int id, @NotNull Inventory inventory) {
             return new AutoFishMenu(id, inventory, this, this.dataAccess);
         }
 
@@ -413,7 +413,7 @@ public class AutoFishBlock extends BaseEntityBlock {
         }
 
         @Override
-        public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
+        public void onDataPacket(@NotNull Connection net, @NotNull ClientboundBlockEntityDataPacket pkt, HolderLookup.@NotNull Provider lookupProvider) {
             super.onDataPacket(net, pkt, lookupProvider);
             CompoundTag tag = pkt.getTag();
             isStarted = tag.getInt("started");
@@ -425,7 +425,7 @@ public class AutoFishBlock extends BaseEntityBlock {
         }
 
         @Override
-        protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        protected void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
             this.setItems(NonNullList.withSize(getContainerSize(), ItemStack.EMPTY));
             super.loadAdditional(tag, registries);
             isStarted = tag.getInt("started");
@@ -436,7 +436,7 @@ public class AutoFishBlock extends BaseEntityBlock {
         }
 
         @Override
-        public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        public @NotNull CompoundTag getUpdateTag(HolderLookup.@NotNull Provider registries) {
             CompoundTag tag = super.getUpdateTag(registries);
             tag.putInt("started", isStarted);
             tag.putInt("fishTime", fishingTime);
@@ -446,7 +446,7 @@ public class AutoFishBlock extends BaseEntityBlock {
         }
 
         @Override
-        protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        protected void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
             super.saveAdditional(tag, registries);
             tag.putInt("started", isStarted);
             if(owner != null)
@@ -464,7 +464,7 @@ public class AutoFishBlock extends BaseEntityBlock {
         }
 
         @Override
-        public int[] getSlotsForFace(Direction direction) {
+        public int @NotNull [] getSlotsForFace(@NotNull Direction direction) {
             if(direction == Direction.UP){
                 return new int[]{28};
             }
@@ -472,7 +472,7 @@ public class AutoFishBlock extends BaseEntityBlock {
         }
 
         @Override
-        public boolean canPlaceItemThroughFace(int i, ItemStack itemStack, @Nullable Direction direction) {
+        public boolean canPlaceItemThroughFace(int i, @NotNull ItemStack itemStack, @Nullable Direction direction) {
             if(direction == Direction.UP){
                 return itemStack.getItem() instanceof BaitItem;
             }
@@ -480,7 +480,7 @@ public class AutoFishBlock extends BaseEntityBlock {
         }
 
         @Override
-        public boolean canTakeItemThroughFace(int i, ItemStack itemStack, Direction direction) {
+        public boolean canTakeItemThroughFace(int i, @NotNull ItemStack itemStack, @NotNull Direction direction) {
             return i < 27;
         }
     }
