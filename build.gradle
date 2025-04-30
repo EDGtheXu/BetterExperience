@@ -164,6 +164,10 @@ dependencies {
 
     compileOnly "curse.maven:jade-324717:6011258"
     runtimeOnly "curse.maven:jade-324717:6011258"
+
+    // carry on
+    compileOnly"curse.maven:carry-on-274259:5649344"
+    runtimeOnly "curse.maven:carry-on-274259:5649344"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

@@ -46,8 +46,6 @@ import net.minecraft.world.phys.Vec3;
 import org.confluence.mod.client.renderer.item.SimpleGeoItemRenderer;
 import org.confluence.mod.common.item.fishing.AbstractFishingPole;
 import org.confluence.mod.common.item.fishing.BaitItem;
-import org.confluence.terra_curio.common.component.ModRarity;
-import org.confluence.terra_curio.common.init.TCDataComponentTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
@@ -64,12 +62,15 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
-import static net.minecraft.world.level.block.BarrelBlock.FACING;
+import static net.minecraft.world.level.block.ChestBlock.FACING;
+
 
 public class AutoFishBlock extends BaseEntityBlock {
 
     public AutoFishBlock(Properties properties) {
         super(properties);
+        registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(TURN, false));
+
     }
     public static final BooleanProperty TURN = BooleanProperty.create("turn_on");
 
