@@ -54,6 +54,37 @@ public class ModUtils {
     }
 
     /**
+     * 尝试将新物品放回到已有的相同物品槽中
+     * @param item 新物品
+     * @param items 已有物品槽
+     * @return 是否成功放回
+     */
+    public static boolean tryPlaceBackItemStackToItemStacks(ItemStack item, List<ItemStack> items){
+        // 尝试将新物品堆叠到已有的相同物品槽中
+        int firstEmptyIndex = -1;
+        for (ItemStack current : items) {
+            if(firstEmptyIndex == -1 && current.isEmpty() ){
+                firstEmptyIndex = items.indexOf(current);
+            }
+            if (current.is(item.getItem()) && current.getCount() < current.getMaxStackSize()) {
+                // 计算可以堆叠的数量
+                int transfer = Math.min(item.getCount(), current.getMaxStackSize() - current.getCount());
+                current.grow(transfer); // 增加当前物品的数量
+                item.shrink(transfer);  // 减少新物品的数量
+                if (item.isEmpty()) {
+                    return true; // 如果新物品被完全堆叠，返回true
+                }
+            }
+        }
+        if(firstEmptyIndex != -1){
+            items.set(firstEmptyIndex, item.copy());
+            item.setCount(0);
+            return true;
+        }
+        return false; // 如果没有找到可以堆叠的物品槽，返回false
+    }
+
+    /**
      * 合并堆叠物品
      * @param items 物品列表
      */

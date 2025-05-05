@@ -145,9 +145,14 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
-    implementation(jarJar(files("libs/ConfluenceOtherworld-1.1.0.jar")))
-    implementation(jarJar(files("libs/terra_entity-1.1.14.jar")))
-    implementation(jarJar(files("libs/confluence_magic_lib-0.0.1.jar")))
+    implementation(files("libs/ConfluenceOtherworld-1.1.0.jar"))
+//    jarJar(files("libs/ConfluenceOtherworld-1.1.0.jar"))
+
+    implementation(files("libs/terra_entity-1.1.14.jar"))
+
+    implementation(files("libs/confluence_magic_lib-0.0.1.jar"))
+    implementation(files("libs/terra_guns-1.21.1-1.0.jar"))
+
 
 //    implementation "curse.maven:confluence-1209464:6343042"
 ////    compileOnly "curse.maven:confluence-1209464:6343042"

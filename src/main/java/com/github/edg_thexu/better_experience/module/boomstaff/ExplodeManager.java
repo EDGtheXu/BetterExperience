@@ -2,8 +2,11 @@ package com.github.edg_thexu.better_experience.module.boomstaff;
 
 import com.github.edg_thexu.better_experience.utils.ModUtils;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -16,6 +19,8 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import static net.minecraft.world.level.block.Block.getId;
 
 public class ExplodeManager {
     private int maxTickToHandle = 20;
@@ -61,7 +66,10 @@ public class ExplodeManager {
                 Block block = state.getBlock();
                 BlockEntity entity2 = level.getBlockEntity(pos);
                 if(player instanceof ServerPlayer sp) {
-                    sp.gameMode.destroyAndAck(pos, 0, "destroyed");
+                    sp.gameMode.destroyAndAck(pos, 2, "destroyed");
+                    if(level.random.nextFloat() < 0.1f)
+                        level.levelEvent(2001, pos, getId(state));
+
                     if(isDrop) {
                         var drops = Block.getDrops(state, (ServerLevel) level, pos, entity2, player, player.getOffhandItem());
 //                        for (var drop : drops) {
@@ -72,8 +80,13 @@ public class ExplodeManager {
                         allDrops.addAll(drops);
                     }
                 }
+                if(level.random.nextFloat() < 0.05f) {
+                    level.playSound(null, pos, SoundEvents.GENERIC_EXPLODE.value(), SoundSource.BLOCKS, 0.2f,0.6f);
+                    ((ServerLevel)level).sendParticles(ParticleTypes.EXPLOSION, pos.getX(), pos.getY(), pos.getZ(), 1, 0.5, 0.1,0,0);
+                }
             }
             ModUtils.unionItemStacks(allDrops);
+
             for (var drop : allDrops) {
                 if(drop.isEmpty()) continue;
                 ItemEntity entity = new ItemEntity(level, center.x,  ymax+1, center.z, drop);

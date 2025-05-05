@@ -343,7 +343,7 @@ public class AutoFishBlock extends BaseEntityBlock {
 //                    this.getBlockPos().offset(0,-1,0)
             };
             boolean hasConduit = false;
-            for(int i=0;i<6;i++){
+            for(int i=0;i<5;i++){
                 if (level != null && level.getBlockState(around[i]).is(Blocks.CONDUIT)) {
                     hasConduit = true;
                     break;
