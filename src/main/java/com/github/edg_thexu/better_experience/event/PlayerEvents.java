@@ -28,9 +28,9 @@ public class PlayerEvents {
 
         if (player.level() instanceof ServerLevel sl) {
             PlayerAttribute.notifyDirty(sl);
+            FishBugRepetition.detect(player);
+            StorageManager.saveMoneyToPiggy(player);
         }
-        FishBugRepetition.detect(player);
-        StorageManager.saveMoneyToPiggy(player);
 
     }
 

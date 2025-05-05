@@ -19,6 +19,7 @@ import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.event.ModifyDefaultComponentsEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.confluence.mod.Confluence;
 import org.confluence.mod.util.PrefixUtils;
 
@@ -77,7 +78,9 @@ public class ModEvent {
     public static void registerConfig(ModConfigEvent.Reloading event) {
 //        try{
             if(event.getConfig().getSpec() == CommonConfig.SPEC){
-                ClientBoundConfigPacket.syncAll();
+                if(ServerLifecycleHooks.getCurrentServer() != null) {
+                    ClientBoundConfigPacket.syncAll();
+                }
             }
 //        }catch(Exception ignored){
 //        }
