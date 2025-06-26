@@ -2,9 +2,10 @@ package com.github.edg_thexu.better_experience.module.autofish;
 
 import com.github.edg_thexu.better_experience.Better_experience;
 import com.github.edg_thexu.better_experience.config.CommonConfig;
+import com.github.edg_thexu.better_experience.intergration.confluence.ConfluenceHelper;
 import com.github.edg_thexu.better_experience.mixed.IFishingHook;
 import com.github.edg_thexu.better_experience.mixed.IPlayer;
-import com.github.edg_thexu.better_experience.mixin.AbstractFishingPoleAccessor;
+import com.github.edg_thexu.better_experience.mixin.integration.confluence.AbstractFishingPoleAccessor;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.item.FishingRodItem;
@@ -25,7 +26,7 @@ public class FishBugRepetition {
                 FishingHook hook = null;
                 try {
                     float power = AutoFishManager.computeFishingPower(player, poleStack, null, null);
-                    if (poleStack.getItem() instanceof AbstractFishingPole pole) {
+                    if (ConfluenceHelper.isLoaded() && poleStack.getItem() instanceof AbstractFishingPole pole) {
                         hook = ((AbstractFishingPoleAccessor) pole).callGetHook(poleStack, player, level, (int) power, 5);
                     } else if (poleStack.getItem() instanceof FishingRodItem) {
                         hook = new FishingHook(player, level, (int) power, 5);

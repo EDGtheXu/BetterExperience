@@ -11,7 +11,10 @@ import net.neoforged.neoforge.common.util.INBTSerializable;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.UnknownNullability;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
 public class AutoPotionAttachment implements INBTSerializable<CompoundTag> {
 
@@ -99,7 +102,7 @@ public class AutoPotionAttachment implements INBTSerializable<CompoundTag> {
 
     public void sync(boolean force){
         // 防止地址相等时数据始终一致
-        if(force ||  !_potions.equals(potions) || _potions == potions) {
+        if(force || dirty ||  !_potions.equals(potions) || _potions == potions) {
             if(_potions != potions)
                 _potions.clear();
             _potions = new HashMap<>(potions);

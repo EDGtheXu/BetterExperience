@@ -1,5 +1,6 @@
 package com.github.edg_thexu.better_experience.module.faststorage;
 
+import com.github.edg_thexu.better_experience.intergration.confluence.ConfluenceHelper;
 import com.github.edg_thexu.better_experience.utils.ModUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -60,6 +61,9 @@ public class StorageManager {
      * @param player 玩家
      */
     public static void saveMoneyToPiggy(Player player){
+        if(!ConfluenceHelper.isLoaded()){
+            return;
+        }
         if(player.level().isClientSide || (player.tickCount & 63) != 0){
             return;
         }

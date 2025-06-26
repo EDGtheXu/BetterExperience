@@ -2,6 +2,7 @@ package com.github.edg_thexu.better_experience.event;
 
 import com.github.edg_thexu.better_experience.Better_experience;
 import com.github.edg_thexu.better_experience.config.CommonConfig;
+import com.github.edg_thexu.better_experience.intergration.confluence.ConfluenceHelper;
 import com.github.edg_thexu.better_experience.module.autopotion.PlayerAttribute;
 import com.github.edg_thexu.better_experience.networks.c2s.BreakBlocksPacketC2S;
 import com.github.edg_thexu.better_experience.networks.c2s.PotionApplyPacketC2S;
@@ -55,10 +56,10 @@ public class ModEvent {
                 for (Map.Entry<ResourceKey<Item>, Item> entry : BuiltInRegistries.ITEM.entrySet()) {
                     Item item = entry.getValue();
                     DataComponentMap components = item.components();
-                    if (components.has(DataComponents.MAX_DAMAGE) || PrefixUtils.couldReforge(item.getDefaultInstance()))
+                    if (components.has(DataComponents.MAX_DAMAGE) || ConfluenceHelper.isLoaded() && PrefixUtils.couldReforge(item.getDefaultInstance()))
                         continue;
                     String namespace = entry.getKey().location().getNamespace();
-                    if ("minecraft".equals(namespace) || Confluence.MODID.equals(namespace)) {
+                    if ("minecraft".equals(namespace) || ConfluenceHelper.isLoaded() && Confluence.MODID.equals(namespace)) {
                         int maxStackSize = item.getDefaultMaxStackSize();
                         if (maxStackSize == 1 || components.has(DataComponents.FOOD) || components.has(DataComponents.POTION_CONTENTS)) {
                             event.modify(item, builder -> builder.set(DataComponents.MAX_STACK_SIZE, 99));

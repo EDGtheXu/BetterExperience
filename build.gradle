@@ -130,29 +130,15 @@ dependencies {
     compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
     runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
 
-    // Example mod dependency using a mod jar from ./libs with a flat dir repository
-    // This maps to ./libs/coolmod-${mc_version}-${coolmod_version}.jar
-    // The group id is ignored when searching -- in this case, it is "blank"
-    // implementation "blank:coolmod-${mc_version}:${coolmod_version}"
-
-    // Example mod dependency using a file as dependency
-    // implementation files("libs/coolmod-${mc_version}-${coolmod_version}.jar")
-
-    // Example project dependency using a sister or child project:
-    // implementation project(":myproject")
-
-    // For more info:
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
-
     implementation(files("libs/ConfluenceOtherworld-1.1.0.jar"))
-//    jarJar(files("libs/ConfluenceOtherworld-1.1.0.jar"))
-
     implementation(files("libs/terra_entity-1.1.14.jar"))
-
     implementation(files("libs/confluence_magic_lib-0.0.1.jar"))
     implementation(files("libs/terra_guns-1.21.1-1.0.jar"))
 
+//    compileOnly(files("libs/ConfluenceOtherworld-1.1.0.jar"))
+//    compileOnly(files("libs/terra_entity-1.1.14.jar"))
+//    compileOnly(files("libs/confluence_magic_lib-0.0.1.jar"))
+//    compileOnly(files("libs/terra_guns-1.21.1-1.0.jar"))
 
 //    implementation "curse.maven:confluence-1209464:6343042"
 ////    compileOnly "curse.maven:confluence-1209464:6343042"

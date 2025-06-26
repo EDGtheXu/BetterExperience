@@ -2,6 +2,7 @@ package com.github.edg_thexu.better_experience.block;
 
 import com.github.edg_thexu.better_experience.Better_experience;
 import com.github.edg_thexu.better_experience.init.ModBlocks;
+import com.github.edg_thexu.better_experience.intergration.confluence_lib.ConfluenceLibHelper;
 import com.github.edg_thexu.better_experience.menu.AutoFishMenu;
 import com.github.edg_thexu.better_experience.mixed.IFishingHook;
 import com.github.edg_thexu.better_experience.mixed.IPlayer;
@@ -34,7 +35,10 @@ import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.entity.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -158,11 +162,9 @@ public class AutoFishBlock extends BaseEntityBlock {
                         var oldHook = player.fishing;
 
                         try {
-                            float power = AutoFishManager.computeFishingPower(null, poleStack,
-                                    bait.getItem() instanceof BaitItem ? (BaitItem) bait.getItem() : null,
-                                    curios);
+                            float power = AutoFishManager.computeFishingPower(null, poleStack, bait.getItem(), curios);
 
-                            if (pole instanceof AbstractFishingPole pole1) {
+                            if (ConfluenceLibHelper.isLoaded() && pole instanceof AbstractFishingPole pole1) {
                                 Method funcField = AbstractFishingPole.class.getDeclaredMethod("getHook", ItemStack.class, Player.class, Level.class, int.class, int.class);
                                 funcField.setAccessible(true);
                                 hook = (FishingHook) funcField.invoke(pole, poleStack, player, level, (int) power, 5);
@@ -254,7 +256,7 @@ public class AutoFishBlock extends BaseEntityBlock {
 
                         entity.lastTick = entity.ticks;
 
-                        if(bait.getItem() instanceof BaitItem bait1){
+                        if(ConfluenceLibHelper.isLoaded() && bait.getItem() instanceof BaitItem bait1){
                             entity.cdReduce = (1 - bait1.getBaitBonus() * 0.5f);
                         }
                         entity.fishingTime = (int) (20 * 10 * entity.cdReduce);

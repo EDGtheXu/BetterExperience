@@ -7,6 +7,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.WidgetSprites;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.MobEffectTextureManager;
 import net.minecraft.core.Holder;
@@ -22,7 +23,6 @@ import net.minecraft.world.item.Items;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.confluence.mod.client.gui.container.ExtraInventoryScreen;
 
 import java.util.Collection;
 import java.util.List;
@@ -34,7 +34,7 @@ public class PotionScreenManager {
 
     private static final ResourceLocation EFFECT_BACKGROUND_SMALL_SPRITE = ResourceLocation.withDefaultNamespace("container/inventory/effect_background_small");
 
-    ExtraInventoryScreen screen;
+    AbstractContainerScreen screen;
     int leftPos;
     int topPos;
     int imageWidth;
@@ -52,7 +52,7 @@ public class PotionScreenManager {
             ResourceLocation.withDefaultNamespace("advancements/task_frame_obtained")
     );
 
-    public PotionScreenManager(ExtraInventoryScreen screen){
+    public PotionScreenManager(AbstractContainerScreen screen){
         this.screen = screen;
         this.imageWidth = 0;
         this.imageHeight = 0;

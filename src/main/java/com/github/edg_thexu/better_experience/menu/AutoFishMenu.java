@@ -1,11 +1,16 @@
 package com.github.edg_thexu.better_experience.menu;
 
 import com.github.edg_thexu.better_experience.init.ModMenus;
+import com.github.edg_thexu.better_experience.intergration.confluence.ConfluenceHelper;
+import com.github.edg_thexu.better_experience.intergration.terra_curios.TCHelper;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.*;
+import net.minecraft.world.inventory.ChestMenu;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.SimpleContainerData;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.FishingRodItem;
 import net.minecraft.world.item.ItemStack;
 import org.confluence.mod.common.item.fishing.BaitItem;
@@ -34,13 +39,18 @@ public class AutoFishMenu extends ChestMenu {
         addSlot(new Slot(container, 28, startX + 18, -16) {
             @Override
             public boolean mayPlace(ItemStack stack) {
+                if(!ConfluenceHelper.isLoaded()){
+                    return false;
+                }
                 return stack.getItem() instanceof BaitItem;
             }
         });
         addSlot(new Slot(container, 29, startX + 36, -16) {
             @Override
             public boolean mayPlace(ItemStack stack) {
-                // todo: 渔力饰品
+                if(!TCHelper.isLoaded()) {
+                    return false;
+                }
                 return stack.getItem() instanceof BaseCurioItem;
             }
         });

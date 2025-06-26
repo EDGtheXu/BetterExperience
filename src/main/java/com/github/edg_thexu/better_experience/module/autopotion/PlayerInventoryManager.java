@@ -3,6 +3,7 @@ package com.github.edg_thexu.better_experience.module.autopotion;
 import com.github.edg_thexu.better_experience.attachment.AutoPotionAttachment;
 import com.github.edg_thexu.better_experience.config.CommonConfig;
 import com.github.edg_thexu.better_experience.init.ModAttachments;
+import com.github.edg_thexu.better_experience.intergration.confluence.ConfluenceHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -25,10 +26,8 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.lib.common.PlayerContainer;
 import org.confluence.mod.client.gui.container.ExtraInventoryScreen;
-import org.confluence.mod.common.init.ModAttachmentTypes;
 import org.confluence.mod.common.init.item.FoodItems;
 import org.confluence.mod.common.item.potion.EffectPotionItem;
-import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeHealth;
 import org.jetbrains.annotations.Nullable;
 import oshi.util.tuples.Pair;
 import top.theillusivec4.curios.client.gui.CuriosScreen;
@@ -73,7 +72,7 @@ public class PlayerInventoryManager {
             // 配置文件
             return effects;
         }
-        if(item instanceof EffectPotionItem potion) {
+        if(ConfluenceHelper.isLoaded() && item instanceof EffectPotionItem potion) {
             // 效果类药水
             effects.add(new Pair<>(potion.mobEffect, potion.amplifier));
             return effects;
@@ -82,18 +81,14 @@ public class PlayerInventoryManager {
         {
             //食物类
                 // 排除飘飘麦
-            if(food == FoodItems.FLOATING_WHEAT_SEED.get()) return effects;
+            if(ConfluenceHelper.isLoaded() && food == FoodItems.FLOATING_WHEAT_SEED.get()) return effects;
 
             var foodProperties = food.getFoodProperties(stack, null);
             if (foodProperties != null) {
                 for (FoodProperties.PossibleEffect foodproperties$possibleeffect : foodProperties.effects()) {
                     var mobEffect = foodproperties$possibleeffect.effect();
                     if (canApplyEffect.test(mobEffect)) {
-                        // 只要有一个可以应用的效果就返回true
-                        return foodProperties.effects().stream().map(eff->{
-                            var ins = eff.effect();
-                            return new Pair<>(ins.getEffect(), ins.getAmplifier());
-                        }).toList();
+                        effects.add(new Pair<>(mobEffect.getEffect(), mobEffect.getAmplifier()));
                     }
                 }
             }
@@ -218,11 +213,11 @@ public class PlayerInventoryManager {
 
         String title = screen.getTitle().toString();
         if((
-                container instanceof PlayerContainer<?> ||  // 猪猪存钱罐和保险箱
+                ConfluenceHelper.isLoaded() && container instanceof PlayerContainer<?> ||  // 猪猪存钱罐和保险箱
                 screen instanceof InventoryScreen || // 背包
                 screen instanceof CreativeModeInventoryScreen || // 创造栏
                 screen instanceof ContainerScreen && (title.contains("enderchest") || title.contains("piggy_bank") || title.contains("safe")) ||
-                        screen instanceof ExtraInventoryScreen||  // 额外栏
+                        ConfluenceHelper.isLoaded() && screen instanceof ExtraInventoryScreen||  // 额外栏
                         screen instanceof CuriosScreen  // 饰品栏
         )
                 && canApply.test(stack)){

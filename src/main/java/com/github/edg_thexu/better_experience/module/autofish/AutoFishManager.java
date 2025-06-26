@@ -1,11 +1,15 @@
 package com.github.edg_thexu.better_experience.module.autofish;
 
+import com.github.edg_thexu.better_experience.intergration.confluence.ConfluenceHelper;
+import com.github.edg_thexu.better_experience.intergration.terra_curios.TCHelper;
+import com.github.edg_thexu.better_experience.utils.EnchantmentUtil;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantments;
-import org.confluence.lib.util.EnchantmentUtil;
+
 import org.confluence.mod.common.init.item.AccessoryItems;
 import org.confluence.mod.common.item.fishing.BaitItem;
 import org.confluence.terra_curio.util.TCUtils;
@@ -18,16 +22,17 @@ public class AutoFishManager {
 
     /**
      * 计算渔力
-     * @param player
-     * @param pole
-     * @param bait
-     * @return
+     * @param player 玩家
+     * @param pole 钓竿
+     * @param bait 鱼饵
+     * @param curios 饰品
+     * @return 渔力
      */
-    public static float computeFishingPower(@Nullable Player player, @Nullable ItemStack pole, @Nullable BaitItem bait, @Nullable ItemStack curios){
+    public static float computeFishingPower(@Nullable Player player, @Nullable ItemStack pole, @Nullable Item bait, @Nullable ItemStack curios){
 
         // 人物属性
         float base = 2 + EnchantmentUtil.getEnchantmentLevel(Enchantments.LUCK_OF_THE_SEA, pole); // 0 1 2 3
-        if (player != null) {
+        if (player != null && TCHelper.isLoaded()) {
             base += TCUtils.getAccessoriesValue(player, AccessoryItems.FISHING$POWER);
         }
 
@@ -50,10 +55,10 @@ public class AutoFishManager {
 
 
         // 鱼饵加成
-        float bounds = 1 + (bait == null? 0 : bait.getBaitBonus());
+        float bounds = 1 + (bait == null? 0 : (ConfluenceHelper.isLoaded() && bait instanceof BaitItem ? (((BaitItem) bait).getBaitBonus()): 0));
         // 饰品加成
         float curiosBonus = 0;
-        if(curios != null) {
+        if(curios != null && !curios.isEmpty() && TCHelper.isLoaded()) {
             var component = TCUtils.getAccessoriesComponent(curios);
             if( component != null && component.contains(AccessoryItems.FISHING$POWER)) {
                 curiosBonus = component.get(AccessoryItems.FISHING$POWER).get();

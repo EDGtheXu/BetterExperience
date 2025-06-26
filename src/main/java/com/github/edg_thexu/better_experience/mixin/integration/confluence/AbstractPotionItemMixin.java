@@ -1,4 +1,4 @@
-package com.github.edg_thexu.better_experience.mixin.potion;
+package com.github.edg_thexu.better_experience.mixin.integration.confluence;
 
 import com.github.edg_thexu.better_experience.config.CommonConfig;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -11,10 +11,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.confluence.mod.common.item.potion.AbstractPotionItem;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-
-@Mixin(AbstractPotionItem.class)
+@Pseudo
+@Mixin(targets = "org.confluence.mod.common.item.potion.AbstractPotionItem")
+//@Mixin(AbstractPotionItem.class)
 public abstract class AbstractPotionItemMixin {
     @Shadow
     public abstract ItemStack finishUsingItem(ItemStack itemStack, Level level, LivingEntity living);

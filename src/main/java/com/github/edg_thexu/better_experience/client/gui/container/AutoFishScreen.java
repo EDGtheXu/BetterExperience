@@ -1,6 +1,8 @@
 package com.github.edg_thexu.better_experience.client.gui.container;
 
 import com.github.edg_thexu.better_experience.Better_experience;
+import com.github.edg_thexu.better_experience.intergration.confluence.ConfluenceHelper;
+import com.github.edg_thexu.better_experience.intergration.terra_curios.TCHelper;
 import com.github.edg_thexu.better_experience.menu.AutoFishMenu;
 import com.github.edg_thexu.better_experience.module.autofish.AutoFishManager;
 import com.github.edg_thexu.better_experience.networks.c2s.ServerBoundPacketC2S;
@@ -15,9 +17,6 @@ import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.confluence.mod.Confluence;
-import org.confluence.mod.common.item.fishing.BaitItem;
-import org.confluence.terra_curio.TerraCurio;
 
 import java.util.List;
 
@@ -27,15 +26,21 @@ public class AutoFishScreen extends ContainerScreen {
 
     public AutoFishScreen(ChestMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
+
+        iconList1 = ConfluenceHelper.isLoaded()? List.of(Better_experience.space("confluence","item/fishing_pole/golden_fishing_rod")):
+                List.of(Better_experience.space("minecraft","item/fishing_rod"));
+        iconList2 = ConfluenceHelper.isLoaded()? List.of(Better_experience.space("confluence","item/bait/worm")) : List.of();
+        iconList3 = TCHelper.isLoaded()? List.of(Better_experience.space("terra_curios","item/curio/angler_earring")) : List.of();
+
     }
 
     private final CyclingSlotBackground icon1 = new CyclingSlotBackground(27+ 36);
     private final CyclingSlotBackground icon2 = new CyclingSlotBackground(28+ 36);
     private final CyclingSlotBackground icon3 = new CyclingSlotBackground(29+ 36);
 
-    List<ResourceLocation> iconList1 = List.of(Confluence.asResource("item/fishing_pole/golden_fishing_rod"));
-    List<ResourceLocation> iconList2 = List.of(Confluence.asResource("item/bait/worm"));
-    List<ResourceLocation> iconList3 = List.of(TerraCurio.asResource("item/curio/angler_earring"));
+    List<ResourceLocation> iconList1;
+    List<ResourceLocation> iconList2;
+    List<ResourceLocation> iconList3;
 
     @Override
     protected void init() {
@@ -90,14 +95,11 @@ public class AutoFishScreen extends ContainerScreen {
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
 
-
-
-
         ItemStack pole = menu.getContainer().getItem(27);
         Item bait = menu.getContainer().getItem(28).getItem();
         ItemStack curios = menu.getContainer().getItem(29);
 
-        float power = AutoFishManager.computeFishingPower(null, pole, bait instanceof BaitItem? (BaitItem) bait : null, curios);
+        float power = AutoFishManager.computeFishingPower(null, pole, bait, curios);
 
         guiGraphics.drawString(font, "Power: " + (int) power, leftPos + 10, topPos - 10 , 0xFFFFFFFF);
 

@@ -21,6 +21,10 @@ public class Better_experience {
         return ResourceLocation.fromNamespaceAndPath(Better_experience.MODID, location);
     }
 
+    public static ResourceLocation space(String modid, String location){
+        return ResourceLocation.fromNamespaceAndPath(modid, location);
+    }
+
     public Better_experience(IEventBus modEventBus, ModContainer modContainer) {
 
         modContainer.registerConfig(ModConfig.Type.COMMON, CommonConfig.init());
@@ -28,7 +32,7 @@ public class Better_experience {
 
         ModTabs.TABS.register(modEventBus);
         ModAttachments.TYPES.register(modEventBus);
-        ModBlocks.BLOCKS.register(modEventBus);
+        ModBlocks.register(modEventBus);
         ModMenus.TYPES.register(modEventBus);
     }
 

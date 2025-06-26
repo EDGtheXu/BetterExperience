@@ -1,4 +1,4 @@
-package com.github.edg_thexu.better_experience.mixin;
+package com.github.edg_thexu.better_experience.mixin.integration.confluence;
 
 import com.github.edg_thexu.better_experience.config.CommonConfig;
 import net.minecraft.core.BlockPos;
@@ -8,12 +8,14 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
 import org.confluence.mod.common.block.natural.sapling.StoneSaplingBlock;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-@Mixin(StoneSaplingBlock.class)
+@Pseudo
+@Mixin(targets = "org.confluence.mod.common.block.natural.sapling.StoneSaplingBlock")
+//@Mixin(StoneSaplingBlock.class)
 public class StoneSaplingBlockMixin {
 
 

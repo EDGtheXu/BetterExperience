@@ -4,6 +4,7 @@ import com.github.edg_thexu.better_experience.Better_experience;
 import com.github.edg_thexu.better_experience.client.buffer.AABBBuffer;
 import com.github.edg_thexu.better_experience.config.ClientConfig;
 import com.github.edg_thexu.better_experience.init.ModAttachments;
+import com.github.edg_thexu.better_experience.intergration.confluence.ConfluenceHelper;
 import com.github.edg_thexu.better_experience.item.MagicBoomStaff;
 import com.github.edg_thexu.better_experience.networks.c2s.ServerBoundPacketC2S;
 import net.minecraft.client.Minecraft;
@@ -47,6 +48,9 @@ public class ClientGameEvent {
 
     @SubscribeEvent
     public static void event(InputEvent.MouseButton.Pre event){
+        if(!ConfluenceHelper.isLoaded()){
+            return;
+        }
         if (ClientConfig.MULTI_FISHING.get() && Minecraft.getInstance().player != null && event.getButton() == 0 && event.getAction() == 1 && Minecraft.getInstance().player.getMainHandItem().getItem() instanceof HammerItem) {
             PacketDistributor.sendToServer(new ServerBoundPacketC2S(3));
 
@@ -56,7 +60,7 @@ public class ClientGameEvent {
 
     @SubscribeEvent
     public static void closeScreen(ScreenEvent.Closing event){
-        if(event.getScreen() instanceof ExtraInventoryScreen){
+        if(ConfluenceHelper.isLoaded() && event.getScreen() instanceof ExtraInventoryScreen){
             if (Minecraft.getInstance().player != null) {
                 Minecraft.getInstance().player.getData(ModAttachments.AUTO_POTION).sync(true);
             }

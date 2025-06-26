@@ -1,5 +1,6 @@
 package com.github.edg_thexu.better_experience.attachment;
 
+import com.github.edg_thexu.better_experience.intergration.confluence.ConfluenceHelper;
 import com.github.edg_thexu.better_experience.module.autopotion.PlayerInventoryManager;
 import com.github.edg_thexu.better_experience.networks.s2c.EnderChestItemsS2C;
 import com.mojang.serialization.Codec;
@@ -17,7 +18,6 @@ import net.neoforged.neoforge.common.util.INBTSerializable;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.confluence.mod.common.init.ModAttachmentTypes;
 import org.jetbrains.annotations.UnknownNullability;
-import org.w3c.dom.TypeInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,7 +88,10 @@ public class EnderChestAttachment implements INBTSerializable<CompoundTag> {
 
     public static void syncAll(ServerPlayer player){
         syncEnderChest(player);
-        syncPig(player);
-        syncSafe(player);
+        if(ConfluenceHelper.isLoaded()) {
+            syncPig(player);
+            syncSafe(player);
+        }
+
     }
 }

@@ -12,7 +12,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import org.confluence.terraentity.client.buffer.AbstractBufferManager;
 import org.lwjgl.opengl.GL11;
 
 @OnlyIn(Dist.CLIENT)

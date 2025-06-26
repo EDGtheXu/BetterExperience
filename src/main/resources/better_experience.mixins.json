@@ -5,23 +5,11 @@
     "compatibilityLevel": "JAVA_21",
     "refmap": "better_experience.refmap.json",
     "mixins": [
-        "AbstractFishingPoleAccessor",
-        "BaseSlimeMixin",
-        "BossSummingItemMixin",
+
         "ChestMenuMixin",
         "FishingHookMixin",
-        "NPCReforgeMenuMixin",
         "PlayerMixin",
-        "ProjectileWeaponItemMixin",
-        "StoneSaplingBlockMixin",
-        "herbs.BlinkrootMixin",
-        "herbs.DaybloomMixin",
-        "herbs.DeathWeedMixin",
-        "herbs.FireblossomMixin",
-        "herbs.MoonglowMixin",
-        "herbs.ShiveringThornMixin",
-        "herbs.WaterleafMixin",
-        "potion.AbstractPotionItemMixin"
+        "ProjectileWeaponItemMixin"
     ],
     "client": [
         "AbstractContainerScreenMixin",
