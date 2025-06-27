@@ -3,6 +3,7 @@ package com.github.edg_thexu.better_experience.item;
 import com.github.edg_thexu.better_experience.init.ModDataComponentTypes;
 import com.github.edg_thexu.better_experience.menu.PotionBagMenu;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.SimpleMenuProvider;
@@ -35,6 +36,22 @@ public class PotionBag extends Item {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         tooltipComponents.add(Component.translatable("better_experience.tooltip.potion_bag.info"));
+        var data = stack.get(ModDataComponentTypes.ITEM_CONTAINER_COMPONENT);
+        if (data != null) {
+            int size = data.getContainerSize();
+            int filled = 0;
+            for( var item : data.getItems()){
+                if(!item.isEmpty()){
+                    filled++;
+                }
+            }
+            MutableComponent component = Component.literal("(" + filled + "/" +size  + ")");
+            if(filled >= size){
+                component.withStyle(style -> style.withColor(0xFF0000));
+            }
+            tooltipComponents.add(component);
+        }
+
     }
 
 }

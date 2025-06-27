@@ -13,18 +13,22 @@ import net.minecraft.world.SimpleContainer;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
+import java.util.UUID;
+
 public class ItemContainerComponent extends SimpleContainer implements DataComponentType<ItemContainerComponent>{
 
     public static Codec<ItemContainerComponent> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.INT.fieldOf("size").forGetter(ItemContainerComponent::getContainerSize),
+            Codec.STRING.optionalFieldOf("uuid").forGetter(ins-> Optional.ofNullable(ins.id.toString())),
             CodecUtil.TAG_CODEC.fieldOf("tag").forGetter(ins->{
                 if(ServerLifecycleHooks.getCurrentServer() == null){
                     return ins.createTag(null);
                 }
                 return ins.createTag(ServerLifecycleHooks.getCurrentServer().registryAccess());
             })
-    ).apply(instance, (size, tag)->{
-        ItemContainerComponent itemContainerComponent = new ItemContainerComponent(size);
+    ).apply(instance, (size, id, tag)->{
+        ItemContainerComponent itemContainerComponent = id.map(s -> new ItemContainerComponent(size, UUID.fromString(s))).orElseGet(() -> new ItemContainerComponent(size));
         if(ServerLifecycleHooks.getCurrentServer() == null){
             itemContainerComponent.fromTag((ListTag) tag, null);
         }else{
@@ -35,10 +39,14 @@ public class ItemContainerComponent extends SimpleContainer implements DataCompo
 
     public static StreamCodec<ByteBuf, ItemContainerComponent> STREAM_CODEC = ByteBufCodecs.fromCodec(CODEC);
 
+    UUID id; // 只是为了hashCode
     public ItemContainerComponent(int size) {
-        super(size);
+        this(size, UUID.randomUUID());
     }
-
+    public ItemContainerComponent(int size, UUID id) {
+        super(size);
+        this.id = id;
+    }
     @Override
     public @Nullable Codec<ItemContainerComponent> codec() {
         return CODEC;
@@ -56,9 +64,7 @@ public class ItemContainerComponent extends SimpleContainer implements DataCompo
 
     @Override
     public int hashCode() {
-        if(ServerLifecycleHooks.getCurrentServer() == null) {
-            return this.createTag(null).hashCode();
-        }
-        return this.createTag(ServerLifecycleHooks.getCurrentServer().registryAccess()).hashCode();
+        return id.hashCode();
     }
+
 }

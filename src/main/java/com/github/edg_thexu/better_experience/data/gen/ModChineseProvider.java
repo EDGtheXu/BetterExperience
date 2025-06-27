@@ -25,6 +25,7 @@ public class ModChineseProvider extends LanguageProvider {
         add(ModItems.StarBoomStaff.get(), "星爆魔杖");
         add(ModItems.PotionBag.get(), "药水袋");
         add(ModBlocks.AUTO_FISH_BLOCK.get(), "自动钓鱼机");
+        add(ModBlocks.AUTO_SELL_BLOCK.get(), "自动贩卖机");
 
 
         // tooltips

@@ -4,7 +4,7 @@ import com.github.edg_thexu.better_experience.Better_experience;
 import com.github.edg_thexu.better_experience.config.CommonConfig;
 import com.github.edg_thexu.better_experience.init.ModItems;
 import com.github.edg_thexu.better_experience.intergration.confluence.ConfluenceHelper;
-import com.github.edg_thexu.better_experience.intergration.terra_curios.TCHelper;
+import com.github.edg_thexu.better_experience.intergration.confluence_lib.ConfluenceLibHelper;
 import com.github.edg_thexu.better_experience.module.autopotion.PlayerAttribute;
 import com.github.edg_thexu.better_experience.networks.c2s.BreakBlocksPacketC2S;
 import com.github.edg_thexu.better_experience.networks.c2s.PotionApplyPacketC2S;
@@ -16,6 +16,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.config.ModConfigEvent;
@@ -23,10 +24,10 @@ import net.neoforged.neoforge.event.ModifyDefaultComponentsEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
+import org.confluence.lib.ConfluenceMagicLib;
+import org.confluence.lib.common.component.ModRarity;
 import org.confluence.mod.Confluence;
 import org.confluence.mod.util.PrefixUtils;
-import org.confluence.terra_curio.common.component.ModRarity;
-import org.confluence.terra_curio.common.init.TCDataComponentTypes;
 
 import java.util.Map;
 
@@ -52,7 +53,7 @@ public class ModEvent {
         }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void modifyDefaultComponents(ModifyDefaultComponentsEvent event) {
         try {
 
@@ -79,8 +80,8 @@ public class ModEvent {
 
         }
 
-        if(TCHelper.isLoaded()){
-            event.modify(ModItems.PotionBag, builder -> builder.set(TCDataComponentTypes.MOD_RARITY.get(), ModRarity.ORANGE));
+        if(ConfluenceLibHelper.isLoaded()){
+            event.modify(ModItems.PotionBag, builder -> builder.set(ConfluenceMagicLib.MOD_RARITY.get(), ModRarity.ORANGE));
         }
     }
     @SubscribeEvent

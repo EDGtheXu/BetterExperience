@@ -7,7 +7,7 @@ public class TCHelper {
 
     public static boolean isLoaded() {
         if(isLoad == null){
-            isLoad = ModList.get().isLoaded("terra_curios");
+            isLoad = ModList.get().isLoaded("terra_curio");
         }
         return isLoad;
     }

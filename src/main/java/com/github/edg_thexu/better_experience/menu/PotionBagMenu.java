@@ -33,7 +33,10 @@ public class PotionBagMenu extends AbstractContainerMenu {
                 this.addSlot(new Slot(container, j1 + i1 * 9, 8 + j1 * 18, 18 + i1 * 18){
                     @Override
                     public boolean mayPlace(ItemStack stack) {
-                        return PlayerInventoryManager.canApply.test(stack);
+                        return
+//                                stack.get(DataComponents.FOOD) != null ||
+//                                stack.get(DataComponents.POTION_CONTENTS) != null ||
+                                PlayerInventoryManager.canApply.test(stack);
                     }
                 });
             }
