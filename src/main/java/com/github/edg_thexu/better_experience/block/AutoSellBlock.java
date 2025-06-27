@@ -101,7 +101,7 @@ public class AutoSellBlock extends BaseEntityBlock {
                         ItemStack stack = entity.getItem(i);
 
                         if (!stack.isEmpty() && !stack.is(ModTags.Items.COINS)) {
-                            int money = ValueComponent.getValue(stack);
+                            int money = ValueComponent.getValue(stack,0) / stack.getCount();
                             if (money > 0) {
                                 entity.getItem(i).shrink(1);
                                 int[] coins = PlayerUtils.decodeCoin(money);

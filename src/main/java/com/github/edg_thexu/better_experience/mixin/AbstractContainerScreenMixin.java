@@ -2,7 +2,6 @@ package com.github.edg_thexu.better_experience.mixin;
 
 import com.github.edg_thexu.better_experience.client.gui.hud.PotionScreenManager;
 import com.github.edg_thexu.better_experience.intergration.confluence.ConfluenceHelper;
-import com.github.edg_thexu.better_experience.intergration.confluence_lib.ConfluenceLibHelper;
 import com.github.edg_thexu.better_experience.module.autopotion.PlayerInventoryManager;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.gui.GuiGraphics;
@@ -14,8 +13,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.Slot;
-import org.confluence.mod.client.gui.container.ExtraInventoryScreen;
-import org.confluence.mod.common.menu.ExtraInventoryMenu;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -38,7 +35,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     @Inject(method = "<init>", at = @At("RETURN"))
     private void init(AbstractContainerMenu menu, Inventory playerInventory, Component title, CallbackInfo ci) {
         AbstractContainerScreen screen = (AbstractContainerScreen) (Object) this;
-        if(ConfluenceHelper.isLoaded() && screen instanceof ExtraInventoryScreen
+        if(ConfluenceHelper.isLoaded() && screen.getClass().getName().equals("org.confluence.mod.client.gui.container.ExtraInventoryScreen")
             || screen instanceof InventoryScreen
         ){
             betterExperience$potionScreenManager = new PotionScreenManager(screen);

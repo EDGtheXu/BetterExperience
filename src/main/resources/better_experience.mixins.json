@@ -13,7 +13,6 @@
     ],
     "client": [
         "AbstractContainerScreenMixin",
-        "client.ExtraInventoryScreenMixin",
         "client.ScreenMixin"
     ],
     "injectors": {
