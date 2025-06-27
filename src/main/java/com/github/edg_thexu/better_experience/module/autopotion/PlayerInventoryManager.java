@@ -1,8 +1,10 @@
 package com.github.edg_thexu.better_experience.module.autopotion;
 
 import com.github.edg_thexu.better_experience.attachment.AutoPotionAttachment;
+import com.github.edg_thexu.better_experience.client.gui.container.PotionBagScreen;
 import com.github.edg_thexu.better_experience.config.CommonConfig;
 import com.github.edg_thexu.better_experience.init.ModAttachments;
+import com.github.edg_thexu.better_experience.init.ModDataComponentTypes;
 import com.github.edg_thexu.better_experience.intergration.confluence.ConfluenceHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -136,7 +138,15 @@ public class PlayerInventoryManager {
             for (int i = 0; i < inventory.getContainerSize(); i++) {
                 try {
                     ItemStack stack = inventory.getItem(i);
-                    effects.addAll(getApplyEffect.apply(stack));
+                    var data1 = stack.get(ModDataComponentTypes.ITEM_CONTAINER_COMPONENT);
+                    if(data1 == null){
+                        effects.addAll(getApplyEffect.apply(stack));
+                    }else {
+                        // 药水袋
+                        for(var item : data1.getItems()){
+                            effects.addAll(getApplyEffect.apply(item));
+                        }
+                    }
                 } catch (Exception ignored) {
 
                 }
@@ -216,6 +226,7 @@ public class PlayerInventoryManager {
                 ConfluenceHelper.isLoaded() && container instanceof PlayerContainer<?> ||  // 猪猪存钱罐和保险箱
                 screen instanceof InventoryScreen || // 背包
                 screen instanceof CreativeModeInventoryScreen || // 创造栏
+                screen instanceof PotionBagScreen || // 药水袋
                 screen instanceof ContainerScreen && (title.contains("enderchest") || title.contains("piggy_bank") || title.contains("safe")) ||
                         ConfluenceHelper.isLoaded() && screen instanceof ExtraInventoryScreen||  // 额外栏
                         screen instanceof CuriosScreen  // 饰品栏

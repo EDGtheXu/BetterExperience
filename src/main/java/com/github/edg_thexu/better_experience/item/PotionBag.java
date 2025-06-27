@@ -1,0 +1,40 @@
+package com.github.edg_thexu.better_experience.item;
+
+import com.github.edg_thexu.better_experience.init.ModDataComponentTypes;
+import com.github.edg_thexu.better_experience.menu.PotionBagMenu;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+
+import java.util.List;
+
+public class PotionBag extends Item {
+    public PotionBag(Properties properties) {
+        super(properties);
+    }
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
+
+        ItemStack stack = player.getItemInHand(usedHand);
+        if(!level.isClientSide()) {
+            var data = stack.get(ModDataComponentTypes.ITEM_CONTAINER_COMPONENT);
+            if (data != null) {
+                player.openMenu(new SimpleMenuProvider((id, inventory, p) -> new PotionBagMenu(id, inventory, data), Component.translatable(stack.getDescriptionId()).withColor(0x333333)));
+            }
+        }
+        return InteractionResultHolder.success(player.getItemInHand(usedHand));
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        tooltipComponents.add(Component.translatable("better_experience.tooltip.potion_bag.info"));
+    }
+
+}

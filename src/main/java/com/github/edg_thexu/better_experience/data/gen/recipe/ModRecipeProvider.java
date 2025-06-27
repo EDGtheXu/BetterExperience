@@ -3,6 +3,7 @@ package com.github.edg_thexu.better_experience.data.gen.recipe;
 
 import com.github.edg_thexu.better_experience.Better_experience;
 import com.github.edg_thexu.better_experience.init.ModBlocks;
+import com.github.edg_thexu.better_experience.init.ModItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
@@ -35,6 +36,14 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('c',Items.CHEST)
                 .define('d',Items.IRON_INGOT)
                 .unlockedBy("has_gold_ingot",has(Items.GOLD_INGOT))
+                .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.PotionBag)
+                .pattern("aaa")
+                .pattern("a a")
+                .pattern("aaa")
+                .define('a',Items.LEATHER)
+                .unlockedBy("has_leather",has(Items.LEATHER))
                 .save(recipeOutput);
     }
 

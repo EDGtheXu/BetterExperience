@@ -2,8 +2,8 @@ package com.github.edg_thexu.better_experience.data;
 
 import com.github.edg_thexu.better_experience.Better_experience;
 import com.github.edg_thexu.better_experience.data.gen.ModItemModelProvider;
-import com.github.edg_thexu.better_experience.data.gen.TEChineseProvider;
-import com.github.edg_thexu.better_experience.data.gen.TEEnglishProvider;
+import com.github.edg_thexu.better_experience.data.gen.ModChineseProvider;
+import com.github.edg_thexu.better_experience.data.gen.ModEnglishProvider;
 import com.github.edg_thexu.better_experience.data.gen.loot.ModLootTableProvider;
 import com.github.edg_thexu.better_experience.data.gen.recipe.ModRecipeProvider;
 import com.github.edg_thexu.better_experience.data.gen.tag.ModBlockTagsProvider;
@@ -39,8 +39,8 @@ public class DataGenerator {
 
 
         boolean client = event.includeClient();
-        generator.addProvider(client, new TEChineseProvider(output));
-        generator.addProvider(client, new TEEnglishProvider(output));
+        generator.addProvider(client, new ModChineseProvider(output));
+        generator.addProvider(client, new ModEnglishProvider(output));
         generator.addProvider(client, new ModItemModelProvider(output, helper));
 
         PROVIDERS = generator.getProvidersView();

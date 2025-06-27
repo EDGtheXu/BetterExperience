@@ -2,7 +2,9 @@ package com.github.edg_thexu.better_experience.event;
 
 import com.github.edg_thexu.better_experience.Better_experience;
 import com.github.edg_thexu.better_experience.config.CommonConfig;
+import com.github.edg_thexu.better_experience.init.ModItems;
 import com.github.edg_thexu.better_experience.intergration.confluence.ConfluenceHelper;
+import com.github.edg_thexu.better_experience.intergration.terra_curios.TCHelper;
 import com.github.edg_thexu.better_experience.module.autopotion.PlayerAttribute;
 import com.github.edg_thexu.better_experience.networks.c2s.BreakBlocksPacketC2S;
 import com.github.edg_thexu.better_experience.networks.c2s.PotionApplyPacketC2S;
@@ -23,6 +25,8 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.confluence.mod.Confluence;
 import org.confluence.mod.util.PrefixUtils;
+import org.confluence.terra_curio.common.component.ModRarity;
+import org.confluence.terra_curio.common.init.TCDataComponentTypes;
 
 import java.util.Map;
 
@@ -73,6 +77,10 @@ public class ModEvent {
             }
         } catch (IllegalStateException ignored) {
 
+        }
+
+        if(TCHelper.isLoaded()){
+            event.modify(ModItems.PotionBag, builder -> builder.set(TCDataComponentTypes.MOD_RARITY.get(), ModRarity.ORANGE));
         }
     }
     @SubscribeEvent

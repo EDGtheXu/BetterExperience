@@ -25,7 +25,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import static net.minecraft.world.level.block.Block.getId;
 
 public class ExplodeManager {
-    private int maxTickToHandle = 20;
+    private final int maxTickToHandle = 500;
     List<BlockQueue> playerBlockQueneList;
 
     private static ExplodeManager instance;
@@ -56,12 +56,19 @@ public class ExplodeManager {
 
             List<ItemStack> allDrops = new ArrayList<>();
             double ymax = center.y;
+            int top = -1023;
             for (int i = 0; i < maxTickToHandle; i++) {
                 if (blockQueue.isEmpty()) {
                     break;
                 }
-                Tuple<BlockPos, Boolean> blockPos = blockQueue.poll();
+                Tuple<BlockPos, Boolean> blockPos = blockQueue.peek();
                 BlockPos pos = blockPos.getA();
+                if(pos.getY() >= top){
+                    top = pos.getY();
+                    blockQueue.poll();
+                }else if(top != -1023){
+                    break;
+                }
                 ymax = pos.getY();
                 boolean isDrop = blockPos.getB();
                 BlockState state = level.getBlockState(pos);

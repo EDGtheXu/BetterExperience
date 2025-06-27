@@ -10,8 +10,8 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 
-public class TEEnglishProvider extends LanguageProvider {
-    public TEEnglishProvider(PackOutput output) {
+public class ModEnglishProvider extends LanguageProvider {
+    public ModEnglishProvider(PackOutput output) {
         super(output, Better_experience.MODID, "en_us");
     }
 
@@ -37,6 +37,8 @@ public class TEEnglishProvider extends LanguageProvider {
 
         // tooltips
         add("better_experience.tooltip.magic_boom_staff.info", "power depends on the item in left hand [hold shift and scroll mousewheel to adjust size]");
+        add("better_experience.tooltip.potion_bag.info", "Can store potions and food");
+
         add("better_experience.gui.fast_storage", "Fast Storage");
 
 

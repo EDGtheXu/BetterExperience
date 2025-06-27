@@ -8,8 +8,8 @@ import net.neoforged.neoforge.common.data.LanguageProvider;
 
 
 
-public class TEChineseProvider extends LanguageProvider {
-    public TEChineseProvider(PackOutput output) {
+public class ModChineseProvider extends LanguageProvider {
+    public ModChineseProvider(PackOutput output) {
         super(output, Better_experience.MODID, "zh_cn");
     }
 
@@ -23,11 +23,14 @@ public class TEChineseProvider extends LanguageProvider {
         // items
         add(ModItems.MagicBoomStaff.get(), "法爆魔杖");
         add(ModItems.StarBoomStaff.get(), "星爆魔杖");
+        add(ModItems.PotionBag.get(), "药水袋");
         add(ModBlocks.AUTO_FISH_BLOCK.get(), "自动钓鱼机");
 
 
         // tooltips
         add("better_experience.tooltip.magic_boom_staff.info", "左手物品决定镐力 [按住shift+鼠标滚轮调整大小]");
+        add("better_experience.tooltip.potion_bag.info", "可以存储一些药水和食物");
+
         add("better_experience.gui.fast_storage", "一键存储");
 
         // config

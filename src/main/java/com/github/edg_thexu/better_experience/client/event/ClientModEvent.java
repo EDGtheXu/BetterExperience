@@ -2,6 +2,7 @@ package com.github.edg_thexu.better_experience.client.event;
 
 import com.github.edg_thexu.better_experience.Better_experience;
 import com.github.edg_thexu.better_experience.client.gui.container.AutoFishScreen;
+import com.github.edg_thexu.better_experience.client.gui.container.PotionBagScreen;
 import com.github.edg_thexu.better_experience.client.renderer.AutoFishBlockRenderer;
 import com.github.edg_thexu.better_experience.init.ModBlocks;
 import com.github.edg_thexu.better_experience.init.ModMenus;
@@ -17,6 +18,7 @@ public class ClientModEvent {
     @SubscribeEvent
     public static void registerMenuScreens(RegisterMenuScreensEvent event) {
         event.register(ModMenus.AUTO_FISH_MENU.get(), AutoFishScreen::new);
+        event.register(ModMenus.POTION_BAG_MENU.get(), PotionBagScreen::new);
 
     }
 
