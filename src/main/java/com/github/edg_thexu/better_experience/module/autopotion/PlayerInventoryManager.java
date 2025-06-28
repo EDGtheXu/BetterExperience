@@ -5,7 +5,10 @@ import com.github.edg_thexu.better_experience.client.gui.container.PotionBagScre
 import com.github.edg_thexu.better_experience.config.CommonConfig;
 import com.github.edg_thexu.better_experience.init.ModAttachments;
 import com.github.edg_thexu.better_experience.init.ModDataComponentTypes;
+import com.github.edg_thexu.better_experience.init.ModItems;
 import com.github.edg_thexu.better_experience.intergration.confluence.ConfluenceHelper;
+import com.github.edg_thexu.better_experience.menu.PotionBagMenu;
+import com.github.edg_thexu.better_experience.utils.ModUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -14,6 +17,7 @@ import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Holder;
+import net.minecraft.core.NonNullList;
 import net.minecraft.world.Container;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -28,8 +32,13 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.lib.common.PlayerContainer;
 import org.confluence.mod.client.gui.container.ExtraInventoryScreen;
+import org.confluence.mod.common.block.functional.PiggyBankBlock;
+import org.confluence.mod.common.init.ModAttachmentTypes;
+import org.confluence.mod.common.init.ModTags;
+import org.confluence.mod.common.init.block.FunctionalBlocks;
 import org.confluence.mod.common.init.item.FoodItems;
 import org.confluence.mod.common.item.potion.EffectPotionItem;
+import org.confluence.terra_guns.api.event.GunEvent;
 import org.jetbrains.annotations.Nullable;
 import oshi.util.tuples.Pair;
 import top.theillusivec4.curios.client.gui.CuriosScreen;
@@ -50,7 +59,7 @@ public class PlayerInventoryManager {
     /**
      * 食物类 effectInstance 过滤器
      */
-    private static final Predicate<MobEffectInstance> canApplyEffect = (effect) -> {
+    private static boolean canApplyEffect(MobEffectInstance effect)  {
         Holder<MobEffect> effect1 = effect.getEffect();
         int time = effect.getDuration();
         if(
@@ -67,10 +76,10 @@ public class PlayerInventoryManager {
     /**
      * 物品过滤器
      */
-    public static Function<ItemStack, List<Pair<Holder<MobEffect>, Integer>>> getApplyEffect = (stack) -> {
+    public static List<Pair<Holder<MobEffect>, Integer>> getApplyEffect(ItemStack stack, boolean ignoreCount){
         Item item = stack.getItem();
         List<Pair<Holder<MobEffect>, Integer>> effects = new ArrayList<>();
-        if(stack.getCount() < CommonConfig.AUTO_POTION_STACK_SIZE.get()) {
+        if(!ignoreCount && stack.getCount() < CommonConfig.AUTO_POTION_STACK_SIZE.get()) {
             // 配置文件
             return effects;
         }
@@ -89,7 +98,7 @@ public class PlayerInventoryManager {
             if (foodProperties != null) {
                 for (FoodProperties.PossibleEffect foodproperties$possibleeffect : foodProperties.effects()) {
                     var mobEffect = foodproperties$possibleeffect.effect();
-                    if (canApplyEffect.test(mobEffect)) {
+                    if (canApplyEffect(mobEffect)) {
                         effects.add(new Pair<>(mobEffect.getEffect(), mobEffect.getAmplifier()));
                     }
                 }
@@ -98,7 +107,13 @@ public class PlayerInventoryManager {
         return effects;
     };
 
-    public static Predicate<ItemStack> canApply = (stack) -> !getApplyEffect.apply(stack).isEmpty();
+    public static List<Pair<Holder<MobEffect>, Integer>> getApplyEffect(ItemStack stack) {
+        return getApplyEffect(stack, false);
+    }
+
+    public static boolean canApply(ItemStack stack){
+        return !getApplyEffect(stack).isEmpty();
+    }
 
     private static PlayerInventoryManager instance;
 
@@ -113,9 +128,16 @@ public class PlayerInventoryManager {
      * @param player
      */
     public void detect(Player player){
-        // 客户端检测，配置是否启用，检测间隔
-        if(!player.level().isClientSide() ||  --detectInternal > 0)
+        // 检测间隔
+        if(--detectInternal > 0){
             return;
+        }
+        if(!player.level().isClientSide()) {
+            // 服务端检测
+            this.detectServer(player);
+            return;
+        }
+        // 客户端检测
         try {
             if(Minecraft.getInstance().player != player) return;
         }catch (NoClassDefFoundError ignored){
@@ -140,11 +162,11 @@ public class PlayerInventoryManager {
                     ItemStack stack = inventory.getItem(i);
                     var data1 = stack.get(ModDataComponentTypes.ITEM_CONTAINER_COMPONENT);
                     if(data1 == null){
-                        effects.addAll(getApplyEffect.apply(stack));
+                        effects.addAll(getApplyEffect(stack));
                     }else {
                         // 药水袋
                         for(var item : data1.getItems()){
-                            effects.addAll(getApplyEffect.apply(item));
+                            effects.addAll(getApplyEffect(item));
                         }
                     }
                 } catch (Exception ignored) {
@@ -173,6 +195,51 @@ public class PlayerInventoryManager {
         data.sync();
     }
 
+    // 这里自动存钱和存放药水等
+    private void detectServer(Player player){
+        NonNullList<ItemStack> items = player.getInventory().items;
+        boolean autoSave = false;
+        List<ItemStack> potionBags = new ArrayList<>();
+        for(ItemStack stack : items){
+            if(ConfluenceHelper.isLoaded() &&  CommonConfig.AUTO_SAVE_MONEY.get() && !autoSave && stack.is(FunctionalBlocks.PIGGY_BANK.asItem())){
+               autoSave = true;
+            }
+            if(stack.getItem() == ModItems.PotionBag.get()){
+                var data = stack.get(ModDataComponentTypes.ITEM_CONTAINER_COMPONENT);
+                if(data != null && data.isAutoCollect()) {
+                    potionBags.add(stack);
+                }
+            }
+        }
+        if(autoSave){
+            for(ItemStack stack : items){
+                if(stack.is(ModTags.Items.COINS)){
+                   ModUtils.tryPlaceBackItemStackToItemStacks(stack, player.getData(ModAttachmentTypes.PIGGY_BANK.get()).getItems());
+                }
+            }
+            var data = player.getData(ModAttachmentTypes.EXTRA_INVENTORY.get());
+
+            for(int i = 0; i < 4; i++){
+                ItemStack stack = data.getCoins(i);
+                if(!stack.isEmpty()){
+                    ModUtils.tryPlaceBackItemStackToItemStacks(stack, player.getData(ModAttachmentTypes.PIGGY_BANK.get()).getItems());
+                }
+            }
+
+        }
+        for(ItemStack stack : items){
+            if(PotionBagMenu.canPlace(stack)) {
+                for (ItemStack potionBag : potionBags) {
+                    var data = potionBag.get(ModDataComponentTypes.ITEM_CONTAINER_COMPONENT);
+                    if(data == null) continue;
+                    if(ModUtils.tryPlaceBackItemStackToItemStacks(stack, data.getItems())){
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * 添加扫描列表
      * @param items 列表
@@ -182,7 +249,7 @@ public class PlayerInventoryManager {
         for (Item item : items) {
             try {
                 ItemStack stack = new ItemStack(item, CommonConfig.AUTO_POTION_STACK_SIZE.get());
-                to.addAll(getApplyEffect.apply(stack));
+                to.addAll(getApplyEffect(stack));
             } catch (Exception ignored) {
 
             }
@@ -231,7 +298,7 @@ public class PlayerInventoryManager {
                         ConfluenceHelper.isLoaded() && screen instanceof ExtraInventoryScreen||  // 额外栏
                         screen instanceof CuriosScreen  // 饰品栏
         )
-                && canApply.test(stack)){
+                && canApply(stack)){
 
             guiGraphics.fillGradient(RenderType.guiOverlay(), x, y, x + 16, y + 16, 0x00200800, 0xf020FFF0, 0);
 

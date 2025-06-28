@@ -46,7 +46,7 @@ public class AutoSellBlock extends BaseEntityBlock {
 
     }
 
-    public static final MapCodec<AutoFishBlock> CODEC = simpleCodec(AutoFishBlock::new);
+    public static final MapCodec<AutoSellBlock> CODEC = simpleCodec(AutoSellBlock::new);
     public static final EnumProperty<ChestType> TYPE = BlockStateProperties.CHEST_TYPE;
 
     @Override

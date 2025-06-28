@@ -3,6 +3,8 @@ package com.github.edg_thexu.better_experience.init;
 import com.github.edg_thexu.better_experience.Better_experience;
 import com.github.edg_thexu.better_experience.block.AutoFishBlock;
 import com.github.edg_thexu.better_experience.block.AutoSellBlock;
+import com.github.edg_thexu.better_experience.block.ForgeBlock;
+import com.github.edg_thexu.better_experience.intergration.confluence.ConfluenceHelper;
 import com.github.edg_thexu.better_experience.intergration.confluence_lib.ConfluenceLibHelper;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.BlockItem;
@@ -29,8 +31,13 @@ public class ModBlocks {
     public static final Supplier<BlockEntityType<AutoFishBlock.AutoFishMachineEntity>> AUTO_FISH_BLOCK_ENTITY = registerBlockEntity("auto_fish_block_entity", () -> BlockEntityType.Builder.of(AutoFishBlock.AutoFishMachineEntity::new, AUTO_FISH_BLOCK.get()).build(null));
     public static final DeferredItem<BlockItem> AUTO_FISH_BLOCK_ITEM = ModItems.ITEMS.register("auto_fish_block", () -> new AutoFishBlock.Item(AUTO_FISH_BLOCK.get()));
 
-    public static final DeferredBlock<AutoSellBlock> AUTO_SELL_BLOCK = registerDecoration("auto_sell_block", ()-> new AutoSellBlock(Block.Properties.ofFullCopy(Blocks.STONE)), ModBlocks::registerWithItem, ConfluenceLibHelper::isLoaded);
-    public static final Supplier<BlockEntityType<AutoSellBlock.AutoSellBlockEntity>> AUTO_SELL_BLOCK_ENTITY = registerBlockEntityDecoration("auto_sell_block_entity", () -> BlockEntityType.Builder.of(AutoSellBlock.AutoSellBlockEntity::new, AUTO_SELL_BLOCK.get()).build(null), ModBlocks::registerBlockEntity, ConfluenceLibHelper::isLoaded);
+    // 以下是加载confluence以后才会注册
+    public static final DeferredBlock<AutoSellBlock> AUTO_SELL_BLOCK = registerDecoration("auto_sell_block", ()-> new AutoSellBlock(Block.Properties.ofFullCopy(Blocks.STONE)), ModBlocks::registerWithItem, ConfluenceHelper::isLoaded);
+    public static final Supplier<BlockEntityType<AutoSellBlock.AutoSellBlockEntity>> AUTO_SELL_BLOCK_ENTITY = registerBlockEntityDecoration("auto_sell_block_entity", () -> BlockEntityType.Builder.of(AutoSellBlock.AutoSellBlockEntity::new, AUTO_SELL_BLOCK.get()).build(null), ModBlocks::registerBlockEntity, ConfluenceHelper::isLoaded);
+
+    public static final DeferredBlock<ForgeBlock> FORGE_BLOCK = registerDecoration("forge_block", ()-> new ForgeBlock(Block.Properties.ofFullCopy(Blocks.STONE)), ModBlocks::registerWithItem, ConfluenceHelper::isLoaded);
+    public static final Supplier<BlockEntityType<ForgeBlock.ForgeBlockEntity>> FORGE_BLOCK_ENTITY = registerBlockEntityDecoration("forge_block_entity", () -> BlockEntityType.Builder.of(ForgeBlock.ForgeBlockEntity::new, FORGE_BLOCK.get()).build(null), ModBlocks::registerBlockEntity, ConfluenceHelper::isLoaded);
+
 
     private static <B extends Block> DeferredBlock<B> registerWithItem(String id, Supplier<B> block) {
         DeferredBlock<B> object = BLOCKS.register(id, block);

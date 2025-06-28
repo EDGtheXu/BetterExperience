@@ -2,6 +2,8 @@ package com.github.edg_thexu.better_experience.networks.c2s;
 
 import com.github.edg_thexu.better_experience.Better_experience;
 import com.github.edg_thexu.better_experience.block.AutoFishBlock;
+import com.github.edg_thexu.better_experience.data.component.ItemContainerComponent;
+import com.github.edg_thexu.better_experience.menu.PotionBagMenu;
 import com.github.edg_thexu.better_experience.mixed.IPlayer;
 import com.github.edg_thexu.better_experience.module.faststorage.StorageManager;
 import io.netty.buffer.ByteBuf;
@@ -52,6 +54,12 @@ public record ServerBoundPacketC2S(int code) implements CustomPacketPayload {
             }else if(packet.code == 4){
                 // 一键堆叠
                 StorageManager.saveAll(player);
+            }else if(packet.code == 5){
+                // 改变药水收纳状态
+                if(player.containerMenu instanceof PotionBagMenu  menu &&  menu.container instanceof ItemContainerComponent component){
+                    component.setAutoCollect(!component.isAutoCollect());
+                }
+
             }
         });
     }

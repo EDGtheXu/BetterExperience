@@ -22,9 +22,8 @@ public class PotionBag extends Item {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
-
         ItemStack stack = player.getItemInHand(usedHand);
-        if(!level.isClientSide()) {
+        if(!level.isClientSide() && usedHand == InteractionHand.MAIN_HAND) {
             var data = stack.get(ModDataComponentTypes.ITEM_CONTAINER_COMPONENT);
             if (data != null) {
                 player.openMenu(new SimpleMenuProvider((id, inventory, p) -> new PotionBagMenu(id, inventory, data), Component.translatable(stack.getDescriptionId()).withColor(0x333333)));

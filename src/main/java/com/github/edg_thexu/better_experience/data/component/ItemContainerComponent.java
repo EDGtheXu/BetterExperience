@@ -20,6 +20,7 @@ public class ItemContainerComponent extends SimpleContainer implements DataCompo
 
     public static Codec<ItemContainerComponent> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.INT.fieldOf("size").forGetter(ItemContainerComponent::getContainerSize),
+            Codec.BOOL.optionalFieldOf("autoCollect").forGetter(ins->Optional.of(ins.autoCollect)),
             Codec.STRING.optionalFieldOf("uuid").forGetter(ins-> Optional.ofNullable(ins.id.toString())),
             CodecUtil.TAG_CODEC.fieldOf("tag").forGetter(ins->{
                 if(ServerLifecycleHooks.getCurrentServer() == null){
@@ -27,8 +28,9 @@ public class ItemContainerComponent extends SimpleContainer implements DataCompo
                 }
                 return ins.createTag(ServerLifecycleHooks.getCurrentServer().registryAccess());
             })
-    ).apply(instance, (size, id, tag)->{
-        ItemContainerComponent itemContainerComponent = id.map(s -> new ItemContainerComponent(size, UUID.fromString(s))).orElseGet(() -> new ItemContainerComponent(size));
+    ).apply(instance, (size, autoCollect, id, tag)->{
+        boolean collect = autoCollect.orElse(true);
+        ItemContainerComponent itemContainerComponent = id.map(s -> new ItemContainerComponent(size, collect, UUID.fromString(s))).orElseGet(() -> new ItemContainerComponent(size));
         if(ServerLifecycleHooks.getCurrentServer() == null){
             itemContainerComponent.fromTag((ListTag) tag, null);
         }else{
@@ -40,12 +42,15 @@ public class ItemContainerComponent extends SimpleContainer implements DataCompo
     public static StreamCodec<ByteBuf, ItemContainerComponent> STREAM_CODEC = ByteBufCodecs.fromCodec(CODEC);
 
     UUID id; // 只是为了hashCode
+    private boolean autoCollect;
+
     public ItemContainerComponent(int size) {
-        this(size, UUID.randomUUID());
+        this(size,true,  UUID.randomUUID());
     }
-    public ItemContainerComponent(int size, UUID id) {
+    public ItemContainerComponent(int size, boolean autoCollect, UUID id) {
         super(size);
         this.id = id;
+        this.autoCollect = autoCollect;
     }
     @Override
     public @Nullable Codec<ItemContainerComponent> codec() {
@@ -65,6 +70,14 @@ public class ItemContainerComponent extends SimpleContainer implements DataCompo
     @Override
     public int hashCode() {
         return id.hashCode();
+    }
+
+    public boolean isAutoCollect() {
+        return autoCollect;
+    }
+
+    public void setAutoCollect(boolean autoCollect) {
+        this.autoCollect = autoCollect;
     }
 
 }

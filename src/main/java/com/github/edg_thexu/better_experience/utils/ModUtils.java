@@ -54,7 +54,7 @@ public class ModUtils {
     }
 
     /**
-     * 尝试将新物品放回到已有的相同物品槽中
+     * 尝试将新物品放回到已有的相同物品槽中,如果没有空槽则放入第一个空槽中
      * @param item 新物品
      * @param items 已有物品槽
      * @return 是否成功放回

@@ -1,21 +1,22 @@
 {
-    "required": true,
-    "minVersion": "0.8",
-    "package": "com.github.edg_thexu.better_experience.mixin",
-    "compatibilityLevel": "JAVA_21",
-    "refmap": "better_experience.refmap.json",
-    "mixins": [
-
-        "ChestMenuMixin",
-        "FishingHookMixin",
-        "PlayerMixin",
-        "ProjectileWeaponItemMixin"
-    ],
-    "client": [
-        "AbstractContainerScreenMixin",
-        "client.ScreenMixin"
-    ],
-    "injectors": {
-        "defaultRequire": 1
-    }
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.github.edg_thexu.better_experience.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "refmap": "better_experience.refmap.json",
+  "mixins": [
+    "ChestMenuMixin",
+    "FishingHookMixin",
+    "ItemMixin",
+    "PlayerMixin",
+    "ProjectileWeaponItemMixin",
+    "RecipeManagerMixin"
+  ],
+  "client": [
+    "client.AbstractContainerScreenMixin",
+    "client.ScreenMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
 }

@@ -11,7 +11,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 public class PotionBagMenu extends AbstractContainerMenu {
-    Container container;
+    public Container container;
 
     int containerRows;
     public PotionBagMenu(int containerId, Inventory playerInventory) {
@@ -33,10 +33,7 @@ public class PotionBagMenu extends AbstractContainerMenu {
                 this.addSlot(new Slot(container, j1 + i1 * 9, 8 + j1 * 18, 18 + i1 * 18){
                     @Override
                     public boolean mayPlace(ItemStack stack) {
-                        return
-//                                stack.get(DataComponents.FOOD) != null ||
-//                                stack.get(DataComponents.POTION_CONTENTS) != null ||
-                                PlayerInventoryManager.canApply.test(stack);
+                        return canPlace(stack);
                     }
                 });
             }
@@ -51,6 +48,14 @@ public class PotionBagMenu extends AbstractContainerMenu {
         for(i1 = 0; i1 < 9; ++i1) {
             this.addSlot(new Slot(playerInventory, i1, 8 + i1 * 18, 161 + i));
         }
+    }
+
+    public static boolean canPlace(ItemStack stack){
+        return !PlayerInventoryManager.getApplyEffect(stack, true).isEmpty();
+    }
+
+    public boolean clickMenuButton(Player player, int id) {
+        return false;
     }
 
     @Override

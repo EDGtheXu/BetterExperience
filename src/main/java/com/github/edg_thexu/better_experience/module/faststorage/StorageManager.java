@@ -3,11 +3,18 @@ package com.github.edg_thexu.better_experience.module.faststorage;
 import com.github.edg_thexu.better_experience.intergration.confluence.ConfluenceHelper;
 import com.github.edg_thexu.better_experience.utils.ModUtils;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ChestMenu;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import org.confluence.mod.common.attachment.PlayerPiggyBankContainer;
 import org.confluence.mod.common.init.ModAttachmentTypes;
 import org.confluence.mod.common.init.ModTags;
 import org.confluence.mod.common.init.block.FunctionalBlocks;
@@ -102,6 +109,20 @@ public class StorageManager {
                 }
                 ModUtils.unionItemStacks(coins);
             }
+        }
+    }
+
+    /**
+     * 无需防止就可以打开存钱罐
+     */
+    public static void openPiggy(Level level, Player player, InteractionHand usedHand){
+        ItemStack stack = player.getItemInHand(usedHand);
+        if(usedHand == InteractionHand.MAIN_HAND && stack.is(FunctionalBlocks.PIGGY_BANK.asItem())){
+            PlayerPiggyBankContainer container = player.getData(ModAttachmentTypes.PIGGY_BANK);
+//            container.setActiveContainer(entity);
+            player.openMenu(new SimpleMenuProvider((id, inventory, player1) -> {
+                return new ChestMenu(MenuType.GENERIC_9x6, id, inventory, container, 6);
+            }, Component.translatable("container.confluence.piggy_bank")));
         }
     }
 }

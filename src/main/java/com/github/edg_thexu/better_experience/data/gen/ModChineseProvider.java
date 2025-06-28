@@ -33,6 +33,7 @@ public class ModChineseProvider extends LanguageProvider {
         add("better_experience.tooltip.potion_bag.info", "可以存储一些药水和食物");
 
         add("better_experience.gui.fast_storage", "一键存储");
+        add("better_experience.gui.potion_screen.auto_collect.message", "自动收集药水");
 
         // config
         add("better_experience.configuration.Player", "玩家");
@@ -61,6 +62,8 @@ public class ModChineseProvider extends LanguageProvider {
         add("better_experience.configuration.valid_bonemeal_target", "骨粉可以催熟宝石树");
         add("better_experience.configuration.block_break_speed_multiplier", "方块 破坏速度 倍率");
         add("better_experience.configuration.forbidden_magic_boom_staff", "禁用法爆魔杖");
+        add("better_experience.configuration.auto_save_money", "自动把钱存到猪猪存钱罐");
+
 
         // info
         add("better_experience.autofish.info.lack", "自动钓鱼机缺少方块连接：");

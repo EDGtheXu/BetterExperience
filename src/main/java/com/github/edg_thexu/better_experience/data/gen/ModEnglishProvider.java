@@ -40,7 +40,7 @@ public class ModEnglishProvider extends LanguageProvider {
         add("better_experience.tooltip.potion_bag.info", "Can store potions and food");
 
         add("better_experience.gui.fast_storage", "Fast Storage");
-
+        add("better_experience.gui.potion_screen.auto_collect.message", "Auto Collect Potions and Food");
 
         // Config
         add("better_experience.configuration.Player", "Player");
@@ -69,6 +69,7 @@ public class ModEnglishProvider extends LanguageProvider {
         add("better_experience.configuration.valid_bonemeal_target", "Bonemeal Can Be Used On Stone Saplings");
         add("better_experience.configuration.block_break_speed_multiplier", "Block Break Speed Multiplier");
         add("better_experience.configuration.forbidden_magic_boom_staff", "Forbidden Magic Boom Staff");
+        add("better_experience.configuration.auto_save_money", "Auto Save Money To Piggy Bank");
 
 
 
@@ -79,7 +80,6 @@ public class ModEnglishProvider extends LanguageProvider {
 
         // container
         add("block.better_experience.autofish_machine", "Auto Fish Machine");
-
 
 
     }

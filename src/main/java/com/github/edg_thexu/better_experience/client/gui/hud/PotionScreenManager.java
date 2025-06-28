@@ -1,6 +1,8 @@
 package com.github.edg_thexu.better_experience.client.gui.hud;
 
+import com.github.edg_thexu.better_experience.client.gui.container.PotionBagScreen;
 import com.github.edg_thexu.better_experience.init.ModAttachments;
+import com.github.edg_thexu.better_experience.intergration.confluence.ConfluenceHelper;
 import com.github.edg_thexu.better_experience.networks.c2s.ServerBoundPacketC2S;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -8,6 +10,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.MobEffectTextureManager;
 import net.minecraft.core.Holder;
@@ -20,7 +23,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.ShulkerBoxBlock;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -53,6 +55,7 @@ public class PotionScreenManager {
             ResourceLocation.withDefaultNamespace("advancements/task_frame_obtained")
     );
 
+
     public PotionScreenManager(AbstractContainerScreen screen){
         this.screen = screen;
         this.imageWidth = 0;
@@ -72,6 +75,11 @@ public class PotionScreenManager {
         return instance;
     }
 
+    public static boolean shouldShowPotionManager(AbstractContainerScreen screen){
+        return ConfluenceHelper.isLoaded() && screen.getClass().getName().equals("org.confluence.mod.client.gui.container.ExtraInventoryScreen")
+                || screen instanceof InventoryScreen || screen instanceof PotionBagScreen;
+    }
+
 
     public void render(GuiGraphics g, int mousex,int mousey, float partialTicks){
         this.leftPos = screen.getGuiLeft();
@@ -81,7 +89,7 @@ public class PotionScreenManager {
             fastStorageBtn.render(g, mousex, mousey, partialTicks);
             g.renderItem(Items.CHEST.getDefaultInstance(), leftPos + 2, topPos + 167);
             if(mousex >= leftPos && mousex <= leftPos + 20 && mousey >= topPos + 165 && mousey <= topPos + 165 + 20){
-                g.drawString(font, Component.translatable("better_experience.gui.fast_storage"+": 5"), leftPos - 15, topPos + 165 + 20, 0xFFFFFF);
+                g.drawString(font, Component.translatable("better_experience.gui.fast_storage"), leftPos - 15, topPos + 165 + 20, 0xFFFFFF);
             }
         }
 
@@ -150,7 +158,6 @@ public class PotionScreenManager {
                 guiGraphics.renderTooltip(this.font, list, Optional.empty(), mouseX, mouseY);
             }
             this.selectedEffect = selectedEffect;
-
         }
     }
 

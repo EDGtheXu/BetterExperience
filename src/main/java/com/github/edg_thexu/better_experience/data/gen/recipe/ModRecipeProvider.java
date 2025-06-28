@@ -27,7 +27,7 @@ public class ModRecipeProvider extends RecipeProvider {
     @Override
     protected void buildRecipes(RecipeOutput recipeOutput) {
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.AUTO_FISH_BLOCK)
+        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, ModBlocks.AUTO_FISH_BLOCK)
                 .pattern("aaa")
                 .pattern("bcb")
                 .pattern("ddd")
@@ -38,6 +38,17 @@ public class ModRecipeProvider extends RecipeProvider {
                 .unlockedBy("has_gold_ingot",has(Items.GOLD_INGOT))
                 .save(recipeOutput);
 
+//        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, ModBlocks.AUTO_SELL_BLOCK)
+//                .pattern("a a")
+//                .pattern("b b")
+//                .pattern("ddd")
+//                .define('a',Items.GOLD_INGOT)
+//                .define('b',Items.REDSTONE)
+//                .define('c',Items.CHEST)
+//                .define('d',Items.IRON_INGOT)
+//                .unlockedBy("has_gold_ingot",has(Items.GOLD_INGOT))
+//                .save(recipeOutput);
+
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.PotionBag)
                 .pattern("aaa")
                 .pattern("a a")
@@ -45,6 +56,8 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('a',Items.LEATHER)
                 .unlockedBy("has_leather",has(Items.LEATHER))
                 .save(recipeOutput);
+
+
     }
 
     protected static <T extends AbstractCookingRecipe> void cookRecipes(

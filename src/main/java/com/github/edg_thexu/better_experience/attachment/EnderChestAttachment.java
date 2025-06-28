@@ -66,7 +66,7 @@ public class EnderChestAttachment implements INBTSerializable<CompoundTag> {
 //        var items = player.getEnderChestInventory().getItems();
         List<Item> itemList = new ArrayList<>();
         for (ItemStack stack : items) {
-            if(PlayerInventoryManager.canApply.test(stack)){
+            if(PlayerInventoryManager.canApply(stack)){
                 itemList.add(stack.getItem());
             }
         }

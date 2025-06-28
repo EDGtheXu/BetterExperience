@@ -60,6 +60,10 @@ public class CommonConfig {
      * 挖矿速度++
      */
     public static ModConfigSpec.DoubleValue BLOCK_BREAK_SPEED_MULTIPLIER;
+    /**
+     * 自动存钱
+     */
+    public static ModConfigSpec.BooleanValue AUTO_SAVE_MONEY;
 
     /*************************** World *****************************
      /**
@@ -132,7 +136,9 @@ public class CommonConfig {
         BLOCK_BREAK_SPEED_MULTIPLIER = BUILDER
                 .comment("Block Break Speed Multiplier")
                 .defineInRange("block_break_speed_multiplier", 1, 0.1, 100.0);
-
+        AUTO_SAVE_MONEY = BUILDER
+                .comment("Auto Save Money.")
+                .define("auto_save_money", true);
         BUILDER.pop();
         BUILDER.push("World");
 

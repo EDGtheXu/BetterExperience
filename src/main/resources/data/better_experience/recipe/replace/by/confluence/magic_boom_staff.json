@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "tools",
+  "key": {
+    "a": {
+      "item": "minecraft:gold_ingot"
+    },
+    "b": {
+      "item": "minecraft:redstone"
+    },
+    "c": {
+      "item": "minecraft:chest"
+    },
+    "d": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "pattern": [
+    "aaa",
+    "bcb",
+    "ddd"
+  ],
+  "result": {
+    "count": 1,
+    "id": "better_experience:magic_boom_staff"
+  }
+}
