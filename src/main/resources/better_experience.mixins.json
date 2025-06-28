@@ -10,11 +10,14 @@
     "ItemMixin",
     "PlayerMixin",
     "ProjectileWeaponItemMixin",
-    "RecipeManagerMixin"
+    "RecipeManagerMixin",
+    "integration.jei.RecipeGuiLayoutsMixin",
+    "integration.jei.RecipeLayoutWithButtonsMixin"
   ],
   "client": [
     "client.AbstractContainerScreenMixin",
-    "client.ScreenMixin"
+    "client.ScreenMixin",
+    "integration.jei.RecipeGuiMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "better_experience:block/forge_block"
+    }
+  }
+}

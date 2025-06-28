@@ -12,6 +12,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
 import java.util.List;
 
@@ -29,6 +30,7 @@ public class PotionBag extends Item {
                 player.openMenu(new SimpleMenuProvider((id, inventory, p) -> new PotionBagMenu(id, inventory, data), Component.translatable(stack.getDescriptionId()).withColor(0x333333)));
             }
         }
+
         return InteractionResultHolder.success(player.getItemInHand(usedHand));
     }
 

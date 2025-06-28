@@ -13,6 +13,8 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.confluence.terraentity.utils.AdapterUtils;
 
 import java.util.List;
@@ -33,19 +35,19 @@ public class PotionBagScreen extends AbstractContainerScreen<PotionBagMenu> {
     @Override
     protected void init() {
         super.init();
-        collectButton = new FloatButton(Button.builder(Component.literal("A"), p->{
-                    AdapterUtils.sendToServer(new ServerBoundPacketC2S(5));
-                }).bounds(this.leftPos - 32, this.topPos, 30, 15));
+        collectButton = (FloatButton) FloatButton.builder(Component.literal("A"), p->{
+            PacketDistributor.sendToServer(new ServerBoundPacketC2S(5));
+                }).setTooltips(List.of(
+                        ClientTooltipComponent.create(Component.translatable("better_experience.gui.potion_screen.auto_collect.message")
+                        .withStyle(Style.EMPTY.withColor(0xFFFFFF)).getVisualOrderText())
+        )).bounds(this.leftPos - 32, this.topPos, 30, 15).build();
         this.addRenderableWidget(collectButton);
         ItemStack stack = minecraft.player.getMainHandItem();
+
         var data = stack.get(ModDataComponentTypes.ITEM_CONTAINER_COMPONENT);
         if(data != null){
             collectButton.setSelected(data.isAutoCollect());
         }
-        collectButton.setTooltips(List.of(
-                ClientTooltipComponent.create(Component.translatable("better_experience.gui.potion_screen.auto_collect.message")
-                        .withStyle(Style.EMPTY.withColor(0xFFFFFF)).getVisualOrderText())
-        ));
     }
 
     @Override

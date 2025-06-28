@@ -64,8 +64,12 @@ public class CommonConfig {
      * 自动存钱
      */
     public static ModConfigSpec.BooleanValue AUTO_SAVE_MONEY;
+    /**
+     * jei从附近箱子取出材料
+     */
+    public static ModConfigSpec.BooleanValue QUICK_JEI_FETCH;
 
-    /*************************** World *****************************
+    //*************************** World *****************************
      /**
      * 宝石树种植无限制
      */
@@ -139,6 +143,9 @@ public class CommonConfig {
         AUTO_SAVE_MONEY = BUILDER
                 .comment("Auto Save Money.")
                 .define("auto_save_money", true);
+        QUICK_JEI_FETCH = BUILDER
+                .comment("Quick JEI Fetch.")
+                .define("quick_jei_fetch", true);
         BUILDER.pop();
         BUILDER.push("World");
 

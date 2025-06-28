@@ -4,6 +4,7 @@ import com.github.edg_thexu.better_experience.config.CommonConfig;
 import com.github.edg_thexu.better_experience.intergration.terra_gun.TerraGunEvents;
 import com.github.edg_thexu.better_experience.init.*;
 import com.github.edg_thexu.better_experience.intergration.terra_gun.TGHelper;
+import com.github.edg_thexu.better_experience.registries.ModRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -30,6 +31,9 @@ public class Better_experience {
 
     public Better_experience(IEventBus modEventBus, ModContainer modContainer) {
 
+        modEventBus.addListener(ModRegistries::newRegistry);
+        ModRegistries.register(modEventBus);
+
         modContainer.registerConfig(ModConfig.Type.COMMON, CommonConfig.init());
         ModItems.register(modEventBus);
 
@@ -38,6 +42,7 @@ public class Better_experience {
         ModBlocks.register(modEventBus);
         ModMenus.TYPES.register(modEventBus);
         ModDataComponentTypes.TYPES.register(modEventBus);
+
 
         if(TGHelper.isLoaded()){
 //            TerraGunEvents.init();

@@ -4,9 +4,13 @@ import com.github.edg_thexu.better_experience.Better_experience;
 import com.github.edg_thexu.better_experience.init.ModBlocks;
 import com.github.edg_thexu.better_experience.init.ModItems;
 import net.minecraft.data.PackOutput;
+import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.common.data.LanguageProvider;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import org.confluence.terraentity.init.item.TESpawnEggItems;
 
 import java.util.Arrays;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 
@@ -30,14 +34,16 @@ public class ModEnglishProvider extends LanguageProvider {
 
 
         // items
-        add(ModItems.MagicBoomStaff.get(), "Magic Boom Staff");
-        add(ModItems.StarBoomStaff.get(), "Star Boom Staff");
-        add(ModBlocks.AUTO_FISH_BLOCK.get(), "Auto Fish Machine");
-
+        Consumer<DeferredHolder<Item, ? extends Item>> itemAction = item -> add(item.get(), toTitleCase(item.getId().getPath()));
+        ModItems.ITEMS.getEntries().forEach(itemAction);
+//        ModBlocks.BLOCKS.getEntries().forEach(block-> add(block.get(), toTitleCase(block.getId().getPath())));
 
         // tooltips
         add("better_experience.tooltip.magic_boom_staff.info", "power depends on the item in left hand [hold shift and scroll mousewheel to adjust size]");
         add("better_experience.tooltip.potion_bag.info", "Can store potions and food");
+        add("better_experience.tooltip.jei.fetch_ingredients", "Fetch ingredients from nearby chests");
+
+
 
         add("better_experience.gui.fast_storage", "Fast Storage");
         add("better_experience.gui.potion_screen.auto_collect.message", "Auto Collect Potions and Food");
@@ -70,12 +76,14 @@ public class ModEnglishProvider extends LanguageProvider {
         add("better_experience.configuration.block_break_speed_multiplier", "Block Break Speed Multiplier");
         add("better_experience.configuration.forbidden_magic_boom_staff", "Forbidden Magic Boom Staff");
         add("better_experience.configuration.auto_save_money", "Auto Save Money To Piggy Bank");
+        add("better_experience.configuration.quick_jei_fetch", "Quick JEI Fetch Ingredients From Nearby Chests");
 
 
 
         // info
         add("better_experience.autofish.info.lack", "Auto Fish Machine Lacks connection: ");
         add("better_experience.info.forbidden_magic_boom_staff", "You can't use magic boom staff in this world, please open function in ESC-MOD-better_experience-config-Item");
+        add("better_experience.info.jei.not_enough_ingredients", "You have not enough ingredients from nearby chests");
 
 
         // container

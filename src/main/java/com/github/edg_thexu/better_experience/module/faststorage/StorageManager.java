@@ -10,11 +10,14 @@ import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.PlayerEnderChestContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import org.confluence.mod.common.attachment.PlayerPiggyBankContainer;
+import org.confluence.mod.common.attachment.PlayerSafeContainer;
 import org.confluence.mod.common.init.ModAttachmentTypes;
 import org.confluence.mod.common.init.ModTags;
 import org.confluence.mod.common.init.block.FunctionalBlocks;
@@ -117,12 +120,28 @@ public class StorageManager {
      */
     public static void openPiggy(Level level, Player player, InteractionHand usedHand){
         ItemStack stack = player.getItemInHand(usedHand);
-        if(usedHand == InteractionHand.MAIN_HAND && stack.is(FunctionalBlocks.PIGGY_BANK.asItem())){
-            PlayerPiggyBankContainer container = player.getData(ModAttachmentTypes.PIGGY_BANK);
-//            container.setActiveContainer(entity);
-            player.openMenu(new SimpleMenuProvider((id, inventory, player1) -> {
-                return new ChestMenu(MenuType.GENERIC_9x6, id, inventory, container, 6);
-            }, Component.translatable("container.confluence.piggy_bank")));
+        if(usedHand == InteractionHand.MAIN_HAND ){
+            if(ConfluenceHelper.isLoaded()) {
+                if(stack.is(FunctionalBlocks.PIGGY_BANK.asItem())) {
+                    PlayerPiggyBankContainer container = player.getData(ModAttachmentTypes.PIGGY_BANK);
+                    player.openMenu(new SimpleMenuProvider((id, inventory, player1) -> {
+                        return new ChestMenu(MenuType.GENERIC_9x6, id, inventory, container, 6);
+                    }, Component.translatable("container.confluence.piggy_bank")));
+                }
+                else if(stack.is(FunctionalBlocks.SAFE.asItem())){
+                    PlayerSafeContainer container = player.getData(ModAttachmentTypes.SAFE);
+                    player.openMenu(new SimpleMenuProvider((id, inventory, player1) -> {
+                        return new ChestMenu(MenuType.GENERIC_9x6, id, inventory, container, 6);
+                    }, Component.translatable("container.confluence.safe")));
+                }
+            }
+            if(stack.is(Blocks.ENDER_CHEST.asItem())){
+                PlayerEnderChestContainer playerenderchestcontainer = player.getEnderChestInventory();
+
+                player.openMenu(new SimpleMenuProvider((id, inventory, player1) -> {
+                    return ChestMenu.threeRows(id, inventory, playerenderchestcontainer);
+                },  Component.translatable("container.enderchest")));
+            }
         }
     }
 }

@@ -5,12 +5,10 @@ import com.github.edg_thexu.better_experience.block.AutoFishBlock;
 import com.github.edg_thexu.better_experience.block.AutoSellBlock;
 import com.github.edg_thexu.better_experience.block.ForgeBlock;
 import com.github.edg_thexu.better_experience.intergration.confluence.ConfluenceHelper;
-import com.github.edg_thexu.better_experience.intergration.confluence_lib.ConfluenceLibHelper;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredBlock;
@@ -32,7 +30,7 @@ public class ModBlocks {
     public static final DeferredItem<BlockItem> AUTO_FISH_BLOCK_ITEM = ModItems.ITEMS.register("auto_fish_block", () -> new AutoFishBlock.Item(AUTO_FISH_BLOCK.get()));
 
     // 以下是加载confluence以后才会注册
-    public static final DeferredBlock<AutoSellBlock> AUTO_SELL_BLOCK = registerDecoration("auto_sell_block", ()-> new AutoSellBlock(Block.Properties.ofFullCopy(Blocks.STONE)), ModBlocks::registerWithItem, ConfluenceHelper::isLoaded);
+    public static final DeferredBlock<AutoSellBlock> AUTO_SELL_BLOCK = registerDecoration("auto_sell_block", ()-> new AutoSellBlock(Block.Properties.ofFullCopy(Blocks.STONE).noOcclusion()), ModBlocks::registerWithItem, ConfluenceHelper::isLoaded);
     public static final Supplier<BlockEntityType<AutoSellBlock.AutoSellBlockEntity>> AUTO_SELL_BLOCK_ENTITY = registerBlockEntityDecoration("auto_sell_block_entity", () -> BlockEntityType.Builder.of(AutoSellBlock.AutoSellBlockEntity::new, AUTO_SELL_BLOCK.get()).build(null), ModBlocks::registerBlockEntity, ConfluenceHelper::isLoaded);
 
     public static final DeferredBlock<ForgeBlock> FORGE_BLOCK = registerDecoration("forge_block", ()-> new ForgeBlock(Block.Properties.ofFullCopy(Blocks.STONE)), ModBlocks::registerWithItem, ConfluenceHelper::isLoaded);
