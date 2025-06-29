@@ -13,11 +13,11 @@ import java.util.function.Supplier;
 public class RecipeHandlerProviderTypes {
     public static final DeferredRegister<RecipeHandlerProvider> TYPES = DeferredRegister.create(JeiRegistries.RecipeHandlerProviders.REGISTRY, Better_experience.MODID);
 
-    public static final Supplier<RecipeHandlerProvider> VANILLA_TYPE = register("simple_track_type", VanillaRecipeHolderHandler.CODEC);
+    public static final Supplier<RecipeHandlerProvider> VANILLA_TYPE = register("simple_track_type", ()->VanillaRecipeHolderHandler.CODEC);
     public static final Supplier<RecipeHandlerProvider> BREW_TYPE = register("brew_type", ItemStackUniversalHandler.CODEC);
 
 
-    private static Supplier<RecipeHandlerProvider> register(String name, MapCodec<? extends IRecipeHandler> codec) {
+    private static Supplier<RecipeHandlerProvider> register(String name, Supplier<MapCodec<? extends IRecipeHandler>> codec) {
         return TYPES.register(name, ()->new RecipeHandlerProvider(codec));
     }
 }

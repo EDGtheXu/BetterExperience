@@ -5,38 +5,52 @@ import com.github.edg_thexu.better_experience.registries.recipehandler.RecipeHan
 import com.github.edg_thexu.better_experience.registries.recipehandler.RecipeHandlerProviderTypes;
 import com.github.edg_thexu.better_experience.registries.recipehandler.visitor.IRecipeHandlerVisitor;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.MapCodec;
 import mezz.jei.api.gui.ingredient.IRecipeSlotDrawable;
 import mezz.jei.api.ingredients.ITypedIngredient;
 import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.common.Internal;
+import mezz.jei.common.codecs.TypedIngredientCodecs;
 import mezz.jei.library.gui.ingredients.RecipeSlot;
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * jei使用自己的api时，原版的recipeManager获取不到配方，此时需要转成List&lt;Ingredient&gt;，方便和原版进行一样的方式处理
  */
-public record ItemStackUniversalHandler(List<Ingredient> ingredients) implements IRecipeHandler<Ingredient> {
+public record ItemStackUniversalHandler(List<List<ITypedIngredient<?>>> ingredients) implements IRecipeHandler<List<ITypedIngredient<?>>> {
 
-    public static MapCodec<ItemStackUniversalHandler> CODEC = Codec.list(Ingredient.CODEC).xmap(ItemStackUniversalHandler::new, ItemStackUniversalHandler::ingredients).fieldOf("ingredients");
+    public static Supplier<MapCodec<? extends IRecipeHandler>> CODEC = ()-> {
+        try {
+            return Codec.list(Codec.list(TypedIngredientCodecs.getIngredientCodec(Internal.getJeiRuntime().getIngredientManager()).codec()))
+                    .xmap(ItemStackUniversalHandler::new, ItemStackUniversalHandler::ingredients)
+                    .fieldOf("ingredients");
+        }catch (Exception e){
+            return null;
+        }
+
+    };
+
 
     public static ItemStackUniversalHandler create(List<IRecipeSlotDrawable> slotDrawables) {
-        List<Ingredient> result = new ArrayList<>();
+        List<List<ITypedIngredient<?>>> result = new ArrayList<>();
         for(var it : slotDrawables){
             RecipeSlot slot = (RecipeSlot) it;
             if(slot.getRole() != RecipeIngredientRole.INPUT && slot.getRole() != RecipeIngredientRole.CATALYST) {
                 continue;
             }
             List<ITypedIngredient<?>> ingredients = slot.getAllIngredientsList();
-            List<ItemStack> itemStacks = new ArrayList<>();
-            for(var ing : ingredients){
-                ing.getItemStack().ifPresent(itemStacks::add);
-            }
-            result.add(Ingredient.of(itemStacks.stream()));
+
+            result.add(ingredients);
+
+//            TypedIngredientCodecs.getIngredientCodec(ingredients.get(0).getType(), Internal.getJeiRuntime().getIngredientManager()).encodeStart(Minecraft.getInstance().level.registryAccess().createSerializationContext(JsonOps.INSTANCE), ingredients.get(0)).result().get()
         }
         if(result.isEmpty()){
             return null;
@@ -45,13 +59,24 @@ public record ItemStackUniversalHandler(List<Ingredient> ingredients) implements
     }
 
     @Override
-    public List<Ingredient> getIngredient(Level level) {
+    public List<List<ITypedIngredient<?>>> getIngredient(Level level) {
+
+//        List<ITypedIngredient<?>> ingredients = slot.getAllIngredientsList();
+//        List<Ingredient> res = new ArrayList<>();
+//        for(var ings : ingredients){
+//            List<ItemStack> itemStacks = new ArrayList<>();
+//            for(var ing : ings){
+//                ing.getItemStack().ifPresent(itemStacks::add);
+//            }
+//            res.add(Ingredient.of(itemStacks.stream()));
+//        }
+
         return ingredients;
     }
 
     @Override
-    public IRecipeHandlerVisitor<Ingredient> getVisitor() {
-        return IRecipeHandlerVisitor.ingredientVisitor;
+    public IRecipeHandlerVisitor<List<ITypedIngredient<?>>> getVisitor() {
+        return IRecipeHandlerVisitor.jeiIngredientVisitor;
     }
 
     @Override

@@ -54,7 +54,7 @@ public interface IRecipeHandler<V> {
 
     Codec<IRecipeHandler> TYPED_CODEC = JeiRegistries.RecipeHandlerProviders.REGISTRY
             .byNameCodec()
-            .dispatch(IRecipeHandler::getCodec, RecipeHandlerProvider::codec);
+            .dispatch(IRecipeHandler::getCodec, a->a.codec().get());
 
     StreamCodec<RegistryFriendlyByteBuf, IRecipeHandler> STREAM_CODEC = ByteBufCodecs.fromCodecWithRegistries(TYPED_CODEC);
 

@@ -22,11 +22,17 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.@NotNull Provider provider) {
-        tag(BlockTags.NEEDS_STONE_TOOL).add(ModBlocks.AUTO_FISH_BLOCK.get());
+        tag(BlockTags.NEEDS_STONE_TOOL).add(
+                ModBlocks.AUTO_FISH_BLOCK.get(),
+                ModBlocks.AUTO_SELL_BLOCK.get(),
+                ModBlocks.FORGE_BLOCK.get()
+        );
 
 
         this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(
-                ModBlocks.AUTO_FISH_BLOCK.get()
+                ModBlocks.AUTO_FISH_BLOCK.get(),
+                ModBlocks.AUTO_SELL_BLOCK.get(),
+                ModBlocks.FORGE_BLOCK.get()
         );
     }
 

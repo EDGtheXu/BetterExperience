@@ -51,7 +51,7 @@ public class ClientGameEvent {
         if(!ConfluenceHelper.isLoaded()){
             return;
         }
-        if (ClientConfig.MULTI_FISHING.get() && Minecraft.getInstance().player != null && event.getButton() == 0 && event.getAction() == 1 && Minecraft.getInstance().player.getMainHandItem().getItem() instanceof HammerItem) {
+        if (Minecraft.getInstance().player != null && ClientConfig.MULTI_FISHING.get() &&  event.getButton() == 0 && event.getAction() == 1 && Minecraft.getInstance().player.getMainHandItem().getItem() instanceof HammerItem) {
             PacketDistributor.sendToServer(new ServerBoundPacketC2S(3));
 
         }
