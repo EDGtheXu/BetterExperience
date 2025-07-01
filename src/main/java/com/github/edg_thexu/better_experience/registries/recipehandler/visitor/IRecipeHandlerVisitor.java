@@ -1,7 +1,7 @@
 package com.github.edg_thexu.better_experience.registries.recipehandler.visitor;
 
 import com.github.edg_thexu.better_experience.intergration.jei.SearchCache;
-import net.minecraft.world.item.ItemStack;
+import com.github.edg_thexu.better_experience.registries.recipehandler.IRecipeHandler;
 import net.minecraft.world.level.Level;
 
 /**
@@ -10,7 +10,7 @@ import net.minecraft.world.level.Level;
  */
 public interface IRecipeHandlerVisitor<T> {
 
-    boolean visit(Level level, SearchCache searchCache, T ingredient);
+    boolean visit(Level level, SearchCache searchCache, T ingredient, IRecipeHandler<T> handler);
 
     IngredientVisitor ingredientVisitor = new IngredientVisitor();
 

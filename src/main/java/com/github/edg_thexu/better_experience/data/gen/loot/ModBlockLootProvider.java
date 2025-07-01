@@ -21,7 +21,7 @@ public class ModBlockLootProvider extends BlockLootSubProvider {
     protected void generate() {
         dropSelf(ModBlocks.AUTO_FISH_BLOCK.get());
         dropSelf(ModBlocks.AUTO_SELL_BLOCK.get());
-        dropSelf(ModBlocks.FORGE_BLOCK.get());
+        dropSelf(ModBlocks.REFORGE_BLOCK.get());
 
     }
 

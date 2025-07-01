@@ -10,9 +10,11 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.api.distmarker.Dist;
@@ -58,14 +60,23 @@ public class JeiHelper {
 
         boolean flag = true;
         for(var ing : ingredients){
-            if(!handler.getVisitor().visit(level, searchCache, ing)){
+            if(!handler.getVisitor().visit(level, searchCache, ing, handler)){
                 flag = false;
-                break;
+                // 注释掉可以查询所有缺少的材料
+//                break;
             }
         }
 
         if(!flag){
+            Map<Ingredient, Integer> requiredCount = searchCache.requiredCount;
+            MutableComponent message = Component.literal("");
+            for(var entry : requiredCount.entrySet()){
+                message.append(entry.getKey().getItems()[0].getDisplayName())
+                        .append(" x").append(String.valueOf(entry.getKey().getItems()[0].getCount() * entry.getValue())).append(", ");
+            }
             player.sendSystemMessage(Component.translatable("better_experience.info.jei.not_enough_ingredients"));
+            player.sendSystemMessage(message);
+
         }else{
 //            player.sendSystemMessage(Component.literal("Found all ingredients"));
             searchCache.markedMap.map.forEach((pos, marked) -> {
@@ -88,8 +99,11 @@ public class JeiHelper {
 
     // 客户端点击配方，生成handler并发送给服务器
     @OnlyIn(Dist.CLIENT)
-    public static void notifyFindIntegrations(List<RecipeLayoutWithButtons<?>> recipeLayoutsWithButtons, double mouseX, double mouseY, int button) {
+    public static void notifyFindIntegrations(List<RecipeLayoutWithButtons<?>> recipeLayoutsWithButtons, double mouseX, double mouseY, int button, int count) {
 
+        if(count <= 0){
+            return;
+        }
         for( var lay : recipeLayoutsWithButtons){
             Button button1 = ((IRecipeLayoutWithButtons) (Object) lay).betterExperience$getButton();
             if(button1 != null && button1.isMouseOver(mouseX, mouseY) && button == 0){
@@ -102,7 +116,7 @@ public class JeiHelper {
                         .min(Comparator.comparing(a -> a.getValue().priority()))
                         .map(Map.Entry::getValue)
                         .ifPresent(handler-> {
-                            IRecipeHandler<?> handler1 = handler.create((RecipeLayout<?>) lay.recipeLayout());
+                            IRecipeHandler<?> handler1 = handler.create((RecipeLayout<?>) lay.recipeLayout(), count);
                             if(handler1!= null) {
                                 PacketDistributor.sendToServer(new SearchJeiIngredientsPacketC2S(handler1));
                             }

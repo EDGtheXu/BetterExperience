@@ -1,10 +1,12 @@
 package com.github.edg_thexu.better_experience.registries.recipehandler.visitor;
 
 import com.github.edg_thexu.better_experience.intergration.jei.SearchCache;
+import com.github.edg_thexu.better_experience.registries.recipehandler.IRecipeHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.apache.commons.lang3.mutable.MutableInt;
@@ -21,12 +23,13 @@ import java.util.Set;
 public abstract class AbstractVisitor<T> implements IRecipeHandlerVisitor<T> {
 
     @Override
-    public boolean visit(Level level, SearchCache searchCache, T ing) {
+    public boolean visit(Level level, SearchCache searchCache, T ing, IRecipeHandler<T> handler) {
         if(isEmpty(ing)){
             return true;
         }
         Set<Item> items = new HashSet<>();
         ItemStack[] stacks = getStacks(ing);
+        int count = handler.count();
 
         boolean flag1 = false;
         int c = -1;
@@ -39,7 +42,7 @@ public abstract class AbstractVisitor<T> implements IRecipeHandlerVisitor<T> {
             if(items.contains(item)){
                 continue;
             }
-            int need = stack.getCount();
+            int need = stack.getCount() * count;
 
             SearchCache.ContainerItem containerItem = searchCache.get(item);
             if(containerItem == null){
@@ -80,6 +83,7 @@ public abstract class AbstractVisitor<T> implements IRecipeHandlerVisitor<T> {
 
         }
         if(!flag1){
+            searchCache.addRequiredCount(Ingredient.of(stacks), count);
             return false;
         }
         return true;

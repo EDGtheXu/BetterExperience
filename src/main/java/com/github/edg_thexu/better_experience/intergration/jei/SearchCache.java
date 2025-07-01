@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.apache.commons.lang3.mutable.MutableInt;
@@ -18,10 +19,12 @@ import java.util.Map;
 public class SearchCache {
     Map<Item, ContainerItem> itemMap;
     ContainerItem markedMap;
+    Map<Ingredient, Integer> requiredCount;
 
     public SearchCache() {
         this.itemMap = new HashMap<>();
         this.markedMap = new ContainerItem();
+        this.requiredCount = new HashMap<>();
     }
 
     public void add(Item item, BlockPos pos, int slot){
@@ -37,6 +40,10 @@ public class SearchCache {
     public ContainerItem get(Item item){
 
         return itemMap.get(item);
+    }
+
+    public void addRequiredCount(Ingredient item, int count){
+        this.requiredCount.compute(item, (k, v) -> v == null? count : v + count);
     }
 
     public @Nullable List<Pair<Integer, MutableInt>> getSlots(Item item, BlockPos pos){

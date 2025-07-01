@@ -3,7 +3,7 @@ package com.github.edg_thexu.better_experience.registries.recipehandlerfactory;
 import com.github.edg_thexu.better_experience.registries.recipehandler.IRecipeHandler;
 import mezz.jei.library.gui.recipes.RecipeLayout;
 
-import java.util.function.Function;
+import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
 /**
@@ -12,14 +12,14 @@ import java.util.function.Predicate;
  * @param match 匹配条件
  * @param factory 创建handler的工厂
  */
-public record RecipeHandlerFactoryProvider(int priority, Predicate<Object> match, Function<RecipeLayout<?>, IRecipeHandler<?>> factory) {
+public record RecipeHandlerFactoryProvider(int priority, Predicate<Object> match, BiFunction<RecipeLayout<?>, Integer, IRecipeHandler<?>> factory) {
 
 
     public boolean match(Object recipe){
         return match.test(recipe);
     }
 
-    public IRecipeHandler<?> create(RecipeLayout<?> layout){
-        return factory.apply(layout);
+    public IRecipeHandler<?> create(RecipeLayout<?> layout, int count){
+        return factory.apply(layout, count);
     }
 }

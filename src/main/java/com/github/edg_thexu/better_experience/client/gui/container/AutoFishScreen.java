@@ -29,8 +29,13 @@ public class AutoFishScreen extends ContainerScreen {
 
         iconList1 = ConfluenceHelper.isLoaded()? List.of(Better_experience.space("confluence","item/fishing_pole/golden_fishing_rod")):
                 List.of(Better_experience.space("minecraft","item/fishing_rod"));
-        iconList2 = ConfluenceHelper.isLoaded()? List.of(Better_experience.space("confluence","item/bait/worm")) : List.of();
-        iconList3 = TCHelper.isLoaded()? List.of(Better_experience.space("terra_curios","item/curio/angler_earring")) : List.of();
+//        minecraft\textures\gui\sprites\spectator\close.png
+        iconList2 = ConfluenceHelper.isLoaded()? List.of(Better_experience.space("confluence","item/bait/worm")) : List.of(
+                Better_experience.space("minecraft","textures\\gui\\sprites\\spectator\\close")
+        );
+        iconList3 = TCHelper.isLoaded()? List.of(Better_experience.space("terra_curios","item/curio/angler_earring")) : List.of(
+                Better_experience.space("minecraft","textures\\gui\\sprites\\spectator\\close")
+        );
 
     }
 

@@ -11,6 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -18,12 +19,12 @@ import org.confluence.mod.common.menu.NPCReforgeMenu;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ForgeBlock extends BaseEntityBlock {
+public class ReforgeBlock extends BaseEntityBlock {
 
-    public ForgeBlock(Properties properties) {
+    public ReforgeBlock(Properties properties) {
         super(properties);
     }
-    public static final MapCodec<ForgeBlock> CODEC = simpleCodec(ForgeBlock::new);
+    public static final MapCodec<ReforgeBlock> CODEC = simpleCodec(ReforgeBlock::new);
 
     @Override
     protected MapCodec<? extends BaseEntityBlock> codec() {
@@ -31,8 +32,13 @@ public class ForgeBlock extends BaseEntityBlock {
     }
 
     @Override
+    public @NotNull RenderShape getRenderShape(@NotNull BlockState pState) {
+        return RenderShape.MODEL;
+    }
+
+    @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new ForgeBlockEntity(blockPos, blockState);
+        return new ReforgeBlockEntity(blockPos, blockState);
     }
 
     @Override
@@ -43,10 +49,10 @@ public class ForgeBlock extends BaseEntityBlock {
         return ItemInteractionResult.SUCCESS;
     }
 
-    public static class ForgeBlockEntity extends BlockEntity {
+    public static class ReforgeBlockEntity extends BlockEntity {
 
-        public ForgeBlockEntity(BlockPos pos, BlockState blockState) {
-            super(ModBlocks.FORGE_BLOCK_ENTITY.get(), pos, blockState);
+        public ReforgeBlockEntity(BlockPos pos, BlockState blockState) {
+            super(ModBlocks.REFORGE_BLOCK_ENTITY.get(), pos, blockState);
         }
     }
 }

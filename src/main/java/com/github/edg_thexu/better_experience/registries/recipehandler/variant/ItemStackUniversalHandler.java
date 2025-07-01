@@ -7,6 +7,7 @@ import com.github.edg_thexu.better_experience.registries.recipehandler.visitor.I
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotDrawable;
 import mezz.jei.api.ingredients.ITypedIngredient;
 import mezz.jei.api.recipe.RecipeIngredientRole;
@@ -25,13 +26,14 @@ import java.util.function.Supplier;
 /**
  * jei使用自己的api时，原版的recipeManager获取不到配方，此时需要转成List&lt;Ingredient&gt;，方便和原版进行一样的方式处理
  */
-public record ItemStackUniversalHandler(List<List<ITypedIngredient<?>>> ingredients) implements IRecipeHandler<List<ITypedIngredient<?>>> {
+public record ItemStackUniversalHandler(List<List<ITypedIngredient<?>>> ingredients, int count) implements IRecipeHandler<List<ITypedIngredient<?>>> {
 
     public static Supplier<MapCodec<? extends IRecipeHandler>> CODEC = ()-> {
         try {
-            return Codec.list(Codec.list(TypedIngredientCodecs.getIngredientCodec(Internal.getJeiRuntime().getIngredientManager()).codec()))
-                    .xmap(ItemStackUniversalHandler::new, ItemStackUniversalHandler::ingredients)
-                    .fieldOf("ingredients");
+            return RecordCodecBuilder.<ItemStackUniversalHandler>mapCodec(instance -> instance.group(
+                            Codec.list(Codec.list(TypedIngredientCodecs.getIngredientCodec(Internal.getJeiRuntime().getIngredientManager()).codec())).fieldOf("ingredients").forGetter(ItemStackUniversalHandler::ingredients),
+                            Codec.INT.fieldOf("count").forGetter(ItemStackUniversalHandler::count)
+                    ).apply(instance, ItemStackUniversalHandler::new));
         }catch (Exception e){
             return null;
         }
@@ -39,7 +41,7 @@ public record ItemStackUniversalHandler(List<List<ITypedIngredient<?>>> ingredie
     };
 
 
-    public static ItemStackUniversalHandler create(List<IRecipeSlotDrawable> slotDrawables) {
+    public static ItemStackUniversalHandler create(List<IRecipeSlotDrawable> slotDrawables, int count) {
         List<List<ITypedIngredient<?>>> result = new ArrayList<>();
         for(var it : slotDrawables){
             RecipeSlot slot = (RecipeSlot) it;
@@ -55,7 +57,7 @@ public record ItemStackUniversalHandler(List<List<ITypedIngredient<?>>> ingredie
         if(result.isEmpty()){
             return null;
         }
-        return new ItemStackUniversalHandler(result);
+        return new ItemStackUniversalHandler(result,count);
     }
 
     @Override

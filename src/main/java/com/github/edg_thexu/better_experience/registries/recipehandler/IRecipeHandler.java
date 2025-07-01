@@ -45,6 +45,10 @@ public interface IRecipeHandler<V> {
      */
     boolean match(ItemStack stack, int slot);
 
+    /**
+     * 获取制作数量
+     */
+    int count();
 
     /**
      * 获取编解码器

@@ -10,7 +10,7 @@ import mezz.jei.library.gui.recipes.RecipeLayout;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-import java.util.function.Function;
+import java.util.function.BiFunction;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -20,16 +20,16 @@ public class RecipeHandlerFactoryProviderTypes {
 
     public static final Supplier<RecipeHandlerFactoryProvider> VanillaRecipe = registerDecorator(register("vanilla", 0,
             r->r instanceof RecipeHolder,
-            layout->new VanillaRecipeHolderHandler(((RecipeHolder)layout.getRecipe()).id())
+            (layout, count)->new VanillaRecipeHolderHandler(((RecipeHolder)layout.getRecipe()).id(), count)
     ), JeiHelper::isLoaded);
 
-    public static final Supplier<RecipeHandlerFactoryProvider> BrewRecipe = registerDecorator(register("universal", 1,
+    public static final Supplier<RecipeHandlerFactoryProvider> UniversalRecipe = registerDecorator(register("universal", 1,
             r->!(r instanceof RecipeHolder),
-            layout-> ItemStackUniversalHandler.create(layout.getRecipeSlots().getSlots())
+            (layout, count)-> ItemStackUniversalHandler.create(layout.getRecipeSlots().getSlots(), count)
     ), JeiHelper::isLoaded);
 
 
-    private static Supplier<RecipeHandlerFactoryProvider> register(String name, int priority, Predicate<Object> match, Function<RecipeLayout<?>, IRecipeHandler<?>> factory) {
+    private static Supplier<RecipeHandlerFactoryProvider> register(String name, int priority, Predicate<Object> match, BiFunction<RecipeLayout<?>, Integer, IRecipeHandler<?>> factory) {
         return TYPES.register(name, ()->new RecipeHandlerFactoryProvider(priority, match, factory));
     }
 

@@ -25,6 +25,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.FishingRodItem;
@@ -35,10 +36,7 @@ import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import net.minecraft.world.level.block.entity.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -332,6 +330,28 @@ public class AutoFishBlock extends BaseEntityBlock {
                 this.setItems(NonNullList.withSize(getContainerSize(), ItemStack.EMPTY));
             }
             face = IntStream.range(0, 27).toArray();
+            this.openersCounter = new ContainerOpenersCounter() {
+                protected void onOpen(Level level, BlockPos blockPos, BlockState state) {
+
+                }
+
+                protected void onClose(Level level, BlockPos blockPos, BlockState state) {
+
+                }
+
+                protected void openerCountChanged(Level level, BlockPos blockPos, BlockState state, int id, int param) {
+                    signalOpenCount(level, blockPos, state, id, param);
+                }
+
+                protected boolean isOwnContainer(Player player) {
+                    if (!(player.containerMenu instanceof ChestMenu)) {
+                        return false;
+                    } else {
+                        Container container = ((ChestMenu)player.containerMenu).getContainer();
+                        return container == AutoFishMachineEntity.this || container instanceof CompoundContainer && ((CompoundContainer)container).contains(AutoFishMachineEntity.this);
+                    }
+                }
+            };
         }
 
         public boolean tryStart(Player player){

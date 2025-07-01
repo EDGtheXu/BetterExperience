@@ -3,22 +3,16 @@
   "category": "tools",
   "key": {
     "a": {
-      "item": "minecraft:gold_ingot"
+      "item": "minecraft:tnt"
     },
     "b": {
-      "item": "minecraft:redstone"
-    },
-    "c": {
-      "item": "minecraft:chest"
-    },
-    "d": {
-      "item": "minecraft:iron_ingot"
+      "item": "minecraft:blaze_rod"
     }
   },
   "pattern": [
-    "aaa",
-    "bcb",
-    "ddd"
+    "  a",
+    " b ",
+    "b  "
   ],
   "result": {
     "count": 1,
