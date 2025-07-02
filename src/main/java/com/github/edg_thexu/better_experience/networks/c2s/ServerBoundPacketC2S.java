@@ -1,39 +1,45 @@
 package com.github.edg_thexu.better_experience.networks.c2s;
 
-import com.github.edg_thexu.better_experience.Better_experience;
 import com.github.edg_thexu.better_experience.block.AutoFishBlock;
 import com.github.edg_thexu.better_experience.data.component.ItemContainerComponent;
 import com.github.edg_thexu.better_experience.menu.PotionBagMenu;
 import com.github.edg_thexu.better_experience.mixed.IPlayer;
 import com.github.edg_thexu.better_experience.module.faststorage.StorageManager;
-import io.netty.buffer.ByteBuf;
+import com.github.edg_thexu.better_experience.utils.ModUtils;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.network.PacketDistributor;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
-import org.jetbrains.annotations.NotNull;
+import net.minecraftforge.network.NetworkEvent;
 
-public record ServerBoundPacketC2S(int code) implements CustomPacketPayload {
+import java.util.function.Supplier;
 
-    public static final StreamCodec<ByteBuf, ServerBoundPacketC2S> STREAM_CODEC =
-            ByteBufCodecs.INT.map(ServerBoundPacketC2S::new, ServerBoundPacketC2S::code);
+public class ServerBoundPacketC2S {
 
-    public static final Type<ServerBoundPacketC2S> TYPE =
-            new Type<>(ResourceLocation.fromNamespaceAndPath(Better_experience.MODID, "serverbound_packet_c2s"));
+    int code;
 
-    public @NotNull Type<? extends CustomPacketPayload> type() {
-        return TYPE;
+    public ServerBoundPacketC2S(int code) {
+        this.code = code;
     }
 
-    public static void handle(ServerBoundPacketC2S packet, final IPayloadContext context) {
+    public ServerBoundPacketC2S(FriendlyByteBuf buf) {
+        this.code = buf.readInt();
+    }
+
+    public static ServerBoundPacketC2S decode(FriendlyByteBuf buffer) {
+        return new ServerBoundPacketC2S(buffer);
+    }
+
+    public static void encode(ServerBoundPacketC2S packet, FriendlyByteBuf buf) {
+        buf.writeInt(packet.code);
+    }
+    
+    public static void handle(ServerBoundPacketC2S packet, Supplier<NetworkEvent.Context> ctx) {
+        NetworkEvent.Context context = ctx.get();
         context.enqueueWork(() -> {
-            Player player = context.player();
+            Player player = context.getSender();
             ServerLevel level = (ServerLevel) player.level();
             if(packet.code == 1){
                 // 自动钓鱼机器开始
@@ -66,6 +72,6 @@ public record ServerBoundPacketC2S(int code) implements CustomPacketPayload {
 
 
     public static void notifyStart(){
-        PacketDistributor.sendToServer(new ServerBoundPacketC2S(1));
+        ModUtils.sendToServer(new ServerBoundPacketC2S(1));
     }
 }

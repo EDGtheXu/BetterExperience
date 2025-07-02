@@ -7,7 +7,6 @@ import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
-import org.confluence.mod.client.gui.container.ExtraInventoryScreen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -21,8 +20,8 @@ public abstract class ScreenMixin  implements SelfGetter<Screen> {
 
     @Inject(method = "init(Lnet/minecraft/client/Minecraft;II)V", at = @At(value = "RETURN"))
     private void initMixin(CallbackInfo ci) {
-        if(ConfluenceHelper.isLoaded() && this.te$getSelf() instanceof ExtraInventoryScreen){
-            addRenderableWidget(PotionScreenManager.getInstance().fastStorageBtn);
-        }
+//        if(ConfluenceHelper.isLoaded() && this.te$getSelf() instanceof ExtraInventoryScreen){
+//            addRenderableWidget(PotionScreenManager.getInstance().fastStorageBtn);
+//        }
     }
 }

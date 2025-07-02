@@ -1,96 +1,99 @@
 package com.github.edg_thexu.better_experience.config;
 
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 public class CommonConfig {
     //************************* Item *************************
     /**
      * 是否开启药水无线续杯
      */
-    public static ModConfigSpec.BooleanValue AUTO_POTION_OPEN;
+    public static ForgeConfigSpec.BooleanValue AUTO_POTION_OPEN;
     /**
      * 无线续杯数量
      */
-    public static ModConfigSpec.IntValue AUTO_POTION_STACK_SIZE;
+    public static ForgeConfigSpec.IntValue AUTO_POTION_STACK_SIZE;
     /**
      * 瞬间喝药
      */
-    public static ModConfigSpec.BooleanValue INSTANTLY_DRINK;
+    public static ForgeConfigSpec.BooleanValue INSTANTLY_DRINK;
     /**
      * 是否开启药水无线续杯
      */
-    public static ModConfigSpec.BooleanValue INFINITE_AMMO;
+    public static ForgeConfigSpec.BooleanValue INFINITE_AMMO;
     /**
      * 无限弹药数量
      */
-    public static ModConfigSpec.IntValue INFINITE_AMMO_STACK_SIZE;
+    public static ForgeConfigSpec.IntValue INFINITE_AMMO_STACK_SIZE;
     /**
      * 召唤BOSS无需消耗召唤物品
      */
-    public static ModConfigSpec.BooleanValue NO_CONSUME_SUMMONER;
+    public static ForgeConfigSpec.BooleanValue NO_CONSUME_SUMMONER;
     /**
      * 更好的重铸
      */
-    public static ModConfigSpec.BooleanValue BETTER_REINFORCED_TOOL;
+    public static ForgeConfigSpec.BooleanValue BETTER_REINFORCED_TOOL;
     /**
      * 修改物品最大堆叠
      */
-    public static ModConfigSpec.BooleanValue MODIFY_MAX_STACK_SIZE;
+    public static ForgeConfigSpec.BooleanValue MODIFY_MAX_STACK_SIZE;
 
     /**
      * 服务器禁用法爆魔杖
      */
-    public static ModConfigSpec.BooleanValue FORBIDDEN_MAGIC_BOOM_STAFF;
+    public static ForgeConfigSpec.BooleanValue FORBIDDEN_MAGIC_BOOM_STAFF;
 
 
     //************************** Player ****************************
     /**
      * 重生时填满生命值
      */
-    public static ModConfigSpec.BooleanValue FILL_LIFE_ON_RESPAWN;
+    public static ForgeConfigSpec.BooleanValue FILL_LIFE_ON_RESPAWN;
     /**
      * 额外的摔落免疫
      */
-    public static ModConfigSpec.IntValue ADDITIONAL_FALL_DISTANCE;
+    public static ForgeConfigSpec.IntValue ADDITIONAL_FALL_DISTANCE;
     /**
      * 多重钓鱼
      */
-    public static ModConfigSpec.BooleanValue MULTI_FISH;
+    public static ForgeConfigSpec.BooleanValue MULTI_FISH;
     /**
      * 挖矿速度++
      */
-    public static ModConfigSpec.DoubleValue BLOCK_BREAK_SPEED_MULTIPLIER;
+    public static ForgeConfigSpec.DoubleValue BLOCK_BREAK_SPEED_MULTIPLIER;
     /**
      * 自动存钱
      */
-    public static ModConfigSpec.BooleanValue AUTO_SAVE_MONEY;
+    public static ForgeConfigSpec.BooleanValue AUTO_SAVE_MONEY;
     /**
      * jei从附近箱子取出材料
      */
-    public static ModConfigSpec.BooleanValue QUICK_JEI_FETCH;
+    public static ForgeConfigSpec.BooleanValue QUICK_JEI_FETCH;
+    /**
+     * jei从附近箱子取出材料的距离
+     */
+    public static ForgeConfigSpec.IntValue QUICK_JEI_FETCH_DISTANCE;
 
     //*************************** World *****************************
      /**
      * 宝石树种植无限制
      */
-    public static ModConfigSpec.BooleanValue STONE_SAPLING_TREE_NO_STRICT;
+    public static ForgeConfigSpec.BooleanValue STONE_SAPLING_TREE_NO_STRICT;
     /**
      * 草药种植无限制
      */
-    public static ModConfigSpec.BooleanValue HERB_GROWTH_NO_STRICT;
+    public static ForgeConfigSpec.BooleanValue HERB_GROWTH_NO_STRICT;
     /**
      * 骨粉催熟
      */
-    public static ModConfigSpec.BooleanValue VALID_BONEMEAL_TARGET;
+    public static ForgeConfigSpec.BooleanValue VALID_BONEMEAL_TARGET;
 
     //**************************** Entity ****************************
     /**
      * 禁止史莱姆死亡时生成熔岩
      */
-    public static ModConfigSpec.BooleanValue SLIME_DIE_NO_LAVA;
+    public static ForgeConfigSpec.BooleanValue SLIME_DIE_NO_LAVA;
 
-    public static ModConfigSpec init() {
-        final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
+    public static ForgeConfigSpec init(ForgeConfigSpec.Builder BUILDER) {
 
         BUILDER.push("Item");
 
@@ -146,6 +149,9 @@ public class CommonConfig {
         QUICK_JEI_FETCH = BUILDER
                 .comment("Quick JEI Fetch.")
                 .define("quick_jei_fetch", true);
+        QUICK_JEI_FETCH_DISTANCE = BUILDER
+                .comment("Quick JEI Fetch Distance.")
+                .defineInRange("quick_jei_fetch_distance", 5, 1, 30);
         BUILDER.pop();
         BUILDER.push("World");
 
@@ -173,5 +179,5 @@ public class CommonConfig {
         return SPEC;
     }
 
-    public static ModConfigSpec SPEC;
+    public static ForgeConfigSpec SPEC;
 }

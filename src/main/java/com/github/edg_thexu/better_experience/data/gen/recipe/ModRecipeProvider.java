@@ -15,19 +15,19 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
 
 import java.util.concurrent.CompletableFuture;
-
+import java.util.function.Consumer;
 
 
 public class ModRecipeProvider extends RecipeProvider {
 
-    public ModRecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-        super(output, registries);
+    public ModRecipeProvider(PackOutput output) {
+        super(output);
     }
 
     @Override
-    protected void buildRecipes(RecipeOutput recipeOutput) {
+    protected void buildRecipes(Consumer<FinishedRecipe>  recipeOutput) {
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, ModBlocks.AUTO_FISH_BLOCK)
+        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, ModBlocks.AUTO_FISH_BLOCK.get())
                 .pattern("aaa")
                 .pattern("bcb")
                 .pattern("ddd")
@@ -49,7 +49,7 @@ public class ModRecipeProvider extends RecipeProvider {
 //                .unlockedBy("has_gold_ingot",has(Items.GOLD_INGOT))
 //                .save(recipeOutput);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.PotionBag)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.PotionBag.get())
                 .pattern("aaa")
                 .pattern("a a")
                 .pattern("aaa")
@@ -60,27 +60,4 @@ public class ModRecipeProvider extends RecipeProvider {
 
     }
 
-    protected static <T extends AbstractCookingRecipe> void cookRecipes(
-            RecipeOutput recipeOutput, String cookingMethod, RecipeSerializer<T> cookingSerializer, AbstractCookingRecipe.Factory<T> recipeFactory, int cookingTime
-    ) {
-//        simpleCookingRecipe(recipeOutput, cookingMethod, cookingSerializer, recipeFactory, cookingTime, ModItems.BREAD_SWORD, ModItems.BREAD_SWORD_HOT, 0.35F);
-//        simpleCookingRecipe(recipeOutput, cookingMethod, cookingSerializer, recipeFactory, cookingTime, ModItems.BREAD_SWORD_HOT, ModItems.BREAD_SWORD_VERY_HOT, 0.35F);
-//
-
-    }
-
-    protected static <T extends AbstractCookingRecipe> void simpleCookingRecipe(
-            RecipeOutput recipeOutput,
-            String cookingMethod,
-            RecipeSerializer<T> cookingSerializer,
-            AbstractCookingRecipe.Factory<T> recipeFactory,
-            int cookingTime,
-            ItemLike material,
-            ItemLike result,
-            float experience
-    ) {
-        SimpleCookingRecipeBuilder.generic(Ingredient.of(material), RecipeCategory.FOOD, result, experience, cookingTime, cookingSerializer, recipeFactory)
-                .unlockedBy(getHasName(material), has(material))
-                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(Better_experience.MODID,getItemName(result) + "_from_" + cookingMethod));
-    }
 }

@@ -17,12 +17,12 @@ public class PlayerAttribute {
      */
     public static void applyAdditionalAttributes(ServerPlayer player) {
         // 增加摔落高度
-        ResourceLocation location = Better_experience.space("fall_distance_modifier");
-        if(player.getAttribute(Attributes.SAFE_FALL_DISTANCE).hasModifier(location)){
-            player.getAttribute(Attributes.SAFE_FALL_DISTANCE).removeModifier(location);
-        }
-        player.getAttribute(Attributes.SAFE_FALL_DISTANCE).addTransientModifier(
-                new AttributeModifier(location, CommonConfig.ADDITIONAL_FALL_DISTANCE.get(), AttributeModifier.Operation.ADD_VALUE));
+//        ResourceLocation location = Better_experience.space("fall_distance_modifier");
+//        if(player.getAttribute(Attributes.SAFE_FALL_DISTANCE).hasModifier(location)){
+//            player.getAttribute(Attributes.SAFE_FALL_DISTANCE).removeModifier(location);
+//        }
+//        player.getAttribute(Attributes.SAFE_FALL_DISTANCE).addTransientModifier(
+//                new AttributeModifier(location, CommonConfig.ADDITIONAL_FALL_DISTANCE.get(), AttributeModifier.Operation.ADD_VALUE));
     }
 
     /**

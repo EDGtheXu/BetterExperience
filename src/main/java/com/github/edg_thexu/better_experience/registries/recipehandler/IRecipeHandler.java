@@ -4,16 +4,16 @@ import com.github.edg_thexu.better_experience.intergration.jei.JeiRegistries;
 import com.github.edg_thexu.better_experience.registries.recipehandler.visitor.IRecipeHandlerVisitor;
 import com.mojang.serialization.Codec;
 import mezz.jei.library.gui.recipes.RecipeLayout;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
+
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * 配方处理器
@@ -56,10 +56,8 @@ public interface IRecipeHandler<V> {
      */
     RecipeHandlerProvider getCodec();
 
-    Codec<IRecipeHandler> TYPED_CODEC = JeiRegistries.RecipeHandlerProviders.REGISTRY
-            .byNameCodec()
-            .dispatch(IRecipeHandler::getCodec, a->a.codec().get());
 
-    StreamCodec<RegistryFriendlyByteBuf, IRecipeHandler> STREAM_CODEC = ByteBufCodecs.fromCodecWithRegistries(TYPED_CODEC);
+
+//    StreamCodec<RegistryFriendlyByteBuf, IRecipeHandler> STREAM_CODEC = ByteBufCodecs.fromCodecWithRegistries(TYPED_CODEC);
 
 }

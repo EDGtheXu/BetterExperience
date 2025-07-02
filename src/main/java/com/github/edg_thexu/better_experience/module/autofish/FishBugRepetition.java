@@ -5,13 +5,11 @@ import com.github.edg_thexu.better_experience.config.CommonConfig;
 import com.github.edg_thexu.better_experience.intergration.confluence.ConfluenceHelper;
 import com.github.edg_thexu.better_experience.mixed.IFishingHook;
 import com.github.edg_thexu.better_experience.mixed.IPlayer;
-import com.github.edg_thexu.better_experience.mixin.integration.confluence.AbstractFishingPoleAccessor;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.item.FishingRodItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import org.confluence.mod.common.item.fishing.AbstractFishingPole;
 
 public class FishBugRepetition {
 
@@ -26,11 +24,11 @@ public class FishBugRepetition {
                 FishingHook hook = null;
                 try {
                     float power = AutoFishManager.computeFishingPower(player, poleStack, null, null);
-                    if (ConfluenceHelper.isLoaded() && poleStack.getItem() instanceof AbstractFishingPole pole) {
-                        hook = ((AbstractFishingPoleAccessor) pole).callGetHook(poleStack, player, level, (int) power, 5);
-                    } else if (poleStack.getItem() instanceof FishingRodItem) {
+//                    if (ConfluenceHelper.isLoaded() && poleStack.getItem() instanceof AbstractFishingPole pole) {
+//                        hook = ((AbstractFishingPoleAccessor) pole).callGetHook(poleStack, player, level, (int) power, 5);
+//                    } else if (poleStack.getItem() instanceof FishingRodItem) {
                         hook = new FishingHook(player, level, (int) power, 5);
-                    }
+//                    }
                 } catch (Exception e) {
                     Better_experience.LOGGER.warn(e.getMessage());
                     return;

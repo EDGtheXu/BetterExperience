@@ -10,16 +10,17 @@ import com.github.edg_thexu.better_experience.data.gen.tag.ModBlockTagsProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import net.neoforged.neoforge.data.event.GatherDataEvent;
+import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.data.event.GatherDataEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 
-@EventBusSubscriber(modid = Better_experience.MODID, bus = EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(modid = Better_experience.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class DataGenerator {
     public static Map<String, DataProvider> PROVIDERS = null;
 
@@ -33,7 +34,7 @@ public class DataGenerator {
         boolean server = event.includeServer();
         ModBlockTagsProvider blockTagsProvider = new ModBlockTagsProvider(output, lookup, helper);
         generator.addProvider(server, blockTagsProvider);
-        generator.addProvider(server,new ModRecipeProvider(output,lookup));
+        generator.addProvider(server,new ModRecipeProvider(output));
         generator.addProvider(server, ModLootTableProvider.getProvider(output, lookup));
 
 

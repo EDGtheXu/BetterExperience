@@ -6,6 +6,7 @@ import com.github.edg_thexu.better_experience.intergration.terra_curios.TCHelper
 import com.github.edg_thexu.better_experience.menu.AutoFishMenu;
 import com.github.edg_thexu.better_experience.module.autofish.AutoFishManager;
 import com.github.edg_thexu.better_experience.networks.c2s.ServerBoundPacketC2S;
+import com.github.edg_thexu.better_experience.utils.ModUtils;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
@@ -16,7 +17,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.List;
 
@@ -31,10 +31,10 @@ public class AutoFishScreen extends ContainerScreen {
                 List.of(Better_experience.space("minecraft","item/fishing_rod"));
 //        minecraft\textures\gui\sprites\spectator\close.png
         iconList2 = ConfluenceHelper.isLoaded()? List.of(Better_experience.space("confluence","item/bait/worm")) : List.of(
-                Better_experience.space("minecraft","textures\\gui\\sprites\\spectator\\close")
+                Better_experience.space("minecraft","textures/gui/sprites/spectator/close")
         );
         iconList3 = TCHelper.isLoaded()? List.of(Better_experience.space("terra_curios","item/curio/angler_earring")) : List.of(
-                Better_experience.space("minecraft","textures\\gui\\sprites\\spectator\\close")
+                Better_experience.space("minecraft","textures/gui/sprites/spectator/close")
         );
 
     }
@@ -57,7 +57,8 @@ public class AutoFishScreen extends ContainerScreen {
                     ServerBoundPacketC2S.notifyStart();
                 }
                 else if (menu.access.get(0) != 0) {
-                    PacketDistributor.sendToServer(new ServerBoundPacketC2S(2));
+//                    PacketDistributor.sendToServer(new ServerBoundPacketC2S(2));
+                    ModUtils.sendToServer(new ServerBoundPacketC2S(2));;
                 }
             }
         }).pos(leftPos + 75, topPos + 3).size(30,13).build();
@@ -81,9 +82,9 @@ public class AutoFishScreen extends ContainerScreen {
     }
 
     @Override
-    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        this.renderTransparentBackground(guiGraphics);
-        this.renderBg(guiGraphics, partialTick, mouseX, mouseY);
+    public void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
+
+        super.renderBg(guiGraphics, partialTick, mouseX, mouseY);
         guiGraphics.blit(Better_experience.space("textures/gui/tri_slots.png"),leftPos+60, topPos-25, 0,0,60,26,60,26);
 
         guiGraphics.setColor(0.6f,0.6f,0.6f, 0.4f);

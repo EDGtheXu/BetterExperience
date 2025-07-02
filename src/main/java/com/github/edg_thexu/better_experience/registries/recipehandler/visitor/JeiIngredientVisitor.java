@@ -1,7 +1,7 @@
 package com.github.edg_thexu.better_experience.registries.recipehandler.visitor;
 
 import mezz.jei.api.ingredients.ITypedIngredient;
-import net.minecraft.core.component.DataComponentPatch;
+
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
@@ -24,17 +24,17 @@ public class JeiIngredientVisitor extends AbstractVisitor<List<ITypedIngredient<
 //        if(!normalizedStack.getComponentsPatch().isEmpty()){
 //            return stack.getComponentsPatch().equals(normalizedStack.getComponentsPatch());
 //        }
-        DataComponentPatch dataComponentPatch = stack.getComponentsPatch();
-        for(var e : normalizedStack.getComponentsPatch().entrySet()){
-            if(dataComponentPatch.entrySet().stream().noneMatch(f -> {
-//                if(f.getKey().equals(e.getKey())){
-//                    return false;
-//                }
-                return f.getKey().equals(e.getKey()) && f.getValue().get().equals(e.getValue().get());
-            })){
-                return false;
-            }
-        }
+//        DataComponentPatch dataComponentPatch = stack.getComponentsPatch();
+//        for(var e : normalizedStack.getComponentsPatch().entrySet()){
+//            if(dataComponentPatch.entrySet().stream().noneMatch(f -> {
+////                if(f.getKey().equals(e.getKey())){
+////                    return false;
+////                }
+//                return f.getKey().equals(e.getKey()) && f.getValue().get().equals(e.getValue().get());
+//            })){
+//                return false;
+//            }
+//        }
         return true;
     }
 

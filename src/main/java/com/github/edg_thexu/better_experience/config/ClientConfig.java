@@ -1,18 +1,18 @@
 package com.github.edg_thexu.better_experience.config;
 
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.common.ModConfigSpec;
+
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 @OnlyIn(Dist.CLIENT)
 public class ClientConfig {
 
-    public static ModConfigSpec.ConfigValue<Boolean> SHOW_OUTLINES;
-    public static ModConfigSpec.ConfigValue<Boolean> MULTI_FISHING;
-    public static ModConfigSpec SPEC;
+    public static ForgeConfigSpec.ConfigValue<Boolean> SHOW_OUTLINES;
+    public static ForgeConfigSpec.ConfigValue<Boolean> MULTI_FISHING;
+    public static ForgeConfigSpec SPEC;
 
-    public static ModConfigSpec init(){
-        final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
+    public static ForgeConfigSpec init(ForgeConfigSpec.Builder BUILDER){
 
         SHOW_OUTLINES = BUILDER
                 .comment("Show outlines")

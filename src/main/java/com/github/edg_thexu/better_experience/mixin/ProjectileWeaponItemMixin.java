@@ -12,11 +12,11 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(ProjectileWeaponItem.class)
 public class ProjectileWeaponItemMixin {
 
-    @Redirect(method = "useAmmo", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;processAmmoUse(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;I)I"))
-    private static int injected(ServerLevel level, ItemStack weapon, ItemStack ammo, int count) {
-        if(CommonConfig.INFINITE_AMMO.get() &&  ammo.getCount() > CommonConfig.INFINITE_AMMO_STACK_SIZE.get()){
-            return 0;
-        }
-        return EnchantmentHelper.processAmmoUse(level, weapon, ammo, count);
-    }
+//    @Redirect(method = "useAmmo", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;processAmmoUse(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;I)I"))
+//    private static int injected(ServerLevel level, ItemStack weapon, ItemStack ammo, int count) {
+//        if(CommonConfig.INFINITE_AMMO.get() &&  ammo.getCount() > CommonConfig.INFINITE_AMMO_STACK_SIZE.get()){
+//            return 0;
+//        }
+//        return EnchantmentHelper.processAmmoUse(level, weapon, ammo, count);
+//    }
 }

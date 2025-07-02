@@ -1,14 +1,15 @@
 package com.github.edg_thexu.better_experience.client.gui.hud;
 
+import com.github.edg_thexu.better_experience.Better_experience;
 import com.github.edg_thexu.better_experience.client.gui.container.PotionBagScreen;
 import com.github.edg_thexu.better_experience.init.ModAttachments;
 import com.github.edg_thexu.better_experience.intergration.confluence.ConfluenceHelper;
 import com.github.edg_thexu.better_experience.networks.c2s.ServerBoundPacketC2S;
+import com.github.edg_thexu.better_experience.utils.ModUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -23,9 +24,9 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
 
 import java.util.Collection;
 import java.util.List;
@@ -35,7 +36,7 @@ import java.util.stream.Collectors;
 @OnlyIn(Dist.CLIENT)
 public class PotionScreenManager {
 
-    private static final ResourceLocation EFFECT_BACKGROUND_SMALL_SPRITE = ResourceLocation.withDefaultNamespace("container/inventory/effect_background_small");
+    private static final ResourceLocation EFFECT_BACKGROUND_SMALL_SPRITE = Better_experience.defaultSpacee("container/inventory/effect_background_small");
 
     AbstractContainerScreen screen;
     int leftPos;
@@ -50,10 +51,10 @@ public class PotionScreenManager {
 
     static PotionScreenManager instance;
     public ImageButton fastStorageBtn;
-    public static final WidgetSprites RECIPE_BUTTON_SPRITES = new WidgetSprites(
-            ResourceLocation.withDefaultNamespace("advancements/task_frame_unobtained"),
-            ResourceLocation.withDefaultNamespace("advancements/task_frame_obtained")
-    );
+//    public static final WidgetSprites RECIPE_BUTTON_SPRITES = new WidgetSprites(
+//            ResourceLocation.withDefaultNamespace("advancements/task_frame_unobtained"),
+//            ResourceLocation.withDefaultNamespace("advancements/task_frame_obtained")
+//    );
 
 
     public PotionScreenManager(AbstractContainerScreen screen){
@@ -65,9 +66,9 @@ public class PotionScreenManager {
         this.width = screen.getXSize();
         this.font = Minecraft.getInstance().font;
         instance = this;
-        this.fastStorageBtn = new ImageButton(20,20,RECIPE_BUTTON_SPRITES,p->{
-            PacketDistributor.sendToServer(new ServerBoundPacketC2S(4));
-        },Component.empty());
+        this.fastStorageBtn = new ImageButton(0,0,20,20,0,0,Better_experience.defaultSpacee("advancements/task_frame_unobtained"),p->{
+            ModUtils.sendToServer(new ServerBoundPacketC2S(4));
+        });
 
     }
 
@@ -98,18 +99,20 @@ public class PotionScreenManager {
 
     public void click(double mousex, double mousey, int button){
         if(selectedEffect!= null){
-            var data = player.getData(ModAttachments.AUTO_POTION.get());
-            if(data.isForbidden(selectedEffect.getEffect())){
-                data.removeForbidden(selectedEffect.getEffect());
-            } else data.addForbidden(selectedEffect.getEffect());
+            player.getCapability(ModAttachments.AUTO_POTION).ifPresent(data -> {
+                if(data.isForbidden(selectedEffect.getEffect())){
+                    data.removeForbidden(selectedEffect.getEffect());
+                } else data.addForbidden(selectedEffect.getEffect());
 //            data.sync();
+            });
+
         }
     }
 
     private void renderEffects(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         int i = this.leftPos - 20;
         int j = this.width - i;
-        var data = player.getData(ModAttachments.AUTO_POTION.get());
+        var data = player.getCapability(ModAttachments.AUTO_POTION).orElseGet(null);
 
         Collection<MobEffectInstance> collection = data.getPotions().entrySet().stream().map(entry -> new MobEffectInstance(entry.getKey(), -1,entry.getValue())).collect(Collectors.toSet());
         if (!collection.isEmpty()) {
@@ -130,8 +133,9 @@ public class PotionScreenManager {
                     guiGraphics.setColor(0.3f, 0.3f, 0.3f, 1.0f);
                 }
 
-                guiGraphics.blitSprite(EFFECT_BACKGROUND_SMALL_SPRITE, ii, jj, 12, 12);
-                Holder<MobEffect> holder = mobeffectinstance.getEffect();
+//                guiGraphics.blitSprite(EFFECT_BACKGROUND_SMALL_SPRITE, ii, jj, 12, 12);
+
+                MobEffect holder = mobeffectinstance.getEffect();
                 TextureAtlasSprite textureatlassprite = mobeffecttexturemanager.get(holder);
                 guiGraphics.blit(ii + 1 , jj +1 , 0, 10, 10, textureatlassprite);
 
@@ -153,7 +157,7 @@ public class PotionScreenManager {
             if (selectedEffect != null) {
                 List<Component> list = List.of(
                         this.getEffectName(selectedEffect),
-                        MobEffectUtil.formatDuration(selectedEffect, 1.0F, this.minecraft.level.tickRateManager().tickrate())
+                        MobEffectUtil.formatDuration(selectedEffect, 1.0F)
                 );
                 guiGraphics.renderTooltip(this.font, list, Optional.empty(), mouseX, mouseY);
             }
@@ -162,7 +166,7 @@ public class PotionScreenManager {
     }
 
     private Component getEffectName(MobEffectInstance effect) {
-        MutableComponent mutablecomponent = effect.getEffect().value().getDisplayName().copy();
+        MutableComponent mutablecomponent = effect.getEffect().getDisplayName().copy();
         if (effect.getAmplifier() >= 1 && effect.getAmplifier() <= 9) {
             mutablecomponent.append(CommonComponents.SPACE).append(Component.translatable("enchantment.level." + (effect.getAmplifier() + 1)));
         }

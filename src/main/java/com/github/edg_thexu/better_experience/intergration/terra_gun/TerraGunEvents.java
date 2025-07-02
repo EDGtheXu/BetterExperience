@@ -1,13 +1,13 @@
 package com.github.edg_thexu.better_experience.intergration.terra_gun;
 
 import com.github.edg_thexu.better_experience.config.CommonConfig;
-import net.neoforged.bus.api.SubscribeEvent;
-import org.confluence.terra_guns.api.event.GunEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+
 
 public class TerraGunEvents {
 
-    @SubscribeEvent
-    public void consumeBullet(GunEvent.ShrinkBulletEvent event) {
+//    @SubscribeEvent
+//    public void consumeBullet(GunEvent.ShrinkBulletEvent event) {
 //        Player player = event.getPlayer();
 //        Inventory inventory = player.getInventory();
 //        NonNullList<ItemStack> stackNonNullList = inventory.items;
@@ -26,9 +26,9 @@ public class TerraGunEvents {
 //            }
 //        }
 
-        if(event.getBulletStack().getCount() >= CommonConfig.INFINITE_AMMO_STACK_SIZE.get()){
-            event.setCanceled(true);
-        }
-    }
+//        if(event.getBulletStack().getCount() >= CommonConfig.INFINITE_AMMO_STACK_SIZE.get()){
+//            event.setCanceled(true);
+//        }
+//    }
 
 }

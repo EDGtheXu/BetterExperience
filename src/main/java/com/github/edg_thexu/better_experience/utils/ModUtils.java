@@ -1,6 +1,8 @@
 package com.github.edg_thexu.better_experience.utils;
 
+import com.github.edg_thexu.better_experience.networks.NetworkHandler;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
@@ -9,12 +11,33 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.network.NetworkDirection;
+import net.minecraftforge.network.PacketDistributor;
 
 import java.util.List;
 
 public class ModUtils {
 
+    public static <MSG> void  sendToPlayer(ServerPlayer player, MSG payload){
+        NetworkHandler.CHANNEL.sendTo(payload, player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
+    }
+    public static <MSG> void sendToAllPlayers(MSG payload){
+        NetworkHandler.CHANNEL.send(PacketDistributor.ALL.noArg(), payload);
+    }
 
+    public static <MSG> void sendToServer(MSG payload){
+        NetworkHandler.CHANNEL.sendToServer(payload);
+    }
+
+    public static float clamp(float value, float min, float max){
+        if(value < min){
+            return min;
+        }else if(value > max){
+            return max;
+        }else{
+            return value;
+        }
+    }
     public static EntityHitResult getEyeTraceHitResult(Player player, double distance){
         AABB aabb = player.getBoundingBox().inflate(distance);
         Vec3 from = player.getEyePosition();

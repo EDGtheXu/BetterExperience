@@ -1,6 +1,7 @@
 package com.github.edg_thexu.better_experience.intergration.confluence_lib;
 
-import net.neoforged.fml.ModList;
+
+import net.minecraftforge.fml.ModList;
 
 public class ConfluenceLibHelper {
     static Boolean isLoad;

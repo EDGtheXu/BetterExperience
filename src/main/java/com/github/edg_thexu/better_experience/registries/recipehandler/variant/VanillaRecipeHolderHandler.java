@@ -1,6 +1,5 @@
 package com.github.edg_thexu.better_experience.registries.recipehandler.variant;
 
-import com.github.edg_thexu.better_experience.intergration.jei.SearchCache;
 import com.github.edg_thexu.better_experience.registries.recipehandler.IRecipeHandler;
 import com.github.edg_thexu.better_experience.registries.recipehandler.RecipeHandlerProvider;
 import com.github.edg_thexu.better_experience.registries.recipehandler.RecipeHandlerProviderTypes;
@@ -12,7 +11,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 
 import java.util.List;
@@ -33,12 +31,11 @@ public record VanillaRecipeHolderHandler(ResourceLocation location, int count) i
 
     @Override
     public List<Ingredient> getIngredient(Level level) {
-        RecipeHolder recipeHolder = level.getRecipeManager().byKey(location).orElse(null);
-        if(recipeHolder == null){
+        Recipe recipe = level.getRecipeManager().byKey(location).orElse(null);
+        if(recipe == null){
 //            if(Internal.getJeiRuntime().getRecipeManager().getRecipeCategory(RecipeTypes.BREWING).)
             return List.of();
         }
-        Recipe recipe = recipeHolder.value();
         return recipe.getIngredients();
     }
 

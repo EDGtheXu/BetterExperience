@@ -13,8 +13,7 @@ import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.FishingRodItem;
 import net.minecraft.world.item.ItemStack;
-import org.confluence.mod.common.item.fishing.BaitItem;
-import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
+
 
 public class AutoFishMenu extends ChestMenu {
     public final ContainerData access;
@@ -39,19 +38,21 @@ public class AutoFishMenu extends ChestMenu {
         addSlot(new Slot(container, 28, startX + 18, -16) {
             @Override
             public boolean mayPlace(ItemStack stack) {
-                if(!ConfluenceHelper.isLoaded()){
-                    return false;
-                }
-                return stack.getItem() instanceof BaitItem;
+//                if(!ConfluenceHelper.isLoaded()){
+//                    return false;
+//                }
+//                return stack.getItem() instanceof BaitItem;
+                return false;
             }
         });
         addSlot(new Slot(container, 29, startX + 36, -16) {
             @Override
             public boolean mayPlace(ItemStack stack) {
-                if(!TCHelper.isLoaded()) {
-                    return false;
-                }
-                return stack.getItem() instanceof BaseCurioItem;
+//                if(!TCHelper.isLoaded()) {
+//                    return false;
+//                }
+//                return stack.getItem() instanceof BaseCurioItem;
+                return false;
             }
         });
 

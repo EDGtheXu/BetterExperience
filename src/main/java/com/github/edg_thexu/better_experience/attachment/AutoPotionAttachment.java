@@ -1,14 +1,16 @@
 package com.github.edg_thexu.better_experience.attachment;
 
 import com.github.edg_thexu.better_experience.networks.c2s.PotionApplyPacketC2S;
+import com.github.edg_thexu.better_experience.utils.ModUtils;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
-import net.neoforged.neoforge.common.util.INBTSerializable;
-import net.neoforged.neoforge.network.PacketDistributor;
+
+import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.HashMap;
@@ -19,16 +21,23 @@ import java.util.Map;
 public class AutoPotionAttachment implements INBTSerializable<CompoundTag> {
 
 
-    Map<Holder<MobEffect>, Integer> potions = new HashMap<>();
-    Map<Holder<MobEffect>, Integer> _potions = new HashMap<>();
+    Map<MobEffect, Integer> potions = new HashMap<>();
+    Map<MobEffect, Integer> _potions = new HashMap<>();
     // client-side only
-    HashSet<Holder<MobEffect>> forbiddens = new HashSet<>();
+    HashSet<MobEffect> forbiddens = new HashSet<>();
     boolean dirty = false;
 
+    public void setAttachment(AutoPotionAttachment attachment){
+        potions = attachment.potions;
+        forbiddens = attachment.forbiddens;
+        _potions = attachment._potions;
+        dirty = attachment.dirty;
+    }
+
     @Override
-    public @UnknownNullability CompoundTag serializeNBT(HolderLookup.Provider provider) {
+    public @UnknownNullability CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
-        List<String> list = potions.keySet().stream().map(integer -> BuiltInRegistries.MOB_EFFECT.getKey(integer.value()).toString()).toList();
+        List<String> list = potions.keySet().stream().map(integer -> ForgeRegistries.MOB_EFFECTS.getKey(integer).toString()).toList();
         List<Integer> amps = potions.values().stream().toList();
         int size = list.size();
         tag.putInt("size", size);
@@ -40,7 +49,7 @@ public class AutoPotionAttachment implements INBTSerializable<CompoundTag> {
     }
 
     @Override
-    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag tag) {
+    public void deserializeNBT(CompoundTag tag) {
         int size = tag.getInt("size");
         potions = new HashMap<>();
         for (int i = 0; i < size; i++) {
@@ -54,33 +63,33 @@ public class AutoPotionAttachment implements INBTSerializable<CompoundTag> {
             if (effect == null) {
                 continue;
             }
-            potions.put(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(effect), amp);
+            potions.put(effect, amp);
         }
     }
 
-    public void removePotion(Holder<MobEffect> potion) {
+    public void removePotion(MobEffect potion) {
         if(potions.remove(potion)!= null) {
             dirty = true;
         }
     }
 
-    public void addForbidden(Holder<MobEffect> potion) {
+    public void addForbidden(MobEffect potion) {
         if(forbiddens.add(potion)){
             dirty = true;
         }
     }
 
-    public void removeForbidden(Holder<MobEffect> potion) {
+    public void removeForbidden(MobEffect potion) {
         if(forbiddens.remove(potion)){
             dirty = true;
         }
     }
 
-    public boolean isForbidden(Holder<MobEffect> potion) {
+    public boolean isForbidden(MobEffect potion) {
         return forbiddens.contains(potion);
     }
 
-    public void addPotion(Holder<MobEffect> potion, int amp) {
+    public void addPotion(MobEffect potion, int amp) {
         if(potions.containsKey(potion)) {
             if(potions.get(potion) > amp){
                 potions.put(potion, amp);
@@ -92,7 +101,7 @@ public class AutoPotionAttachment implements INBTSerializable<CompoundTag> {
         }
     }
 
-    public Map<Holder<MobEffect>, Integer> getPotions() {
+    public Map<MobEffect, Integer> getPotions() {
         return potions;
     }
 
@@ -113,7 +122,8 @@ public class AutoPotionAttachment implements INBTSerializable<CompoundTag> {
                 if(!forbiddens.contains(potion.getKey()))
                     attachment.potions.put(potion.getKey(), potion.getValue());
             }
-            PacketDistributor.sendToServer(new PotionApplyPacketC2S(attachment));
+            ModUtils.sendToServer(new PotionApplyPacketC2S(attachment));
+//            PacketDistributor.sendToServer(new PotionApplyPacketC2S(attachment));
             dirty = false;
         }
     }

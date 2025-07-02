@@ -90,7 +90,7 @@ public class ExplodeManager {
                     }
                 }
                 if(level.random.nextFloat() < 0.05f) {
-                    level.playSound(null, pos, SoundEvents.GENERIC_EXPLODE.value(), SoundSource.BLOCKS, 0.2f,0.6f);
+                    level.playSound(null, pos, SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 0.2f,0.6f);
                     ((ServerLevel)level).sendParticles(ParticleTypes.EXPLOSION, pos.getX(), pos.getY(), pos.getZ(), 1, 0.5, 0.1,0,0);
                 }
             }

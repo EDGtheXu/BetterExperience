@@ -30,7 +30,7 @@ public class TooltipButton extends Button {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
+//        super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
         if(this.isHovered() && this.tooltips!= null && !this.tooltips.isEmpty()){
             RenderUtil.customTooltip(guiGraphics, mouseX, mouseY, this.tooltips);
         }
@@ -38,7 +38,7 @@ public class TooltipButton extends Button {
 
     public static class Builder extends Button.Builder {
 
-        private List<ClientTooltipComponent> tooltips;
+        protected List<ClientTooltipComponent> tooltips;
 
         public Builder(Component message, OnPress onPress) {
             super(message, onPress);

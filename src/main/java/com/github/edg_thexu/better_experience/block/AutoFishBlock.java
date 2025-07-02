@@ -45,17 +45,14 @@ import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.mod.client.renderer.item.SimpleGeoItemRenderer;
-import org.confluence.mod.common.item.fishing.AbstractFishingPole;
-import org.confluence.mod.common.item.fishing.BaitItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.GeoItem;
-import software.bernie.geckolib.animatable.client.GeoRenderProvider;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
+
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -77,19 +74,17 @@ public class AutoFishBlock extends BaseEntityBlock {
     public static final BooleanProperty TURN = BooleanProperty.create("turn_on");
 
 
-    public static final MapCodec<AutoFishBlock> CODEC = simpleCodec(AutoFishBlock::new);
-
-    @Override
-    protected @NotNull MapCodec<AutoFishBlock> codec() {return CODEC;}
-
     @Override
     public @NotNull RenderShape getRenderShape(@NotNull BlockState pState) {
         return RenderShape.MODEL;
     }
 
     @Override
-    protected void onRemove(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState newState, boolean isMoving) {
-        Containers.dropContentsOnDestroy(state, newState, level, pos);
+    public void onRemove(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState newState, boolean isMoving) {
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        if (blockEntity instanceof AutoFishMachineEntity entity) {
+            Containers.dropContents(level, pos, entity);
+        }
         super.onRemove(state, level, pos, newState, isMoving);
     }
     public static final EnumProperty<ChestType> TYPE = BlockStateProperties.CHEST_TYPE;
@@ -113,7 +108,7 @@ public class AutoFishBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected @NotNull ItemInteractionResult useItemOn(@NotNull ItemStack stack, BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hitResult) {
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if(state.hasBlockEntity()){
             BlockEntity entity = level.getBlockEntity(pos);
             ((IPlayer)player).betterExperience$setInteractBlockEntity(entity);
@@ -121,7 +116,7 @@ public class AutoFishBlock extends BaseEntityBlock {
                 player.openMenu(new SimpleMenuProvider(entity1, Component.translatable("block.better_experience.autofish_machine")));
             }
         }
-        return ItemInteractionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Override
@@ -162,13 +157,13 @@ public class AutoFishBlock extends BaseEntityBlock {
                         try {
                             float power = AutoFishManager.computeFishingPower(null, poleStack, bait.getItem(), curios);
 
-                            if (ConfluenceLibHelper.isLoaded() && pole instanceof AbstractFishingPole pole1) {
-                                Method funcField = AbstractFishingPole.class.getDeclaredMethod("getHook", ItemStack.class, Player.class, Level.class, int.class, int.class);
-                                funcField.setAccessible(true);
-                                hook = (FishingHook) funcField.invoke(pole, poleStack, player, level, (int) power, 5);
-                            } else {
+//                            if (ConfluenceLibHelper.isLoaded() && pole instanceof AbstractFishingPole pole1) {
+//                                Method funcField = AbstractFishingPole.class.getDeclaredMethod("getHook", ItemStack.class, Player.class, Level.class, int.class, int.class);
+//                                funcField.setAccessible(true);
+//                                hook = (FishingHook) funcField.invoke(pole, poleStack, player, level, (int) power, 5);
+//                            } else {
                                 hook = new FishingHook(player, level, (int) power, 5);
-                            }
+//                            }
                         } catch (Exception e) {
                             Better_experience.LOGGER.error("Failed to create fishing hook", e);
                             return;
@@ -254,9 +249,9 @@ public class AutoFishBlock extends BaseEntityBlock {
 
                         entity.lastTick = entity.ticks;
 
-                        if(ConfluenceLibHelper.isLoaded() && bait.getItem() instanceof BaitItem bait1){
-                            entity.cdReduce = (1 - bait1.getBaitBonus() * 0.5f);
-                        }
+//                        if(ConfluenceLibHelper.isLoaded() && bait.getItem() instanceof BaitItem bait1){
+//                            entity.cdReduce = (1 - bait1.getBaitBonus() * 0.5f);
+//                        }
                         entity.fishingTime = (int) (20 * 10 * entity.cdReduce);
                         entity.updateState();
 
@@ -272,7 +267,7 @@ public class AutoFishBlock extends BaseEntityBlock {
         });
     }
 
-    public static class AutoFishMachineEntity extends ChestBlockEntity  implements GeoBlockEntity,  WorldlyContainer{
+    public static class AutoFishMachineEntity extends ChestBlockEntity implements GeoBlockEntity, WorldlyContainer{
 
 
         int ticks = 0;
@@ -436,8 +431,8 @@ public class AutoFishBlock extends BaseEntityBlock {
         }
 
         @Override
-        public void onDataPacket(@NotNull Connection net, @NotNull ClientboundBlockEntityDataPacket pkt, HolderLookup.@NotNull Provider lookupProvider) {
-            super.onDataPacket(net, pkt, lookupProvider);
+        public void onDataPacket(@NotNull Connection net, @NotNull ClientboundBlockEntityDataPacket pkt) {
+            super.onDataPacket(net, pkt);
             CompoundTag tag = pkt.getTag();
             isStarted = tag.getInt("started");
             fishingTime = tag.getInt("fishTime");
@@ -448,9 +443,9 @@ public class AutoFishBlock extends BaseEntityBlock {
         }
 
         @Override
-        protected void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
+        public void load(@NotNull CompoundTag tag) {
             this.setItems(NonNullList.withSize(getContainerSize(), ItemStack.EMPTY));
-            super.loadAdditional(tag, registries);
+            super.load(tag);
             isStarted = tag.getInt("started");
 
             if(tag.contains("owner")){
@@ -459,8 +454,8 @@ public class AutoFishBlock extends BaseEntityBlock {
         }
 
         @Override
-        public @NotNull CompoundTag getUpdateTag(HolderLookup.@NotNull Provider registries) {
-            CompoundTag tag = super.getUpdateTag(registries);
+        public @NotNull CompoundTag getUpdateTag() {
+            CompoundTag tag = super.getUpdateTag();
             tag.putInt("started", isStarted);
             tag.putInt("fishTime", fishingTime);
             if(owner != null)
@@ -469,12 +464,13 @@ public class AutoFishBlock extends BaseEntityBlock {
         }
 
         @Override
-        protected void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
-            super.saveAdditional(tag, registries);
+        protected void saveAdditional(@NotNull CompoundTag tag) {
+            super.saveAdditional(tag);
             tag.putInt("started", isStarted);
             if(owner != null)
                 tag.putUUID("owner", owner.getUUID());
         }
+
         private final AnimatableInstanceCache CACHE = GeckoLibUtil.createInstanceCache(this);
 
         @Override
@@ -496,9 +492,9 @@ public class AutoFishBlock extends BaseEntityBlock {
 
         @Override
         public boolean canPlaceItemThroughFace(int i, @NotNull ItemStack itemStack, @Nullable Direction direction) {
-            if(direction == Direction.UP){
-                return itemStack.getItem() instanceof BaitItem;
-            }
+//            if(direction == Direction.UP){
+//                return itemStack.getItem() instanceof BaitItem;
+//            }
             return true;
         }
 
@@ -512,20 +508,17 @@ public class AutoFishBlock extends BaseEntityBlock {
         private final AnimatableInstanceCache CACHE = GeckoLibUtil.createInstanceCache(this);
 
         public Item(AutoFishBlock pBlock) {
-            super(pBlock, new Properties()
-                    // todo
-//                    .component(TCDataComponentTypes.MOD_RARITY, ModRarity.BLUE)
-            );
+            super(pBlock, new Properties());
         }
 
-        @Override
-        public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {
-            consumer.accept(new SimpleGeoItemRenderer<>(
-                    Better_experience.space("geo/block/auto_fish_block.geo.json"),
-                    Better_experience.space("textures/block/auto_fish_block.png"),
-                    null
-                    ));
-        }
+//        @Override
+//        public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {
+//            consumer.accept(new SimpleGeoItemRenderer<>(
+//                    Better_experience.space("geo/block/auto_fish_block.geo.json"),
+//                    Better_experience.space("textures/block/auto_fish_block.png"),
+//                    null
+//                    ));
+//        }
 
         @Override
         public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {

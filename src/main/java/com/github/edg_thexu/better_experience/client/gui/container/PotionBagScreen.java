@@ -1,9 +1,11 @@
 package com.github.edg_thexu.better_experience.client.gui.container;
 
+import com.github.edg_thexu.better_experience.Better_experience;
 import com.github.edg_thexu.better_experience.client.gui.widget.FloatButton;
 import com.github.edg_thexu.better_experience.init.ModDataComponentTypes;
 import com.github.edg_thexu.better_experience.menu.PotionBagMenu;
 import com.github.edg_thexu.better_experience.networks.c2s.ServerBoundPacketC2S;
+import com.github.edg_thexu.better_experience.utils.ModUtils;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -13,14 +15,11 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
-import org.confluence.terraentity.utils.AdapterUtils;
 
 import java.util.List;
 
 public class PotionBagScreen extends AbstractContainerScreen<PotionBagMenu> {
-    private static final ResourceLocation CONTAINER_BACKGROUND = ResourceLocation.withDefaultNamespace("textures/gui/container/generic_54.png");
+    private static final ResourceLocation CONTAINER_BACKGROUND = Better_experience.defaultSpacee("textures/gui/container/generic_54.png");
     private final int containerRows;
 
     FloatButton collectButton;
@@ -36,7 +35,8 @@ public class PotionBagScreen extends AbstractContainerScreen<PotionBagMenu> {
     protected void init() {
         super.init();
         collectButton = (FloatButton) FloatButton.builder(Component.literal("A"), p->{
-            PacketDistributor.sendToServer(new ServerBoundPacketC2S(5));
+//            PacketDistributor.sendToServer(new ServerBoundPacketC2S(5));
+            ModUtils.sendToServer(new ServerBoundPacketC2S(5));
                 }).setTooltips(List.of(
                         ClientTooltipComponent.create(Component.translatable("better_experience.gui.potion_screen.auto_collect.message")
                         .withStyle(Style.EMPTY.withColor(0xFFFFFF)).getVisualOrderText())
@@ -44,10 +44,10 @@ public class PotionBagScreen extends AbstractContainerScreen<PotionBagMenu> {
         this.addRenderableWidget(collectButton);
         ItemStack stack = minecraft.player.getMainHandItem();
 
-        var data = stack.get(ModDataComponentTypes.ITEM_CONTAINER_COMPONENT);
-        if(data != null){
-            collectButton.setSelected(data.isAutoCollect());
-        }
+//        var data = stack.get(ModDataComponentTypes.ITEM_CONTAINER_COMPONENT);
+//        if(data != null){
+//            collectButton.setSelected(data.isAutoCollect());
+//        }
     }
 
     @Override
@@ -67,12 +67,6 @@ public class PotionBagScreen extends AbstractContainerScreen<PotionBagMenu> {
         int j = (this.height - this.imageHeight) / 2;
         guiGraphics.blit(CONTAINER_BACKGROUND, i, j, 0, 0, this.imageWidth, this.containerRows * 18 + 17);
         guiGraphics.blit(CONTAINER_BACKGROUND, i, j + this.containerRows * 18 + 17, 0, 126, this.imageWidth, 96);
-    }
-
-    @Override
-    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        this.renderTransparentBackground(guiGraphics);
-        this.renderBg(guiGraphics, partialTick, mouseX, mouseY);
     }
 
 

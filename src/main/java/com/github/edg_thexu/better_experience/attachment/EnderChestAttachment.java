@@ -3,20 +3,17 @@ package com.github.edg_thexu.better_experience.attachment;
 import com.github.edg_thexu.better_experience.intergration.confluence.ConfluenceHelper;
 import com.github.edg_thexu.better_experience.module.autopotion.PlayerInventoryManager;
 import com.github.edg_thexu.better_experience.networks.s2c.EnderChestItemsS2C;
+import com.github.edg_thexu.better_experience.utils.ModUtils;
 import com.mojang.serialization.Codec;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.util.INBTSerializable;
-import net.neoforged.neoforge.network.PacketDistributor;
-import org.confluence.mod.common.init.ModAttachmentTypes;
+
+import net.minecraftforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.ArrayList;
@@ -28,11 +25,11 @@ public class EnderChestAttachment implements INBTSerializable<CompoundTag> {
 
     public static Codec<EnderChestAttachment> CODEC = CompoundTag.CODEC.xmap(i->{
         EnderChestAttachment attachment = new EnderChestAttachment();
-        attachment.deserializeNBT(null, i);
+        attachment.deserializeNBT(i);
         return attachment;
-    }, i->i.serializeNBT(null));
+    }, i->i.serializeNBT());
 
-    public static StreamCodec<ByteBuf, EnderChestAttachment> STREAM_CODEC = ByteBufCodecs.fromCodec(CODEC);
+//    public static StreamCodec<ByteBuf, EnderChestAttachment> STREAM_CODEC = ByteBufCodecs.fromCodec(CODEC);
 
     public void refresh(EnderChestAttachment attachment){
         items = attachment.items;
@@ -43,7 +40,7 @@ public class EnderChestAttachment implements INBTSerializable<CompoundTag> {
 
 
     @Override
-    public @UnknownNullability CompoundTag serializeNBT(HolderLookup.Provider provider) {
+    public @UnknownNullability CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
         for (int i = 0; i < items.size(); i++) {
             tag.putString("item" + i, BuiltInRegistries.ITEM.getKey(items.get(i)).toString());
@@ -53,7 +50,7 @@ public class EnderChestAttachment implements INBTSerializable<CompoundTag> {
 
 
     @Override
-    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag tag) {
+    public void deserializeNBT(CompoundTag tag) {
         for (int i = 0; i < tag.size(); i++) {
             String key = tag.getString("item" + i);
             if (key.isEmpty()) continue;
@@ -71,19 +68,20 @@ public class EnderChestAttachment implements INBTSerializable<CompoundTag> {
             }
         }
         att.items = itemList;
-        PacketDistributor.sendToPlayer(player, new EnderChestItemsS2C(att, typeIndex));
+        ModUtils.sendToPlayer(player, new EnderChestItemsS2C(att, typeIndex));
+//        PacketDistributor.sendToPlayer(player, new EnderChestItemsS2C(att, typeIndex));
     }
 
     public static void syncEnderChest(ServerPlayer player){
-        sync(player, player.getEnderChestInventory().getItems(), EnderChestItemsS2C.TypeIndex.ENDER);
+        sync(player, player.getEnderChestInventory().items, EnderChestItemsS2C.TypeIndex.ENDER);
     }
 
     public static void syncPig(ServerPlayer player){
-        sync(player, player.getData(ModAttachmentTypes.PIGGY_BANK).getItems(),EnderChestItemsS2C.TypeIndex.PIG);
+//        sync(player, player.getData(ModAttachmentTypes.PIGGY_BANK).getItems(),EnderChestItemsS2C.TypeIndex.PIG);
     }
 
     public static void syncSafe(ServerPlayer player){
-        sync(player, player.getData(ModAttachmentTypes.SAFE).getItems(), EnderChestItemsS2C.TypeIndex.SAFE);
+//        sync(player, player.getData(ModAttachmentTypes.SAFE).getItems(), EnderChestItemsS2C.TypeIndex.SAFE);
     }
 
     public static void syncAll(ServerPlayer player){

@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.minecraftforge.client.event.RenderLevelStageEvent;
 import org.joml.Matrix4f;
 
 public abstract class AbstractBufferManager {
@@ -32,40 +32,46 @@ public abstract class AbstractBufferManager {
         this.lastRefreshTime = System.currentTimeMillis();
         this.vertexBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
         Tesselator tessellator = Tesselator.getInstance();
-        BufferBuilder buffer = tessellator.begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR);
-        this.buildBuffer(buffer);
-        MeshData build = buffer.build();
-        if (build == null) {
-            this.vertexBuffer = null;
-        } else {
-            this.vertexBuffer.bind();
-            this.vertexBuffer.upload(build);
-            VertexBuffer.unbind();
-        }
+        BufferBuilder buffer = tessellator.getBuilder();
 
+        beginBuffer(buffer);
+        buildBuffer(buffer);
+
+        var build = buffer.end();
+        vertexBuffer.bind();
+        vertexBuffer.upload(build);
+        VertexBuffer.unbind();
+
+    }
+
+    protected void beginBuffer(BufferBuilder buffer){
+        buffer.begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR);
     }
 
     public void render(RenderLevelStageEvent event) {
-        this.render(event.getPoseStack(), event.getModelViewMatrix(), Minecraft.getInstance().gameRenderer.getMainCamera().getPosition(), event.getProjectionMatrix());
+        render(event.getPoseStack(), Minecraft.getInstance().gameRenderer.getMainCamera().getPosition(), event.getProjectionMatrix());
     }
 
-    public void render(PoseStack poseStack, Matrix4f modelMatrix, Vec3 playerPos, Matrix4f projectMatrix) {
-        if (this.shouldRefresh()) {
-            this.refresh();
-        }
+    public void render(PoseStack poseStack, Vec3 playerPos, Matrix4f projectMatrix){
+        if(shouldRefresh())
+            refresh();
 
-        if (this.vertexBuffer != null) {
+        if (vertexBuffer != null) {
+
             RenderSystem.setShader(GameRenderer::getPositionColorShader);
-            this.beforeRender();
+            beforeRender();
+
             poseStack.pushPose();
-            poseStack.mulPose(modelMatrix);
             poseStack.translate(-playerPos.x(), -playerPos.y(), -playerPos.z());
-            this.vertexBuffer.bind();
-            this.vertexBuffer.drawWithShader(poseStack.last().pose(), projectMatrix, RenderSystem.getShader());
+
+//            minecraft.getBlockRenderer().renderSingleBlock(minecraft.level.getBlockState(BlockPos.containing(playerPos.subtract(0,-1,0))),poseStack,minecraft.renderBuffers().bufferSource(),15, OverlayTexture.NO_OVERLAY);
+            vertexBuffer.bind();
+            vertexBuffer.drawWithShader(poseStack.last().pose(), projectMatrix, RenderSystem.getShader());
             VertexBuffer.unbind();
             poseStack.popPose();
-            this.afterRender(poseStack);
-        }
 
+            afterRender(poseStack);
+
+        }
     }
 }

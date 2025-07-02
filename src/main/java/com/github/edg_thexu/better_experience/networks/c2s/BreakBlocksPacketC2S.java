@@ -1,14 +1,16 @@
 package com.github.edg_thexu.better_experience.networks.c2s;
 
 import com.github.edg_thexu.better_experience.Better_experience;
+import com.github.edg_thexu.better_experience.attachment.EnderChestAttachment;
 import com.github.edg_thexu.better_experience.config.CommonConfig;
 import com.github.edg_thexu.better_experience.item.MagicBoomStaff;
 import com.github.edg_thexu.better_experience.module.boomstaff.ExplodeManager;
+import com.github.edg_thexu.better_experience.networks.s2c.EnderChestItemsS2C;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Tuple;
@@ -20,36 +22,59 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.minecraftforge.network.NetworkEvent;
+
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.function.Supplier;
 
-public record BreakBlocksPacketC2S(BlockPos p1, BlockPos p2) implements CustomPacketPayload {
+public class BreakBlocksPacketC2S{
 
-    public static final StreamCodec<ByteBuf, BreakBlocksPacketC2S> STREAM_CODEC = StreamCodec.composite(
-                    BlockPos.STREAM_CODEC, BreakBlocksPacketC2S::p1,
-                    BlockPos.STREAM_CODEC, BreakBlocksPacketC2S::p2,
-                    BreakBlocksPacketC2S::new
-            );
+//    public static final StreamCodec<ByteBuf, BreakBlocksPacketC2S> STREAM_CODEC = StreamCodec.composite(
+//                    BlockPos.STREAM_CODEC, BreakBlocksPacketC2S::p1,
+//                    BlockPos.STREAM_CODEC, BreakBlocksPacketC2S::p2,
+//                    BreakBlocksPacketC2S::new
+//            );
 
-    public static final Type<BreakBlocksPacketC2S> TYPE =
-            new Type<>(ResourceLocation.fromNamespaceAndPath(Better_experience.MODID, "break_blocks_packet_c2s"));
-
-    public Type<? extends CustomPacketPayload> type() {
-        return TYPE;
-
+    BlockPos p1;
+    BlockPos p2;
+    public BreakBlocksPacketC2S(BlockPos p1, BlockPos p2) {
+        this.p1 = p1;
+        this.p2 = p2;
     }
 
-    public static void handle(BreakBlocksPacketC2S packet, final IPayloadContext context) {
+    public BreakBlocksPacketC2S(FriendlyByteBuf buf) {
+        this(buf.readBlockPos(), buf.readBlockPos());
+    }
+
+    public static BreakBlocksPacketC2S decode(FriendlyByteBuf buffer) {
+        return new BreakBlocksPacketC2S(buffer);
+    }
+
+    public static void encode(BreakBlocksPacketC2S packet, FriendlyByteBuf buf) {
+        buf.writeBlockPos(packet.p1);
+        buf.writeBlockPos(packet.p2);
+    }
+
+    public BlockPos p1() {
+        return p1;
+    }
+
+    public BlockPos p2() {
+        return p2;
+    }
+
+    public static void handle(BreakBlocksPacketC2S packet, Supplier<NetworkEvent.Context> ctx) {
+        NetworkEvent.Context context = ctx.get();
         context.enqueueWork(() -> {
             if(CommonConfig.FORBIDDEN_MAGIC_BOOM_STAFF.get()){
-                context.player().sendSystemMessage(Component.translatable("better_experience.info.forbidden_magic_boom_staff").withColor(0xbc6538));
+                context.getSender().sendSystemMessage(Component.translatable("better_experience.info.forbidden_magic_boom_staff").withStyle(style -> style.withColor(0xbc6538)));
                 return;
             }
-            ItemStack stack = context.player().getMainHandItem();
+            ItemStack stack = context.getSender().getMainHandItem();
             if(stack.getItem() instanceof MagicBoomStaff staff){
-                context.player().getCooldowns().addCooldown(staff, 20);
+                context.getSender().getCooldowns().addCooldown(staff, 20);
             }
             int x1 = Math.min(packet.p1().getX(), packet.p2().getX());
             int y1 = Math.min(packet.p1().getY(), packet.p2().getY());
@@ -60,7 +85,7 @@ public record BreakBlocksPacketC2S(BlockPos p1, BlockPos p2) implements CustomPa
             int centerX = (x2 + x1) / 2;
             int centerY = (y2 + y1) / 2;
             int centerZ = (z2 + z1) / 2;
-            ServerPlayer player = (ServerPlayer) context.player();
+            ServerPlayer player = (ServerPlayer) context.getSender();
             Level level = player.level();
 
             Queue<Tuple<BlockPos, Boolean>> blocks = new LinkedList<>();

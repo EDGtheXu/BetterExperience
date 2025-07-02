@@ -7,8 +7,9 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.common.data.BlockTagsProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
+
+import net.minecraftforge.common.data.BlockTagsProvider;
+import net.minecraftforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,16 +24,16 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
     @Override
     protected void addTags(HolderLookup.@NotNull Provider provider) {
         tag(BlockTags.NEEDS_STONE_TOOL).add(
-                ModBlocks.AUTO_FISH_BLOCK.get(),
-                ModBlocks.AUTO_SELL_BLOCK.get(),
-                ModBlocks.REFORGE_BLOCK.get()
+                ModBlocks.AUTO_FISH_BLOCK.get()
+//                ModBlocks.AUTO_SELL_BLOCK.get(),
+//                ModBlocks.REFORGE_BLOCK.get()
         );
 
 
         this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(
-                ModBlocks.AUTO_FISH_BLOCK.get(),
-                ModBlocks.AUTO_SELL_BLOCK.get(),
-                ModBlocks.REFORGE_BLOCK.get()
+                ModBlocks.AUTO_FISH_BLOCK.get()
+//                ModBlocks.AUTO_SELL_BLOCK.get(),
+//                ModBlocks.REFORGE_BLOCK.get()
         );
     }
 

@@ -4,8 +4,7 @@ import com.github.edg_thexu.better_experience.Better_experience;
 import com.github.edg_thexu.better_experience.init.ModBlocks;
 import com.github.edg_thexu.better_experience.init.ModItems;
 import net.minecraft.data.PackOutput;
-import net.neoforged.neoforge.common.data.LanguageProvider;
-
+import net.minecraftforge.common.data.LanguageProvider;
 
 
 public class ModChineseProvider extends LanguageProvider {
@@ -25,8 +24,8 @@ public class ModChineseProvider extends LanguageProvider {
         add(ModItems.StarBoomStaff.get(), "星爆魔杖");
         add(ModItems.PotionBag.get(), "药水袋");
         add(ModBlocks.AUTO_FISH_BLOCK.get(), "自动钓鱼机");
-        add(ModBlocks.AUTO_SELL_BLOCK.get(), "自动贩卖机");
-        add(ModBlocks.REFORGE_BLOCK.get(), "重铸机");
+//        add(ModBlocks.AUTO_SELL_BLOCK.get(), "自动贩卖机");
+//        add(ModBlocks.REFORGE_BLOCK.get(), "重铸机");
 
         // tooltips
         add("better_experience.tooltip.magic_boom_staff.info", "左手物品决定镐力 [按住shift+鼠标滚轮调整大小]");
@@ -66,6 +65,7 @@ public class ModChineseProvider extends LanguageProvider {
         add("better_experience.configuration.forbidden_magic_boom_staff", "禁用法爆魔杖");
         add("better_experience.configuration.auto_save_money", "自动把钱存到猪猪存钱罐");
         add("better_experience.configuration.quick_jei_fetch", "JEI快速从周围箱子取材料");
+        add("better_experience.configuration.quick_jei_fetch_distance", "JEI快速从周围箱子取材料 距离");
 
 
         // info

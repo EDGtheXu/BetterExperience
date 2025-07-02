@@ -1,6 +1,7 @@
 package com.github.edg_thexu.better_experience.intergration.terra_gun;
 
-import net.neoforged.fml.ModList;
+
+import net.minecraftforge.fml.ModList;
 
 public class TGHelper {
     static Boolean isLoad;

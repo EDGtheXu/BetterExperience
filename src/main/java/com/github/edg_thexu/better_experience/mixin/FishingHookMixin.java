@@ -106,7 +106,7 @@ public abstract class FishingHookMixin implements IFishingHook, SelfGetter<Fishi
     @Redirect(method = "retrieve", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addFreshEntity(Lnet/minecraft/world/entity/Entity;)Z", ordinal = 1))
     private boolean onRetrieve(Level instance, Entity entity, @Local Player player) {
         if(!betterExperience$isSimulation){
-            instance.addFreshEntity(new ExperienceOrb(player.level(), player.getX(), player.getY() + 0.5, player.getZ() + 0.5, te$getSelf().getRandom().nextInt(6) + 1));
+            instance.addFreshEntity(new ExperienceOrb(player.level(), player.getX(), player.getY() + 0.5, player.getZ() + 0.5, te$getSelf().level().getRandom().nextInt(6) + 1));
         }
         return true;
     }

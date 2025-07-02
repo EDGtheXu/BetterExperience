@@ -16,12 +16,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
-import org.confluence.mod.common.attachment.PlayerPiggyBankContainer;
-import org.confluence.mod.common.attachment.PlayerSafeContainer;
-import org.confluence.mod.common.init.ModAttachmentTypes;
-import org.confluence.mod.common.init.ModTags;
-import org.confluence.mod.common.init.block.FunctionalBlocks;
-import org.confluence.mod.util.PlayerUtils;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +42,7 @@ public class StorageManager {
                         for(ItemStack stack : player.getInventory().items){
                             for(int slot = 0; slot < entity.getContainerSize(); slot++){
                                 ItemStack containerStack = entity.getItem(slot);
-                                if(ItemStack.isSameItemSameComponents(stack, containerStack)){
+                                if(ItemStack.isSameItemSameTags(stack, containerStack)){
                                     int m  = containerStack.getCount() + stack.getCount();
                                     int n = containerStack.getMaxStackSize();
                                     if (m <= n) {
@@ -78,70 +73,70 @@ public class StorageManager {
             return;
         }
         // 当背包中有猪猪存钱罐时
-        if(player.getInventory().hasAnyMatching(it->it.getItem() == FunctionalBlocks.PIGGY_BANK.get().asItem())) {
-            // 将钱存入存钱罐
-            var data = player.getData(ModAttachmentTypes.PIGGY_BANK);
-            for (var itemstack : player.getInventory().items) {
-                if (itemstack.is(ModTags.Items.COINS)) {
-                    ModUtils.tryPlaceBackItemStackToItemStacks(itemstack, data.getItems());
-                }
-            }
-            // 如果存钱罐钱可以升级，则升级
-            int c = 0;
-            boolean dirty = false;
-            for(var item : data.getItems()){
-                if(item.is(ModTags.Items.COINS)) {
-                    if (item.getCount() == 100) {
-                        int index = PlayerUtils.COIN_2_INDEX.applyAsInt(item.getItem()) - 1;
-                        if (index >= 0) {
-                            data.getItems().set(c, new ItemStack(PlayerUtils.INDEX_2_COIN.apply(3 - index)));
-                            dirty = true;
-                        }
-
-                    }
-                }
-                c++;
-            }
-            // 合并所有钱
-            if(dirty){
-                List<ItemStack> coins = new ArrayList<>();
-                for(var item : data.getItems()){
-                    if(item.is(ModTags.Items.COINS)) {
-                        coins.add(item);
-                    }
-                }
-                ModUtils.unionItemStacks(coins);
-            }
-        }
+//        if(player.getInventory().hasAnyMatching(it->it.getItem() == FunctionalBlocks.PIGGY_BANK.get().asItem())) {
+//            // 将钱存入存钱罐
+//            var data = player.getData(ModAttachmentTypes.PIGGY_BANK);
+//            for (var itemstack : player.getInventory().items) {
+//                if (itemstack.is(ModTags.Items.COINS)) {
+//                    ModUtils.tryPlaceBackItemStackToItemStacks(itemstack, data.getItems());
+//                }
+//            }
+//            // 如果存钱罐钱可以升级，则升级
+//            int c = 0;
+//            boolean dirty = false;
+//            for(var item : data.getItems()){
+//                if(item.is(ModTags.Items.COINS)) {
+//                    if (item.getCount() == 100) {
+//                        int index = PlayerUtils.COIN_2_INDEX.applyAsInt(item.getItem()) - 1;
+//                        if (index >= 0) {
+//                            data.getItems().set(c, new ItemStack(PlayerUtils.INDEX_2_COIN.apply(3 - index)));
+//                            dirty = true;
+//                        }
+//
+//                    }
+//                }
+//                c++;
+//            }
+//            // 合并所有钱
+//            if(dirty){
+//                List<ItemStack> coins = new ArrayList<>();
+//                for(var item : data.getItems()){
+//                    if(item.is(ModTags.Items.COINS)) {
+//                        coins.add(item);
+//                    }
+//                }
+//                ModUtils.unionItemStacks(coins);
+//            }
+//        }
     }
 
     /**
      * 无需防止就可以打开存钱罐
      */
     public static void openPiggy(Level level, Player player, InteractionHand usedHand){
-        ItemStack stack = player.getItemInHand(usedHand);
-        if(usedHand == InteractionHand.MAIN_HAND ){
-            if(ConfluenceHelper.isLoaded()) {
-                if(stack.is(FunctionalBlocks.PIGGY_BANK.asItem())) {
-                    PlayerPiggyBankContainer container = player.getData(ModAttachmentTypes.PIGGY_BANK);
-                    player.openMenu(new SimpleMenuProvider((id, inventory, player1) -> {
-                        return new ChestMenu(MenuType.GENERIC_9x6, id, inventory, container, 6);
-                    }, Component.translatable("container.confluence.piggy_bank")));
-                }
-                else if(stack.is(FunctionalBlocks.SAFE.asItem())){
-                    PlayerSafeContainer container = player.getData(ModAttachmentTypes.SAFE);
-                    player.openMenu(new SimpleMenuProvider((id, inventory, player1) -> {
-                        return new ChestMenu(MenuType.GENERIC_9x6, id, inventory, container, 6);
-                    }, Component.translatable("container.confluence.safe")));
-                }
-            }
-            if(stack.is(Blocks.ENDER_CHEST.asItem())){
-                PlayerEnderChestContainer playerenderchestcontainer = player.getEnderChestInventory();
-
-                player.openMenu(new SimpleMenuProvider((id, inventory, player1) -> {
-                    return ChestMenu.threeRows(id, inventory, playerenderchestcontainer);
-                },  Component.translatable("container.enderchest")));
-            }
-        }
+//        ItemStack stack = player.getItemInHand(usedHand);
+//        if(usedHand == InteractionHand.MAIN_HAND ){
+//            if(ConfluenceHelper.isLoaded()) {
+//                if(stack.is(FunctionalBlocks.PIGGY_BANK.asItem())) {
+//                    PlayerPiggyBankContainer container = player.getData(ModAttachmentTypes.PIGGY_BANK);
+//                    player.openMenu(new SimpleMenuProvider((id, inventory, player1) -> {
+//                        return new ChestMenu(MenuType.GENERIC_9x6, id, inventory, container, 6);
+//                    }, Component.translatable("container.confluence.piggy_bank")));
+//                }
+//                else if(stack.is(FunctionalBlocks.SAFE.asItem())){
+//                    PlayerSafeContainer container = player.getData(ModAttachmentTypes.SAFE);
+//                    player.openMenu(new SimpleMenuProvider((id, inventory, player1) -> {
+//                        return new ChestMenu(MenuType.GENERIC_9x6, id, inventory, container, 6);
+//                    }, Component.translatable("container.confluence.safe")));
+//                }
+//            }
+//            if(stack.is(Blocks.ENDER_CHEST.asItem())){
+//                PlayerEnderChestContainer playerenderchestcontainer = player.getEnderChestInventory();
+//
+//                player.openMenu(new SimpleMenuProvider((id, inventory, player1) -> {
+//                    return ChestMenu.threeRows(id, inventory, playerenderchestcontainer);
+//                },  Component.translatable("container.enderchest")));
+//            }
+//        }
     }
 }

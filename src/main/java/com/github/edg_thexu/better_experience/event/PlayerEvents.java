@@ -12,18 +12,19 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.bus.api.EventPriority;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
-@EventBusSubscriber(modid = Better_experience.MODID, bus = EventBusSubscriber.Bus.GAME)
+
+@Mod.EventBusSubscriber(modid = Better_experience.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class PlayerEvents {
     @SubscribeEvent
-    public static void playerTick(PlayerTickEvent.Post event) {
-        Player player = event.getEntity();
+    public static void playerTick(TickEvent.PlayerTickEvent event) {
+        Player player = event.player;
         PlayerInventoryManager.getInstance().detect(player);
 
         if (player.level() instanceof ServerLevel sl) {
@@ -31,15 +32,17 @@ public class PlayerEvents {
             FishBugRepetition.detect(player);
             StorageManager.saveMoneyToPiggy(player);
         }
+    }
 
+    @SubscribeEvent
+    public static void PlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        event.getEntity().sendSystemMessage(Component.translatable("better_experience.welcome_message"));
     }
 
     @SubscribeEvent
     public static void entityJoinLevel(EntityJoinLevelEvent event) {
         // 欢迎语
         if (event.getEntity() instanceof ServerPlayer player) {
-            if (player.connection.tickCount == 0)
-                player.sendSystemMessage(Component.translatable("better_experience.welcome_message"));
             EnderChestAttachment.syncAll(player);
 //            player.getInventory().add(ModItems.MagicBoomStaff.toStack());
             ClientBoundConfigPacket.sync(player);

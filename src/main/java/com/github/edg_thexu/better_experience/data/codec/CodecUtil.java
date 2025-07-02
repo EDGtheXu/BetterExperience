@@ -22,7 +22,7 @@ public class CodecUtil {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             DataOutputStream output = new DataOutputStream(outputStream);
             try {
-                NbtIo.writeAnyTag(input, output);
+                NbtIo.writeUnnamedTag(input, output);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -32,14 +32,14 @@ public class CodecUtil {
     }, new Decoder<>() {
         @Override
         public <T> DataResult<Pair<Tag, T>> decode(DynamicOps<T> ops, T input) {
-            var map = ops.getMap(input).getOrThrow();
+            var map = ops.getMap(input).get().left().get();
             var tag = map.get("tag");
             ByteBuf byteBuf;
             if(ops.getStringValue(tag).result().isPresent()){
                 byteBuf = Unpooled.copiedBuffer(ops.getStringValue(tag).result().get(), CharsetUtil.UTF_8);
                 try {
                     ByteBufInputStream bufInputStream =  new ByteBufInputStream(byteBuf);
-                    Tag tag1 = NbtIo.readAnyTag(bufInputStream, NbtAccounter.create(2097152L));
+                    Tag tag1 = NbtIo.read(bufInputStream);
                     return DataResult.success(Pair.of(tag1, input));
                 } catch (IOException e) {
                     return DataResult.error(() -> "No tag found in map:");

@@ -11,7 +11,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.List;
 
@@ -31,13 +30,13 @@ public class MagicBoomStaff extends Item {
         if(level.isClientSide()){
             BlockPos pos = ModUtils.getEyeBlockHitResult(player, maxRange * 2);
 
-            PacketDistributor.sendToServer(new BreakBlocksPacketC2S(pos.offset(-range,-range,-range), pos.offset(range,range,range)));
+            ModUtils.sendToServer(new BreakBlocksPacketC2S(pos.offset(-range,-range,-range), pos.offset(range,range,range)));
             player.startUsingItem(usedHand);
         }
         return InteractionResultHolder.success(player.getItemInHand(usedHand));
     }
 
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack stack, Level context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         tooltipComponents.add(Component.translatable("better_experience.tooltip.magic_boom_staff.info"));
 
     }

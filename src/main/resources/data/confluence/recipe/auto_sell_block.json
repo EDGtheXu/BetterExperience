@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "a": {
+      "item": "minecraft:chest"
+    },
+    "b": {
+      "item": "confluence:golden_coin"
+    }
+  },
+  "pattern": [
+    "bab"
+  ],
+  "result": {
+    "count": 1,
+    "id": "better_experience:auto_sell_block"
+  }
+}

@@ -12,7 +12,6 @@ import mezz.jei.api.gui.ingredient.IRecipeSlotDrawable;
 import mezz.jei.api.ingredients.ITypedIngredient;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.common.Internal;
-import mezz.jei.common.codecs.TypedIngredientCodecs;
 import mezz.jei.library.gui.ingredients.RecipeSlot;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.ItemStack;
@@ -30,13 +29,15 @@ public record ItemStackUniversalHandler(List<List<ITypedIngredient<?>>> ingredie
 
     public static Supplier<MapCodec<? extends IRecipeHandler>> CODEC = ()-> {
         try {
-            return RecordCodecBuilder.<ItemStackUniversalHandler>mapCodec(instance -> instance.group(
-                            Codec.list(Codec.list(TypedIngredientCodecs.getIngredientCodec(Internal.getJeiRuntime().getIngredientManager()).codec())).fieldOf("ingredients").forGetter(ItemStackUniversalHandler::ingredients),
-                            Codec.INT.fieldOf("count").forGetter(ItemStackUniversalHandler::count)
-                    ).apply(instance, ItemStackUniversalHandler::new));
+//            return RecordCodecBuilder.<ItemStackUniversalHandler>mapCodec(instance -> instance.group(
+//
+//                            Codec.list(Codec.list(TypedIngredientCodecs.getIngredientCodec(Internal.getJeiRuntime().getIngredientManager()).codec())).fieldOf("ingredients").forGetter(ItemStackUniversalHandler::ingredients),
+//                            Codec.INT.fieldOf("count").forGetter(ItemStackUniversalHandler::count)
+//                    ).apply(instance, ItemStackUniversalHandler::new));
         }catch (Exception e){
             return null;
         }
+        return null;
 
     };
 
@@ -48,7 +49,7 @@ public record ItemStackUniversalHandler(List<List<ITypedIngredient<?>>> ingredie
             if(slot.getRole() != RecipeIngredientRole.INPUT && slot.getRole() != RecipeIngredientRole.CATALYST) {
                 continue;
             }
-            List<ITypedIngredient<?>> ingredients = slot.getAllIngredientsList();
+            List<ITypedIngredient<?>> ingredients = slot.getAllIngredients().toList();
 
             result.add(ingredients);
 

@@ -51,6 +51,7 @@ public class PotionBagMenu extends AbstractContainerMenu {
     }
 
     public static boolean canPlace(ItemStack stack){
+
         return !PlayerInventoryManager.getApplyEffect(stack, true).isEmpty();
     }
 

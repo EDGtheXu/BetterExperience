@@ -12,26 +12,22 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import net.neoforged.bus.api.EventPriority;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
-import net.neoforged.neoforge.event.entity.player.ItemFishedEvent;
-import net.neoforged.neoforge.event.tick.ServerTickEvent;
-import org.confluence.mod.common.init.ModEffects;
-import org.confluence.mod.common.init.ModLootTables;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.player.ItemFishedEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+
 
 import java.util.List;
 
-@EventBusSubscriber(modid = Better_experience.MODID, bus = EventBusSubscriber.Bus.GAME)
+@Mod.EventBusSubscriber(modid = Better_experience.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class GameEvent {
 
-    @SubscribeEvent
-    public static void entitySpawn(FinalizeSpawnEvent event){
-    }
+
 
     @SubscribeEvent
-    public static void serverTick(ServerTickEvent.Post event){
+    public static void serverTick(TickEvent.ServerTickEvent event){
         ExplodeManager.getInstance().tickHandle();
 
     }
@@ -44,22 +40,22 @@ public class GameEvent {
         Level level = event.getHookEntity().level();
         if(ihook.betterExperience$isSimulation() && level instanceof ServerLevel serverLevel){
             List<ItemStack> items = event.getDrops();
-            if(ConfluenceHelper.isLoaded()) {
-                // 宝匣掉率增加
-                int luck = hook.luck;
-
-                Player player = hook.getPlayerOwner();
-                float chance = player != null && player.hasEffect(ModEffects.CRATE) ? 0.25f : 0.1f;
-                chance += luck / 30f;
-
-                if (level.random.nextFloat() < chance) {
-                    items = serverLevel.getServer().reloadableRegistries().getLootTable(ModLootTables.CRATE)
-                            .getRandomItems(new LootParams.Builder(serverLevel)
-                                    .withParameter(LootContextParams.ORIGIN, hook.position())
-                                    .withParameter(LootContextParams.THIS_ENTITY, hook)
-                                    .create(LootContextParamSets.GIFT));
-                }
-            }
+//            if(ConfluenceHelper.isLoaded()) {
+//                // 宝匣掉率增加
+//                int luck = hook.luck;
+//
+//                Player player = hook.getPlayerOwner();
+//                float chance = player != null && player.hasEffect(ModEffects.CRATE) ? 0.25f : 0.1f;
+//                chance += luck / 30f;
+//
+//                if (level.random.nextFloat() < chance) {
+//                    items = serverLevel.getServer().reloadableRegistries().getLootTable(ModLootTables.CRATE)
+//                            .getRandomItems(new LootParams.Builder(serverLevel)
+//                                    .withParameter(LootContextParams.ORIGIN, hook.position())
+//                                    .withParameter(LootContextParams.THIS_ENTITY, hook)
+//                                    .create(LootContextParamSets.GIFT));
+//                }
+//            }
             // 取消原版收回物品
             ihook.betterExperience$setItems(items);
             event.setCanceled(true);

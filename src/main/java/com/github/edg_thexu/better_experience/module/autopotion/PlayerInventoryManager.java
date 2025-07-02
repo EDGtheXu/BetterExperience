@@ -9,6 +9,7 @@ import com.github.edg_thexu.better_experience.init.ModItems;
 import com.github.edg_thexu.better_experience.intergration.confluence.ConfluenceHelper;
 import com.github.edg_thexu.better_experience.menu.PotionBagMenu;
 import com.github.edg_thexu.better_experience.utils.ModUtils;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -28,25 +29,20 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import org.confluence.lib.common.PlayerContainer;
-import org.confluence.mod.client.gui.container.ExtraInventoryScreen;
-import org.confluence.mod.common.block.functional.PiggyBankBlock;
-import org.confluence.mod.common.init.ModAttachmentTypes;
-import org.confluence.mod.common.init.ModTags;
-import org.confluence.mod.common.init.block.FunctionalBlocks;
-import org.confluence.mod.common.init.item.FoodItems;
-import org.confluence.mod.common.item.potion.EffectPotionItem;
-import org.confluence.terra_guns.api.event.GunEvent;
+import net.minecraft.world.item.PotionItem;
+import net.minecraft.world.item.alchemy.Potion;
+
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
-import oshi.util.tuples.Pair;
-import top.theillusivec4.curios.client.gui.CuriosScreen;
+
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.Optional;
+
 
 /**
  * 客户端遍历玩家背包，检测药水续杯等效果
@@ -60,14 +56,14 @@ public class PlayerInventoryManager {
      * 食物类 effectInstance 过滤器
      */
     private static boolean canApplyEffect(MobEffectInstance effect)  {
-        Holder<MobEffect> effect1 = effect.getEffect();
+        MobEffect effect1 = effect.getEffect();
         int time = effect.getDuration();
         if(
                 // 饱和效果不应该应用，过于超模
                 effect1 == MobEffects.SATURATION || effect1 == MobEffects.ABSORPTION || effect1 == MobEffects.REGENERATION){
             return false;
         }
-        if(effect1.value().getCategory() == MobEffectCategory.HARMFUL){
+        if(effect1.getCategory() == MobEffectCategory.HARMFUL){
             // 负面效果不应该应用
             return false;
         }
@@ -76,38 +72,52 @@ public class PlayerInventoryManager {
     /**
      * 物品过滤器
      */
-    public static List<Pair<Holder<MobEffect>, Integer>> getApplyEffect(ItemStack stack, boolean ignoreCount){
+    public static List<Pair<MobEffect, Integer>> getApplyEffect(ItemStack stack, boolean ignoreCount){
         Item item = stack.getItem();
-        List<Pair<Holder<MobEffect>, Integer>> effects = new ArrayList<>();
+        List<Pair<MobEffect, Integer>> effects = new ArrayList<>();
         if(!ignoreCount && stack.getCount() < CommonConfig.AUTO_POTION_STACK_SIZE.get()) {
             // 配置文件
             return effects;
         }
-        if(ConfluenceHelper.isLoaded() && item instanceof EffectPotionItem potion) {
-            // 效果类药水
-            effects.add(new Pair<>(potion.mobEffect, potion.amplifier));
-            return effects;
-        }
-        if(item instanceof Item food)
-        {
-            //食物类
-                // 排除飘飘麦
-            if(ConfluenceHelper.isLoaded() && food == FoodItems.FLOATING_WHEAT_SEED.get()) return effects;
+//        if(ConfluenceHelper.isLoaded() && item instanceof EffectPotionItem potion) {
+//            // 效果类药水
+//            effects.add(new Pair<>(potion.mobEffect, potion.amplifier));
+//            return effects;
+//        }
+        if(stack.getItem() instanceof PotionItem potion){
+//            var data = stack.get(DataComponents.POTION_CONTENTS);
+            Potion data = PotionUtils.getPotion(stack);
+            if (data != Potions.EMPTY) {
 
-            var foodProperties = food.getFoodProperties(stack, null);
-            if (foodProperties != null) {
-                for (FoodProperties.PossibleEffect foodproperties$possibleeffect : foodProperties.effects()) {
-                    var mobEffect = foodproperties$possibleeffect.effect();
-                    if (canApplyEffect(mobEffect)) {
-                        effects.add(new Pair<>(mobEffect.getEffect(), mobEffect.getAmplifier()));
+                var mobEffect = data.getEffects();
+                for (MobEffectInstance effect : mobEffect) {
+                    if (canApplyEffect(effect)) {
+                        effects.add(new Pair<>(effect.getEffect(), effect.getAmplifier()));
                     }
+                }
+
+
+            }
+
+        }
+
+        //食物类
+            // 排除飘飘麦
+//        if(ConfluenceHelper.isLoaded() && food == FoodItems.FLOATING_WHEAT_SEED.get()) return effects;
+
+        var foodProperties = item.getFoodProperties(stack, null);
+        if (foodProperties != null) {
+            for (com.mojang.datafixers.util.Pair<MobEffectInstance, Float>  foodEffect : foodProperties.getEffects()) {
+                if (canApplyEffect(foodEffect.getFirst())) {
+                    effects.add(new Pair<>(foodEffect.getFirst().getEffect(), foodEffect.getFirst().getAmplifier()));
                 }
             }
         }
-        return effects;
-    };
 
-    public static List<Pair<Holder<MobEffect>, Integer>> getApplyEffect(ItemStack stack) {
+        return effects;
+    }
+
+    public static List<Pair<MobEffect, Integer>> getApplyEffect(ItemStack stack) {
         return getApplyEffect(stack, false);
     }
 
@@ -150,8 +160,9 @@ public class PlayerInventoryManager {
         detectInternal = (int) (_detectInternal * 0.1f);
 
 
-        List<Pair<Holder<MobEffect>, Integer>> effects = new ArrayList<>();
-        var data = player.getData(ModAttachments.AUTO_POTION);
+        List<Pair<MobEffect, Integer>> effects = new ArrayList<>();
+//        var data = player.getData(ModAttachments.AUTO_POTION);
+        var data = player.getCapability(ModAttachments.AUTO_POTION).orElseGet(null);
         data.getPotions().clear();
         if(CommonConfig.AUTO_POTION_OPEN.get()) { // 客户端可自行选择是否启用
 
@@ -160,34 +171,35 @@ public class PlayerInventoryManager {
             for (int i = 0; i < inventory.getContainerSize(); i++) {
                 try {
                     ItemStack stack = inventory.getItem(i);
-                    var data1 = stack.get(ModDataComponentTypes.ITEM_CONTAINER_COMPONENT);
-                    if(data1 == null){
-                        effects.addAll(getApplyEffect(stack));
-                    }else {
-                        // 药水袋
-                        for(var item : data1.getItems()){
-                            effects.addAll(getApplyEffect(item));
-                        }
-                    }
+//                    var data1 = stack.get(ModDataComponentTypes.ITEM_CONTAINER_COMPONENT);
+//
+//                    if(data1 == null){
+//                        effects.addAll(getApplyEffect(stack));
+//                    }else {
+//                        // 药水袋
+//                        for(var item : data1.getItems()){
+//                            effects.addAll(getApplyEffect(item));
+//                        }
+//                    }
                 } catch (Exception ignored) {
 
                 }
             }
 
             // 末影箱的药水
-            addApplyItemList(player.getData(ModAttachments.ENDER_CHEST).getItems(), effects);
+            addApplyItemList(player.getCapability(ModAttachments.ENDER_CHEST).orElseGet(null).getItems(), effects);
 
-            // 存钱罐
-            addApplyItemList(player.getData(ModAttachments.PIG_CHEST.get()).getItems(), effects);
-
-            // 保险箱
-            addApplyItemList(player.getData(ModAttachments.PIG_CHEST.get()).getItems(), effects);
+//            // 存钱罐
+//            addApplyItemList(player.getData(ModAttachments.PIG_CHEST.get()).getItems(), effects);
+//
+//            // 保险箱
+//            addApplyItemList(player.getData(ModAttachments.PIG_CHEST.get()).getItems(), effects);
 
 
             // 重新生成缓存
 
             effects.forEach(effect_amp -> {
-                data.addPotion(effect_amp.getA(), effect_amp.getB());
+                data.addPotion(effect_amp.getFirst(), effect_amp.getSecond());
             });
         }
 
@@ -198,46 +210,46 @@ public class PlayerInventoryManager {
     // 这里自动存钱和存放药水等
     private void detectServer(Player player){
         NonNullList<ItemStack> items = player.getInventory().items;
-        boolean autoSave = false;
+//        boolean autoSave = false;
         List<ItemStack> potionBags = new ArrayList<>();
         for(ItemStack stack : items){
-            if(ConfluenceHelper.isLoaded() &&  CommonConfig.AUTO_SAVE_MONEY.get() && !autoSave && stack.is(FunctionalBlocks.PIGGY_BANK.asItem())){
-               autoSave = true;
-            }
+//            if(ConfluenceHelper.isLoaded() &&  CommonConfig.AUTO_SAVE_MONEY.get() && !autoSave && stack.is(FunctionalBlocks.PIGGY_BANK.asItem())){
+//               autoSave = true;
+//            }
             if(stack.getItem() == ModItems.PotionBag.get()){
-                var data = stack.get(ModDataComponentTypes.ITEM_CONTAINER_COMPONENT);
-                if(data != null && data.isAutoCollect()) {
-                    potionBags.add(stack);
-                }
+//                var data = stack.get(ModDataComponentTypes.ITEM_CONTAINER_COMPONENT);
+//                if(data != null && data.isAutoCollect()) {
+//                    potionBags.add(stack);
+//                }
             }
         }
-        if(autoSave){
-            for(ItemStack stack : items){
-                if(stack.is(ModTags.Items.COINS)){
-                   ModUtils.tryPlaceBackItemStackToItemStacks(stack, player.getData(ModAttachmentTypes.PIGGY_BANK.get()).getItems());
-                }
-            }
-            var data = player.getData(ModAttachmentTypes.EXTRA_INVENTORY.get());
-
-            for(int i = 0; i < 4; i++){
-                ItemStack stack = data.getCoins(i);
-                if(!stack.isEmpty()){
-                    ModUtils.tryPlaceBackItemStackToItemStacks(stack, player.getData(ModAttachmentTypes.PIGGY_BANK.get()).getItems());
-                }
-            }
-
-        }
-        for(ItemStack stack : items){
-            if(PotionBagMenu.canPlace(stack)) {
-                for (ItemStack potionBag : potionBags) {
-                    var data = potionBag.get(ModDataComponentTypes.ITEM_CONTAINER_COMPONENT);
-                    if(data == null) continue;
-                    if(ModUtils.tryPlaceBackItemStackToItemStacks(stack, data.getItems())){
-                        break;
-                    }
-                }
-            }
-        }
+//        if(autoSave){
+//            for(ItemStack stack : items){
+//                if(stack.is(ModTags.Items.COINS)){
+//                   ModUtils.tryPlaceBackItemStackToItemStacks(stack, player.getData(ModAttachmentTypes.PIGGY_BANK.get()).getItems());
+//                }
+//            }
+//            var data = player.getData(ModAttachmentTypes.EXTRA_INVENTORY.get());
+//
+//            for(int i = 0; i < 4; i++){
+//                ItemStack stack = data.getCoins(i);
+//                if(!stack.isEmpty()){
+//                    ModUtils.tryPlaceBackItemStackToItemStacks(stack, player.getData(ModAttachmentTypes.PIGGY_BANK.get()).getItems());
+//                }
+//            }
+//
+//        }
+//        for(ItemStack stack : items){
+//            if(PotionBagMenu.canPlace(stack)) {
+//                for (ItemStack potionBag : potionBags) {
+//                    var data = potionBag.get(ModDataComponentTypes.ITEM_CONTAINER_COMPONENT);
+//                    if(data == null) continue;
+//                    if(ModUtils.tryPlaceBackItemStackToItemStacks(stack, data.getItems())){
+//                        break;
+//                    }
+//                }
+//            }
+//        }
     }
 
     /**
@@ -245,7 +257,7 @@ public class PlayerInventoryManager {
      * @param items 列表
      * @param to 应用于
      */
-    private void addApplyItemList(List<Item> items, List<Pair<Holder<MobEffect>, Integer>> to){
+    private void addApplyItemList(List<Item> items, List<Pair<MobEffect, Integer>> to){
         for (Item item : items) {
             try {
                 ItemStack stack = new ItemStack(item, CommonConfig.AUTO_POTION_STACK_SIZE.get());
@@ -262,15 +274,19 @@ public class PlayerInventoryManager {
      */
     public static void apply(AutoPotionAttachment attachment, Player player){
         try {
-            var data = player.getData(ModAttachments.AUTO_POTION);
-            data.getPotions().forEach((effect1, amp1) ->{
-                if(!attachment.getPotions().containsKey(effect1))
-                    player.removeEffect(effect1);
-            } );
-            attachment.getPotions().forEach((effect,amp)->{
-                player.addEffect(new MobEffectInstance(effect, -1, amp, false, false));
+            player.getCapability(ModAttachments.AUTO_POTION).ifPresent(data->{
+                data.getPotions().forEach((effect1, amp1) ->{
+                    if(!attachment.getPotions().containsKey(effect1))
+                        player.removeEffect(effect1);
+                } );
+                attachment.getPotions().forEach((effect,amp)->{
+                    player.addEffect(new MobEffectInstance(effect, -1, amp, false, false));
+                });
+                player.getCapability(ModAttachments.AUTO_POTION).ifPresent(data1->{
+                    data1.setAttachment(attachment);
+                });
             });
-            player.setData(ModAttachments.AUTO_POTION, attachment);
+
         }catch (Exception ignored){
 
         }
@@ -290,13 +306,13 @@ public class PlayerInventoryManager {
 
         String title = screen.getTitle().toString();
         if((
-                ConfluenceHelper.isLoaded() && container instanceof PlayerContainer<?> ||  // 猪猪存钱罐和保险箱
+//                ConfluenceHelper.isLoaded() && container instanceof PlayerContainer<?> ||  // 猪猪存钱罐和保险箱
                 screen instanceof InventoryScreen || // 背包
                 screen instanceof CreativeModeInventoryScreen || // 创造栏
                 screen instanceof PotionBagScreen || // 药水袋
-                screen instanceof ContainerScreen && (title.contains("enderchest") || title.contains("piggy_bank") || title.contains("safe")) ||
-                        ConfluenceHelper.isLoaded() && screen instanceof ExtraInventoryScreen||  // 额外栏
-                        screen instanceof CuriosScreen  // 饰品栏
+                screen instanceof ContainerScreen && (title.contains("enderchest") || title.contains("piggy_bank") || title.contains("safe"))
+//                        ConfluenceHelper.isLoaded() && screen instanceof ExtraInventoryScreen||  // 额外栏
+//                        screen instanceof CuriosScreen  // 饰品栏
         )
                 && canApply(stack)){
 

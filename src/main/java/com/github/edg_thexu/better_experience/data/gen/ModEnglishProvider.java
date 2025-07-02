@@ -1,13 +1,12 @@
 package com.github.edg_thexu.better_experience.data.gen;
 
 import com.github.edg_thexu.better_experience.Better_experience;
-import com.github.edg_thexu.better_experience.init.ModBlocks;
 import com.github.edg_thexu.better_experience.init.ModItems;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Item;
-import net.neoforged.neoforge.common.data.LanguageProvider;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import org.confluence.terraentity.init.item.TESpawnEggItems;
+import net.minecraftforge.common.data.LanguageProvider;
+import net.minecraftforge.registries.RegistryObject;
+
 
 import java.util.Arrays;
 import java.util.function.Consumer;
@@ -34,7 +33,7 @@ public class ModEnglishProvider extends LanguageProvider {
 
 
         // items
-        Consumer<DeferredHolder<Item, ? extends Item>> itemAction = item -> add(item.get(), toTitleCase(item.getId().getPath()));
+        Consumer<RegistryObject<Item>> itemAction = item -> add(item.get(), toTitleCase(item.getId().getPath()));
         ModItems.ITEMS.getEntries().forEach(itemAction);
 //        ModBlocks.BLOCKS.getEntries().forEach(block-> add(block.get(), toTitleCase(block.getId().getPath())));
 
@@ -77,6 +76,7 @@ public class ModEnglishProvider extends LanguageProvider {
         add("better_experience.configuration.forbidden_magic_boom_staff", "Forbidden Magic Boom Staff");
         add("better_experience.configuration.auto_save_money", "Auto Save Money To Piggy Bank");
         add("better_experience.configuration.quick_jei_fetch", "Quick JEI Fetch Ingredients From Nearby Chests");
+        add("better_experience.configuration.quick_jei_fetch_distance", "Quick JEI Fetch Ingredients Distance");
 
 
 

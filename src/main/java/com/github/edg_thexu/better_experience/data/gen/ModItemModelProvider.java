@@ -4,9 +4,11 @@ import com.github.edg_thexu.better_experience.Better_experience;
 import com.github.edg_thexu.better_experience.init.ModItems;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraft.world.item.Item;
+import net.minecraftforge.client.model.generators.ItemModelProvider;
+import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.registries.DeferredRegister;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +24,7 @@ public class ModItemModelProvider extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        List<DeferredRegister.Items> ALL = new ArrayList<>();
+        List<DeferredRegister<Item>> ALL = new ArrayList<>();
         ALL.add(ModItems.ITEMS);
 
         ALL.forEach(registry -> registry.getEntries().forEach(item -> {
@@ -34,7 +36,7 @@ public class ModItemModelProvider extends ItemModelProvider {
             }
         }));
 
-        List<DeferredRegister.Items> TOOLS = new ArrayList<>();
+        List<DeferredRegister<Item>> TOOLS = new ArrayList<>();
         TOOLS.add(ModItems.TOOLS);
 
         TOOLS.forEach(registry -> registry.getEntries().forEach(item -> {

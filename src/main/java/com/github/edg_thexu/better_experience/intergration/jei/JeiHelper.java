@@ -3,6 +3,8 @@ package com.github.edg_thexu.better_experience.intergration.jei;
 import com.github.edg_thexu.better_experience.config.CommonConfig;
 import com.github.edg_thexu.better_experience.networks.c2s.SearchJeiIngredientsPacketC2S;
 import com.github.edg_thexu.better_experience.registries.recipehandler.IRecipeHandler;
+import com.github.edg_thexu.better_experience.registries.recipehandlerfactory.RecipeHandlerFactoryProviderTypes;
+import com.github.edg_thexu.better_experience.utils.ModUtils;
 import mezz.jei.gui.recipes.RecipeLayoutWithButtons;
 import mezz.jei.library.gui.recipes.RecipeLayout;
 import net.minecraft.client.Minecraft;
@@ -17,10 +19,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.fml.ModList;
-import net.neoforged.neoforge.network.PacketDistributor;
+
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.ModList;
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import java.util.Comparator;
@@ -111,14 +113,14 @@ public class JeiHelper {
                 button1.playDownSound(Minecraft.getInstance().getSoundManager());
                 var recipe = lay.recipeLayout().getRecipe();
 
-                JeiRegistries.RecipeHandlerFactoryProviders.REGISTRY.entrySet().stream()
+                RecipeHandlerFactoryProviderTypes.REGISTRY.get().getEntries().stream()
                         .filter(h -> h.getValue().match(recipe))
                         .min(Comparator.comparing(a -> a.getValue().priority()))
                         .map(Map.Entry::getValue)
                         .ifPresent(handler-> {
                             IRecipeHandler<?> handler1 = handler.create((RecipeLayout<?>) lay.recipeLayout(), count);
                             if(handler1!= null) {
-                                PacketDistributor.sendToServer(new SearchJeiIngredientsPacketC2S(handler1));
+                                ModUtils.sendToServer(new SearchJeiIngredientsPacketC2S(handler1));
                             }
                         });
 
