@@ -18,10 +18,9 @@ import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.Container;
+import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.ChestBlock;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -29,14 +28,13 @@ import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.event.ModifyDefaultComponentsEvent;
-import net.neoforged.neoforge.items.wrapper.InvWrapper;
+import net.neoforged.neoforge.items.wrapper.SidedInvWrapper;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.confluence.lib.ConfluenceMagicLib;
 import org.confluence.lib.common.component.ModRarity;
 import org.confluence.mod.Confluence;
-import org.confluence.mod.common.block.common.BaseChestBlock;
 import org.confluence.mod.util.PrefixUtils;
 
 import java.util.ArrayList;
@@ -124,10 +122,10 @@ public class ModEvent {
             supportBlocks.add(ModBlocks.AUTO_SELL_BLOCK.get());
         }
         event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, blockEntity, side) -> {
-            if (!state.getValue(BaseChestBlock.UNLOCKED)) return null;
-            Container container = ChestBlock.getContainer((ChestBlock) state.getBlock(), state, level, pos, true);
-            if (container == null) return null;
-            return new InvWrapper(container);
+            if(blockEntity instanceof WorldlyContainer container){
+                return new SidedInvWrapper(container, side);
+            }
+            return null;
         }, supportBlocks.toArray(new Block[0]));
     }
 
