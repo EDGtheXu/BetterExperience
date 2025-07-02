@@ -1,17 +1,14 @@
 package com.github.edg_thexu.better_experience.client.gui.widget;
 
-import com.github.edg_thexu.better_experience.client.RenderUtil;
 import com.github.edg_thexu.better_experience.intergration.terra_entity.TEHelper;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import org.confluence.terra_curio.integration.jei.ModJeiPlugin;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.ModRenderTypes;
 import org.confluence.terraentity.client.util.ShaderUtil;
@@ -23,7 +20,7 @@ import java.util.List;
 public class FloatButton extends TooltipButton {
 
     private boolean selected;
-    long lastClickTime;
+    public long lastClickTime;
     private int duration = 300;
 
     protected FloatButton(int x, int y, int width, int height, Component message, OnPress onPress, CreateNarration createNarration) {
@@ -136,6 +133,7 @@ public class FloatButton extends TooltipButton {
         return selected;
     }
     public void setSelected(boolean selected) {
+        this.lastClickTime = System.currentTimeMillis();
         this.selected = selected;
     }
 

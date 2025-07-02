@@ -1,13 +1,13 @@
 package com.github.edg_thexu.better_experience.client.gui.container;
 
 import com.github.edg_thexu.better_experience.Better_experience;
+import com.github.edg_thexu.better_experience.client.gui.widget.FloatButton;
 import com.github.edg_thexu.better_experience.intergration.confluence.ConfluenceHelper;
 import com.github.edg_thexu.better_experience.intergration.terra_curios.TCHelper;
 import com.github.edg_thexu.better_experience.menu.AutoFishMenu;
 import com.github.edg_thexu.better_experience.module.autofish.AutoFishManager;
 import com.github.edg_thexu.better_experience.networks.c2s.ServerBoundPacketC2S;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CyclingSlotBackground;
 import net.minecraft.network.chat.Component;
@@ -22,7 +22,7 @@ import java.util.List;
 
 public class AutoFishScreen extends ContainerScreen {
 
-    Button startBt;
+    FloatButton startBt;
 
     public AutoFishScreen(ChestMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -33,7 +33,7 @@ public class AutoFishScreen extends ContainerScreen {
         iconList2 = ConfluenceHelper.isLoaded()? List.of(Better_experience.space("confluence","item/bait/worm")) : List.of(
                 Better_experience.space("minecraft","textures\\gui\\sprites\\spectator\\close")
         );
-        iconList3 = TCHelper.isLoaded()? List.of(Better_experience.space("terra_curios","item/curio/angler_earring")) : List.of(
+        iconList3 = TCHelper.isLoaded()? List.of(Better_experience.space("terra_curio","item/curio/angler_earring")) : List.of(
                 Better_experience.space("minecraft","textures\\gui\\sprites\\spectator\\close")
         );
 
@@ -51,7 +51,7 @@ public class AutoFishScreen extends ContainerScreen {
     protected void init() {
         super.init();
 
-        startBt = Button.builder(Component.literal("Start"), p->{
+        startBt = (FloatButton) FloatButton.builder(Component.literal("S"), p->{
             if(menu instanceof AutoFishMenu menu){
                 if(menu.access.get(0) == 0) {
                     ServerBoundPacketC2S.notifyStart();
@@ -61,6 +61,7 @@ public class AutoFishScreen extends ContainerScreen {
                 }
             }
         }).pos(leftPos + 75, topPos + 3).size(30,13).build();
+
 
         this.addRenderableWidget(startBt);
 
@@ -72,6 +73,17 @@ public class AutoFishScreen extends ContainerScreen {
         this.icon2.tick(iconList2);
         this.icon3.tick(iconList3);
 
+        if(menu instanceof AutoFishMenu menu){
+            if (menu.access.get(0) == 0 && startBt.isSelected()) {
+                if(System.currentTimeMillis() -  startBt.lastClickTime > 200){
+                    startBt.setSelected(false);
+                }
+            }else if(menu.access.get(0) != 0 && !startBt.isSelected()){
+                if(System.currentTimeMillis() -  startBt.lastClickTime > 200) {
+                    startBt.setSelected(true);
+                }
+            }
+        }
     }
 
     @Override
