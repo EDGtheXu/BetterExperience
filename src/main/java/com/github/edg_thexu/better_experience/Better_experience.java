@@ -46,7 +46,7 @@ public class Better_experience {
 //        ModAttachments.TYPES.register(modEventBus);
         ModBlocks.register(modEventBus);
         ModMenus.TYPES.register(modEventBus);
-//        ModDataComponentTypes.TYPES.register(modEventBus);
+        ModDataComponentTypes.register(modEventBus);
 
 
         if(TGHelper.isLoaded()){

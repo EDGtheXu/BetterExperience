@@ -40,13 +40,13 @@ public class TypedIngredientCodecs {
 //			Codec<IIngredientType<?>> ingredientTypeCodec = getIngredientTypeCodec(ingredientManager);
 //			ingredientCodec = ingredientTypeCodec.dispatchMap(
 //				ITypedIngredient::getType,
-//				type -> getIngredientCodec(type, ingredientManager).fieldOf("ingredient")
+//				type -> getIngredientCodec(type, ingredientManager)
 //			);
 //		}
 //		return ingredientCodec;
 //	}
 
-	@SuppressWarnings("unchecked")
+//	@SuppressWarnings("unchecked")
 //	public static <T> Codec<ITypedIngredient<T>> getIngredientCodec(IIngredientType<T> ingredientType, IIngredientManager ingredientManager) {
 //		Codec<ITypedIngredient<T>> result = (Codec<ITypedIngredient<T>>) (Object) codecMapCache.get(ingredientType);
 //		if (result == null) {
@@ -57,27 +57,27 @@ public class TypedIngredientCodecs {
 //		return result;
 //	}
 
-	private static <T> Codec<ITypedIngredient<T>> create(Codec<T> ingredientCodec, IIngredientManager ingredientManager) {
-		return ingredientCodec.flatXmap(
-			ingredient -> {
-				Optional<IIngredientType<T>> type = ingredientManager.getIngredientTypeChecked(ingredient);
-				return type.map(ingredientType ->
-						ingredientManager.createTypedIngredient(ingredientType, ingredient)
-						.map(DataResult::success)
-						.orElseGet(() -> {
-							return DataResult.error(() -> {
-								IIngredientHelper<T> ingredientHelper = ingredientManager.getIngredientHelper(ingredientType);
-								String errorInfo = ingredientHelper.getErrorInfo(ingredient);
-								return "Failed to create typed ingredient: " + errorInfo;
-							});
-						})
-					)
-					.orElseGet(() -> DataResult.error(() -> "Failed to find type for ingredient: " + ingredient.getClass()));
-			},
-			typedIngredient -> {
-				T ingredient = typedIngredient.getIngredient();
-				return DataResult.success(ingredient);
-			}
-		);
-	}
+//	private static <T> Codec<ITypedIngredient<T>> create(Codec<T> ingredientCodec, IIngredientManager ingredientManager) {
+//		return ingredientCodec.flatXmap(
+//			ingredient -> {
+//				Optional<IIngredientType<T>> type = ingredientManager.getIngredientTypeChecked(ingredient);
+//				return type.map(ingredientType ->
+//						ingredientManager.createTypedIngredient(ingredientType, ingredient)
+//						.map(DataResult::success)
+//						.orElseGet(() -> {
+//							return DataResult.error(() -> {
+//								IIngredientHelper<T> ingredientHelper = ingredientManager.getIngredientHelper(ingredientType);
+//								String errorInfo = ingredientHelper.getErrorInfo(ingredient);
+//								return "Failed to create typed ingredient: " + errorInfo;
+//							});
+//						})
+//					)
+//					.orElseGet(() -> DataResult.error(() -> "Failed to find type for ingredient: " + ingredient.getClass()));
+//			},
+//			typedIngredient -> {
+//				T ingredient = typedIngredient.getIngredient();
+//				return DataResult.success(ingredient);
+//			}
+//		);
+//	}
 }

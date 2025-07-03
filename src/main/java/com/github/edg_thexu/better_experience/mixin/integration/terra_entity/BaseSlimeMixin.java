@@ -11,9 +11,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 //@Mixin(BaseSlime.class)
 public class BaseSlimeMixin {
 
-//    @Inject(method = "tickDeath", at = @At(value = "INVOKE", target = "Lorg/confluence/terraentity/entity/monster/slime/BaseSlime;level()Lnet/minecraft/world/level/Level;"), cancellable = true)
-//    private void tickDeathMixin(CallbackInfo ci) {
-//        if(CommonConfig.SLIME_DIE_NO_LAVA.get())
-//            ci.cancel();
-//    }
+    @Inject(method = "tickDeath", at = @At(value = "INVOKE", target = "Lorg/confluence/terraentity/entity/monster/slime/BaseSlime;level()Lnet/minecraft/world/level/Level;"), cancellable = true)
+    private void tickDeathMixin(CallbackInfo ci) {
+        if(CommonConfig.SLIME_DIE_NO_LAVA.get())
+            ci.cancel();
+    }
 }

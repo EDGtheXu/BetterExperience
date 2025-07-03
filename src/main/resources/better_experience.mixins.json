@@ -2,7 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "com.github.edg_thexu.better_experience.mixin",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_8",
   "refmap": "better_experience.refmap.json",
   "mixins": [
     "ChestMenuMixin",
@@ -12,7 +12,8 @@
     "ProjectileWeaponItemMixin",
     "RecipeManagerMixin",
     "integration.jei.RecipeGuiLayoutsMixin",
-    "integration.jei.RecipeLayoutWithButtonsMixin"
+    "integration.jei.RecipeLayoutWithButtonsMixin",
+    "integration.terra_entity.BaseSlimeMixin"
   ],
   "client": [
     "client.AbstractContainerScreenMixin",

@@ -7,6 +7,7 @@ import com.github.edg_thexu.better_experience.registries.recipehandlerfactory.Re
 import com.github.edg_thexu.better_experience.utils.ModUtils;
 import mezz.jei.gui.recipes.RecipeLayoutWithButtons;
 import mezz.jei.library.gui.recipes.RecipeLayout;
+import mezz.jei.library.plugins.vanilla.anvil.AnvilRecipe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.Rect2i;
@@ -48,7 +49,7 @@ public class JeiHelper {
         Level level = player.level();
         SearchCache searchCache = new SearchCache();
 
-        int r = 5;
+        int r = CommonConfig.QUICK_JEI_FETCH_DISTANCE.get();
         for(int i = -r; i <= r; i++){
             for(int j = -r; j <= r; j++){
                 for(int k = -r; k <= r; k++) {
@@ -118,7 +119,7 @@ public class JeiHelper {
                         .min(Comparator.comparing(a -> a.getValue().priority()))
                         .map(Map.Entry::getValue)
                         .ifPresent(handler-> {
-                            IRecipeHandler<?> handler1 = handler.create((RecipeLayout<?>) lay.recipeLayout(), count);
+                            IRecipeHandler<?> handler1 = handler.create((RecipeLayout<?>) lay.recipeLayout(), recipe , count);
                             if(handler1!= null) {
                                 ModUtils.sendToServer(new SearchJeiIngredientsPacketC2S(handler1));
                             }

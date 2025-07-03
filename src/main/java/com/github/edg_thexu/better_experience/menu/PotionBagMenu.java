@@ -9,6 +9,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.PotionItem;
 
 public class PotionBagMenu extends AbstractContainerMenu {
     public Container container;
@@ -50,8 +51,10 @@ public class PotionBagMenu extends AbstractContainerMenu {
         }
     }
 
-    public static boolean canPlace(ItemStack stack){
-
+    public boolean canPlace(ItemStack stack){
+        if(stack.getItem() instanceof PotionItem || stack.getFoodProperties(null)!= null ){
+            return true;
+        }
         return !PlayerInventoryManager.getApplyEffect(stack, true).isEmpty();
     }
 

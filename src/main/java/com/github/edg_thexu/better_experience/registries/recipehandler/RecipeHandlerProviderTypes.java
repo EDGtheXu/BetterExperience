@@ -18,7 +18,7 @@ public class RecipeHandlerProviderTypes {
     public static final Supplier<IForgeRegistry<RecipeHandlerProvider>> REGISTRY = TYPES.makeRegistry(RegistryBuilder::new);
 
     public static final Supplier<RecipeHandlerProvider> VANILLA_TYPE = register("simple_track_type", ()->VanillaRecipeHolderHandler.CODEC);
-    public static final Supplier<RecipeHandlerProvider> BREW_TYPE = register("brew_type", ItemStackUniversalHandler.CODEC);
+    public static final Supplier<RecipeHandlerProvider> UNIVERSAL_TYPE = register("universal_type", ItemStackUniversalHandler.CODEC);
 
 
     private static Supplier<RecipeHandlerProvider> register(String name, Supplier<MapCodec<? extends IRecipeHandler>> codec) {

@@ -2,6 +2,7 @@ package com.github.edg_thexu.better_experience.networks.c2s;
 
 import com.github.edg_thexu.better_experience.block.AutoFishBlock;
 import com.github.edg_thexu.better_experience.data.component.ItemContainerComponent;
+import com.github.edg_thexu.better_experience.init.ModDataComponentTypes;
 import com.github.edg_thexu.better_experience.menu.PotionBagMenu;
 import com.github.edg_thexu.better_experience.mixed.IPlayer;
 import com.github.edg_thexu.better_experience.module.faststorage.StorageManager;
@@ -12,6 +13,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -64,6 +66,15 @@ public class ServerBoundPacketC2S {
                 // 改变药水收纳状态
                 if(player.containerMenu instanceof PotionBagMenu  menu &&  menu.container instanceof ItemContainerComponent component){
                     component.setAutoCollect(!component.isAutoCollect());
+                    ItemStack stack = player.getMainHandItem();
+                    component.writeToNBT(ModDataComponentTypes.ITEM_CONTAINER_COMPONENT,stack.getOrCreateTag());
+                }
+
+            } else if(packet.code == 15){
+                // 保存药水袋数据
+                if(player.containerMenu instanceof PotionBagMenu menu && menu.container instanceof ItemContainerComponent component){
+                    ItemStack stack = player.getMainHandItem();
+                    component.writeToNBT(ModDataComponentTypes.ITEM_CONTAINER_COMPONENT,stack.getOrCreateTag());
                 }
 
             }

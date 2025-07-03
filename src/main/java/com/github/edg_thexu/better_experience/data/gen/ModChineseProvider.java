@@ -37,6 +37,9 @@ public class ModChineseProvider extends LanguageProvider {
         add("better_experience.gui.potion_screen.auto_collect.message", "自动收集药水");
 
         // config
+        add("better_experience.options.title", "更好的体验配置");
+
+        add("better_experience.configuration.Client", "客户端");
         add("better_experience.configuration.Player", "玩家");
         add("better_experience.configuration.World", "世界");
         add("better_experience.configuration.Entity", "生物");

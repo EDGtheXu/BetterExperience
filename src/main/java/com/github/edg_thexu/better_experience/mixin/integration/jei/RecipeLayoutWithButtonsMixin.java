@@ -1,8 +1,8 @@
 package com.github.edg_thexu.better_experience.mixin.integration.jei;
 
-import com.github.edg_thexu.better_experience.client.gui.widget.TooltipButton;
 import com.github.edg_thexu.better_experience.config.CommonConfig;
 import com.github.edg_thexu.better_experience.intergration.jei.IRecipeLayoutWithButtons;
+import com.github.edg_thexu.cafelib.client.gui.widget.TooltipButton;
 import mezz.jei.api.gui.IRecipeLayoutDrawable;
 import mezz.jei.gui.recipes.RecipeBookmarkButton;
 import mezz.jei.gui.recipes.RecipeLayoutWithButtons;

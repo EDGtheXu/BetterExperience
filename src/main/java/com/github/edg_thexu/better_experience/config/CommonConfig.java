@@ -95,7 +95,7 @@ public class CommonConfig {
 
     public static ForgeConfigSpec init(ForgeConfigSpec.Builder BUILDER) {
 
-        BUILDER.push("Item");
+//        BUILDER.push("Item");
 
         // 药水无线续杯
         AUTO_POTION_OPEN = BUILDER
@@ -128,8 +128,8 @@ public class CommonConfig {
                 .comment("Forbidden magic boom staff.")
                 .define("forbidden_magic_boom_staff", false);
 
-        BUILDER.pop();
-        BUILDER.push("Player");
+//        BUILDER.pop();
+//        BUILDER.push("Player");
 
         FILL_LIFE_ON_RESPAWN = BUILDER
                 .comment("Fill life on respawn.")
@@ -152,8 +152,9 @@ public class CommonConfig {
         QUICK_JEI_FETCH_DISTANCE = BUILDER
                 .comment("Quick JEI Fetch Distance.")
                 .defineInRange("quick_jei_fetch_distance", 5, 1, 30);
-        BUILDER.pop();
-        BUILDER.push("World");
+
+//        BUILDER.pop();
+//        BUILDER.push("World");
 
 
         STONE_SAPLING_TREE_NO_STRICT = BUILDER
@@ -166,14 +167,14 @@ public class CommonConfig {
                 .comment("Valid bonemeal target.")
                 .define("valid_bonemeal_target", true);
 
-        BUILDER.pop();
-        BUILDER.push("Entity");
+//        BUILDER.pop();
+//        BUILDER.push("Entity");
 
         SLIME_DIE_NO_LAVA = BUILDER
                 .comment("Forbidden slime to generate lava?")
                 .define("slime_die_no_lava", true);
 
-        BUILDER.pop();
+//        BUILDER.pop();
 
         SPEC = BUILDER.build();
         return SPEC;

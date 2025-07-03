@@ -48,6 +48,9 @@ public class ModEnglishProvider extends LanguageProvider {
         add("better_experience.gui.potion_screen.auto_collect.message", "Auto Collect Potions and Food");
 
         // Config
+        add("better_experience.options.title", "Better Experience Configuration");
+
+        add("better_experience.configuration.Client", "Client");
         add("better_experience.configuration.Player", "Player");
         add("better_experience.configuration.World", "World");
         add("better_experience.configuration.Entity", "Entity");

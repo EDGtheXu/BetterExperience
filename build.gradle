@@ -13,15 +13,13 @@ buildscript {
 }
 
 
-plugins {
-    id 'eclipse'
-    id 'idea'
-    id 'java'
-    id 'net.minecraftforge.gradle' version '[6.0.16,6.2)'
-    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
-    id 'org.spongepowered.mixin' version '0.7.+'
-    id 'com.github.johnrengelman.shadow' version '7.1.2'
-}
+apply plugin: 'eclipse'
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'org.parchmentmc.librarian.forgegradle'
+apply plugin: 'org.spongepowered.mixin'
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'com.github.johnrengelman.shadow'
 
 
 group = mod_group_id
@@ -88,7 +86,9 @@ jarJar.enable()
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
-
+    flatDir {
+        dir 'libs'
+    }
     mavenLocal()
     maven {
         name = "Jared's maven"
@@ -141,6 +141,15 @@ dependencies {
 
     implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version}")
 
+//    implementation jarJar(files("libs/cafelib-1.0.0-all.jar")){
+//        jarJar.ranged(it, "[1.0.0,)")
+//    }
+
+    implementation fg.deobf("libs:cafelib:1.0.0")
+    jarJar("com.github.edg_thexu:cafelib:1.0.0") {
+        jarJar.ranged(it, "[1.0.0,)")
+    }
+
 
 //    implementation "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
 //    implementation "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
@@ -154,6 +163,8 @@ dependencies {
 
 //    compileOnly(files("libs/ConfluenceOtherworld-1.1.4-alpha.jar"))
 //    compileOnly(files("libs/terra_entity-1.1.14.jar"))
+    compileOnly fg.deobf("curse.maven:terra-entity-1173196:6488255")
+//    runtimeOnly fg.deobf("curse.maven:terra-entity-1173196:6488255")
 //    compileOnly(files("libs/confluence_magic_lib-0.0.1.jar"))
 //    compileOnly(files("libs/terra_guns-1.21.1-1.0.jar"))
 //    compileOnly(files("libs/terra_curio-1.1.0.jar"))

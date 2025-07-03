@@ -15,7 +15,7 @@ public class ClientConfig {
     public static ForgeConfigSpec init(ForgeConfigSpec.Builder BUILDER){
 
         SHOW_OUTLINES = BUILDER
-                .comment("Show outlines")
+                .comment("Show Staff outlines")
                 .define("show_outlines", true);
         MULTI_FISHING = BUILDER
                 .comment("Multi Fishing")

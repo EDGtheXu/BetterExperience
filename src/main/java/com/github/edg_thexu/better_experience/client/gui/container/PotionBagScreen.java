@@ -1,13 +1,13 @@
 package com.github.edg_thexu.better_experience.client.gui.container;
 
 import com.github.edg_thexu.better_experience.Better_experience;
-import com.github.edg_thexu.better_experience.client.gui.widget.FloatButton;
 import com.github.edg_thexu.better_experience.init.ModDataComponentTypes;
 import com.github.edg_thexu.better_experience.menu.PotionBagMenu;
 import com.github.edg_thexu.better_experience.networks.c2s.ServerBoundPacketC2S;
 import com.github.edg_thexu.better_experience.utils.ModUtils;
+import com.github.edg_thexu.cafelib.api.datacomponent.IDataComponentType;
+import com.github.edg_thexu.cafelib.client.gui.widget.FloatButton;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.network.chat.Component;
@@ -45,9 +45,10 @@ public class PotionBagScreen extends AbstractContainerScreen<PotionBagMenu> {
         ItemStack stack = minecraft.player.getMainHandItem();
 
 //        var data = stack.get(ModDataComponentTypes.ITEM_CONTAINER_COMPONENT);
-//        if(data != null){
-//            collectButton.setSelected(data.isAutoCollect());
-//        }
+        var data = IDataComponentType.getData(stack, ModDataComponentTypes.ITEM_CONTAINER_COMPONENT.get());
+        if(data != null){
+            collectButton.setSelected(data.isAutoCollect());
+        }
     }
 
     @Override
@@ -63,6 +64,7 @@ public class PotionBagScreen extends AbstractContainerScreen<PotionBagMenu> {
 
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
+        this.renderBackground(guiGraphics);
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         guiGraphics.blit(CONTAINER_BACKGROUND, i, j, 0, 0, this.imageWidth, this.containerRows * 18 + 17);
@@ -76,6 +78,13 @@ public class PotionBagScreen extends AbstractContainerScreen<PotionBagMenu> {
         this.renderTooltip(guiGraphics, mouseX, mouseY);
 
 
+    }
+
+    @Override
+    public void onClose() {
+        // 同步物品数据
+        ModUtils.sendToServer(new ServerBoundPacketC2S(15));
+        super.onClose();
     }
 
 }
