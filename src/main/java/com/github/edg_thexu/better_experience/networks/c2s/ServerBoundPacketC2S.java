@@ -67,14 +67,14 @@ public class ServerBoundPacketC2S {
                 if(player.containerMenu instanceof PotionBagMenu  menu &&  menu.container instanceof ItemContainerComponent component){
                     component.setAutoCollect(!component.isAutoCollect());
                     ItemStack stack = player.getMainHandItem();
-                    component.writeToNBT(ModDataComponentTypes.ITEM_CONTAINER_COMPONENT,stack.getOrCreateTag());
+                    component.writeToNBT(stack.getOrCreateTag());
                 }
 
             } else if(packet.code == 15){
                 // 保存药水袋数据
                 if(player.containerMenu instanceof PotionBagMenu menu && menu.container instanceof ItemContainerComponent component){
                     ItemStack stack = player.getMainHandItem();
-                    component.writeToNBT(ModDataComponentTypes.ITEM_CONTAINER_COMPONENT,stack.getOrCreateTag());
+                    component.writeToNBT(stack.getOrCreateTag());
                 }
 
             }

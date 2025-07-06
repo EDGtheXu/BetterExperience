@@ -1,18 +1,15 @@
 package com.github.edg_thexu.better_experience.registries;
 
+import com.github.edg_thexu.better_experience.Better_experience;
 import com.github.edg_thexu.better_experience.intergration.jei.JeiHelper;
-import com.github.edg_thexu.better_experience.intergration.jei.JeiRegistries;
 import com.github.edg_thexu.better_experience.registries.itemmatcher.ItemMatcherTypes;
 import com.github.edg_thexu.better_experience.registries.recipehandler.RecipeHandlerProviderTypes;
 import com.github.edg_thexu.better_experience.registries.recipehandlerfactory.RecipeHandlerFactoryProviderTypes;
-import com.github.edg_thexu.cafelib.registries.CafeLibRegistries;
+import com.github.edg_thexu.cafelib.api.datacomponent.IDataComponentType;
+import com.github.edg_thexu.cafelib.data.codec.DataComponentProvider;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.registries.NewRegistryEvent;
-import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.registries.datacomponent.DataComponentProvider;
-import org.confluence.terraentity.registries.datacomponent.IDataComponentType;
 
 import static net.minecraft.resources.ResourceKey.createRegistryKey;
 
@@ -37,7 +34,7 @@ public class ModRegistries {
 
     public static class DataComponentProviders{
 
-        public static final ResourceKey<Registry<DataComponentProvider<? extends IDataComponentType<?>>>> KEY = createRegistryKey(TerraEntity.space("data_component"));
+        public static final ResourceKey<Registry<DataComponentProvider<? extends IDataComponentType<?>>>> KEY = createRegistryKey(Better_experience.space("data_component"));
 
     }
 

@@ -31,6 +31,9 @@ public class BEConfigScreen extends ConfigScreen {
     public void render(GuiGraphics g, int mouseX, int mouseY, float partialTicks) {
         super.render(g, mouseX, mouseY, partialTicks);
 
+        // for debug
+//        g.drawString(minecraft.font, String.valueOf(getScrollAmount()), 0, 0 , 0xFFFFFF);
+
          //渲染彩色标题
 
         if(TEHelper.isLoaded()) {
@@ -62,6 +65,11 @@ public class BEConfigScreen extends ConfigScreen {
         }
     }
 
+
+    @Override
+    public int getMaxScroll() {
+        return Math.max(0, 400);
+    }
 
     @Override
     protected ForgeConfigSpec getSpec() {

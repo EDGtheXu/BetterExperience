@@ -13,15 +13,15 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(Screen.class)
-public abstract class ScreenMixin  implements SelfGetter<Screen> {
-
-    @Shadow protected abstract <T extends GuiEventListener & Renderable & NarratableEntry> T addRenderableWidget(T widget);
-
-    @Inject(method = "init(Lnet/minecraft/client/Minecraft;II)V", at = @At(value = "RETURN"))
-    private void initMixin(CallbackInfo ci) {
+//@Mixin(Screen.class)
+//public abstract class ScreenMixin  implements SelfGetter<Screen> {
+//
+//    @Shadow protected abstract <T extends GuiEventListener & Renderable & NarratableEntry> T addRenderableWidget(T widget);
+//
+//    @Inject(method = "init(Lnet/minecraft/client/Minecraft;II)V", at = @At(value = "RETURN"))
+//    private void initMixin(CallbackInfo ci) {
 //        if(ConfluenceHelper.isLoaded() && this.te$getSelf() instanceof ExtraInventoryScreen){
 //            addRenderableWidget(PotionScreenManager.getInstance().fastStorageBtn);
 //        }
-    }
-}
+//    }
+//}

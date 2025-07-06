@@ -5,19 +5,22 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "better_experience.refmap.json",
   "mixins": [
+    "ArrowItemMixin",
     "ChestMenuMixin",
     "FishingHookMixin",
     "ItemMixin",
+    "ItemStackMixin",
     "PlayerMixin",
+    "PotionItemMixin",
     "ProjectileWeaponItemMixin",
     "RecipeManagerMixin",
+    "SlotMixin",
     "integration.jei.RecipeGuiLayoutsMixin",
     "integration.jei.RecipeLayoutWithButtonsMixin",
     "integration.terra_entity.BaseSlimeMixin"
   ],
   "client": [
     "client.AbstractContainerScreenMixin",
-    "client.ScreenMixin",
     "integration.jei.RecipeGuiMixin"
   ],
   "injectors": {

@@ -9,6 +9,7 @@ import com.github.edg_thexu.better_experience.init.ModItems;
 import com.github.edg_thexu.better_experience.intergration.confluence.ConfluenceHelper;
 import com.github.edg_thexu.better_experience.menu.PotionBagMenu;
 import com.github.edg_thexu.better_experience.utils.ModUtils;
+import com.github.edg_thexu.cafelib.api.datacomponent.IDataComponentType;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -142,22 +143,19 @@ public class PlayerInventoryManager {
         if(--detectInternal > 0){
             return;
         }
+        detectInternal = (int) (_detectInternal  * 0.1);
         if(!player.level().isClientSide()) {
             // 服务端检测
             this.detectServer(player);
             return;
         }
         // 客户端检测
-        try {
-            if(Minecraft.getInstance().player != player) return;
-        }catch (NoClassDefFoundError ignored){
 
-        }
         if(!serverOpenAutoPotion){
             return;
         }
 
-        detectInternal = (int) (_detectInternal * 0.1f);
+
 
 
         List<Pair<MobEffect, Integer>> effects = new ArrayList<>();
@@ -171,16 +169,16 @@ public class PlayerInventoryManager {
             for (int i = 0; i < inventory.getContainerSize(); i++) {
                 try {
                     ItemStack stack = inventory.getItem(i);
-//                    var data1 = stack.get(ModDataComponentTypes.ITEM_CONTAINER_COMPONENT);
-//
-//                    if(data1 == null){
-//                        effects.addAll(getApplyEffect(stack));
-//                    }else {
-//                        // 药水袋
-//                        for(var item : data1.getItems()){
-//                            effects.addAll(getApplyEffect(item));
-//                        }
-//                    }
+                    var data1 = IDataComponentType.getData(stack, ModDataComponentTypes.ITEM_CONTAINER_COMPONENT);
+
+                    if(data1 == null){
+                        effects.addAll(getApplyEffect(stack));
+                    }else {
+                        // 药水袋
+                        for(var item : data1.items){
+                            effects.addAll(getApplyEffect(item));
+                        }
+                    }
                 } catch (Exception ignored) {
 
                 }
@@ -209,6 +207,9 @@ public class PlayerInventoryManager {
 
     // 这里自动存钱和存放药水等
     private void detectServer(Player player){
+        if(player.containerMenu instanceof PotionBagMenu){
+            return;
+        }
         NonNullList<ItemStack> items = player.getInventory().items;
 //        boolean autoSave = false;
         List<ItemStack> potionBags = new ArrayList<>();
@@ -217,10 +218,10 @@ public class PlayerInventoryManager {
 //               autoSave = true;
 //            }
             if(stack.getItem() == ModItems.PotionBag.get()){
-//                var data = stack.get(ModDataComponentTypes.ITEM_CONTAINER_COMPONENT);
-//                if(data != null && data.isAutoCollect()) {
-//                    potionBags.add(stack);
-//                }
+                var data = IDataComponentType.getData(stack, ModDataComponentTypes.ITEM_CONTAINER_COMPONENT);
+                if(data != null && data.isAutoCollect()) {
+                    potionBags.add(stack);
+                }
             }
         }
 //        if(autoSave){
@@ -239,17 +240,17 @@ public class PlayerInventoryManager {
 //            }
 //
 //        }
-//        for(ItemStack stack : items){
-//            if(PotionBagMenu.canPlace(stack)) {
-//                for (ItemStack potionBag : potionBags) {
-//                    var data = potionBag.get(ModDataComponentTypes.ITEM_CONTAINER_COMPONENT);
-//                    if(data == null) continue;
-//                    if(ModUtils.tryPlaceBackItemStackToItemStacks(stack, data.getItems())){
-//                        break;
-//                    }
-//                }
-//            }
-//        }
+
+        for (ItemStack potionBag : potionBags) {
+            var data = IDataComponentType.getData(potionBag, ModDataComponentTypes.ITEM_CONTAINER_COMPONENT);
+            if(data == null) continue;
+            for(ItemStack stack : items){
+                if(PotionBagMenu.canPlace(stack)) {
+                    ModUtils.tryPlaceBackItemStackToItemStacks(stack, data.items);
+                }
+            }
+            data.writeToNBT(potionBag.getOrCreateTag());
+        }
     }
 
     /**
@@ -305,6 +306,9 @@ public class PlayerInventoryManager {
     public static void renderApply(AbstractContainerScreen screen, @Nullable Container container, ItemStack stack, GuiGraphics guiGraphics, int x, int y, float partialTick){
 
         String title = screen.getTitle().toString();
+        if(!CommonConfig.AUTO_POTION_OPEN.get()){
+            return;
+        }
         if((
 //                ConfluenceHelper.isLoaded() && container instanceof PlayerContainer<?> ||  // 猪猪存钱罐和保险箱
                 screen instanceof InventoryScreen || // 背包

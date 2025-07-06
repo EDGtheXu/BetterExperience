@@ -26,10 +26,10 @@ public class PotionBag extends Item {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         ItemStack stack = player.getItemInHand(usedHand);
         if(!level.isClientSide() && usedHand == InteractionHand.MAIN_HAND) {
-            var data = IDataComponentType.getData(stack, ModDataComponentTypes.ITEM_CONTAINER_COMPONENT.get());
+            ItemContainerComponent data = IDataComponentType.getData(stack, ModDataComponentTypes.ITEM_CONTAINER_COMPONENT.get());
             if (data == null) {
                 data = new ItemContainerComponent(18);
-                data.writeToNBT(ModDataComponentTypes.ITEM_CONTAINER_COMPONENT, stack.getOrCreateTag());
+                data.writeToNBT(stack.getOrCreateTag());
             }
             ItemContainerComponent finalData = data;
             player.openMenu(new SimpleMenuProvider((id, inventory, p) -> new PotionBagMenu(id, inventory, finalData), Component.translatable(stack.getDescriptionId()).withStyle(style -> style.withColor(0x333333))));

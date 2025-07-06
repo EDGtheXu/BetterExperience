@@ -5,7 +5,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 public class CommonConfig {
     //************************* Item *************************
     /**
-     * 是否开启药水无线续杯
+     * 是否开启药水无限续杯
      */
     public static ForgeConfigSpec.BooleanValue AUTO_POTION_OPEN;
     /**
@@ -17,7 +17,7 @@ public class CommonConfig {
      */
     public static ForgeConfigSpec.BooleanValue INSTANTLY_DRINK;
     /**
-     * 是否开启药水无线续杯
+     * 是否开启药水无限弹药
      */
     public static ForgeConfigSpec.BooleanValue INFINITE_AMMO;
     /**
@@ -103,7 +103,7 @@ public class CommonConfig {
                 .define("auto_potion_open", true);
         AUTO_POTION_STACK_SIZE = BUILDER
                 .comment("How many potion stack could apply without consuming automatically?")
-                .defineInRange("auto_potion_stack_size", 10, 1, 9999);
+                .defineInRange("auto_potion_stack_size", 10, 1, 64);
         INSTANTLY_DRINK = BUILDER
                 .comment("Instantly Drink")
                 .define("instantly_drink", false);
@@ -114,7 +114,7 @@ public class CommonConfig {
                 .define("infinite_ammo", false);
         INFINITE_AMMO_STACK_SIZE = BUILDER
                 .comment("How many ammo stack could apply without consuming automatically?")
-                .defineInRange("infinite_ammo_stack_size", 3996, 64, 9999);
+                .defineInRange("infinite_ammo_stack_size", 64, 1, 64);
         NO_CONSUME_SUMMONER = BUILDER
                 .comment("Not consume summon item?")
                 .define("no_consume_summoner", false);
@@ -122,8 +122,8 @@ public class CommonConfig {
                 .comment("Better reinforced tool.")
                 .define("better_reinforced_tool", false);
         MODIFY_MAX_STACK_SIZE = BUILDER
-                .comment("Modify Max Stack Size")
-                .define("modify_max_stack_size", false);
+                .comment("Modify Max Stack Size.")
+                .define("modify_max_stack_size", true);
         FORBIDDEN_MAGIC_BOOM_STAFF = BUILDER
                 .comment("Forbidden magic boom staff.")
                 .define("forbidden_magic_boom_staff", false);
@@ -138,7 +138,7 @@ public class CommonConfig {
                 .comment("Additional fall distance for players.")
                 .defineInRange("additional_fall_distance", 0, 0, 100);
         MULTI_FISH = BUILDER
-                .comment("Multi fish.")
+                .comment("Multi fish after left click with axe and change fishing rod soon.")
                 .define("server_multi_fishing", true);
         BLOCK_BREAK_SPEED_MULTIPLIER = BUILDER
                 .comment("Block Break Speed Multiplier")

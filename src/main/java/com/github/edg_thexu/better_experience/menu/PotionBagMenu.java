@@ -51,7 +51,7 @@ public class PotionBagMenu extends AbstractContainerMenu {
         }
     }
 
-    public boolean canPlace(ItemStack stack){
+    public static boolean canPlace(ItemStack stack){
         if(stack.getItem() instanceof PotionItem || stack.getFoodProperties(null)!= null ){
             return true;
         }

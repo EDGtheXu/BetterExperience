@@ -25,11 +25,13 @@ import net.minecraft.world.level.block.ChestBlock;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.server.ServerLifecycleHooks;
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 
 
 import java.util.ArrayList;
@@ -42,6 +44,16 @@ public class ModEvent {
     @SubscribeEvent
     public static void commonSetup(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
+            if(ModList.get().isLoaded("terra_entity")) {
+
+                DefaultArtifactVersion version = (DefaultArtifactVersion) ModList.get().getMods().stream().filter(mod->mod.getModId().equals("terra_entity")).findAny().get().getVersion();
+                if(version.compareTo(new DefaultArtifactVersion("1.1.15")) < 0) {
+                    Better_experience.LOGGER.error("Terra Entity version must greater than 1.1.14, conflict with Better Experience");
+                    throw new RuntimeException("Terra Entity version must greater than 1.1.14, conflict with Better Experience");
+                }
+
+            }
+
             NetworkHandler.register();
         });
     }

@@ -145,10 +145,18 @@ dependencies {
 //        jarJar.ranged(it, "[1.0.0,)")
 //    }
 
-    implementation fg.deobf("libs:cafelib:1.0.0")
-    jarJar("com.github.edg_thexu:cafelib:1.0.0") {
+//    files("libs/cafelib-1.0.0.jar")
+//    implementation files(fg.deobf("libs:cafelib:1.0.0-all"))
+
+//    implementation fg.deobf("libs:cafelib:1.0.0-all")
+//    jarJar(files("libs/cafelib-1.0.0-all.jar")) {
+//        jarJar.ranged(it, "[1.0.0,)")
+//    }
+
+    jarJar(implementation fg.deobf("libs:cafelib:1.0.0-all")) {
         jarJar.ranged(it, "[1.0.0,)")
     }
+
 
 
 //    implementation "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
@@ -176,14 +184,6 @@ dependencies {
 
 //    compileOnly "curse.maven:terra-curio-1027625:6254391"
 //    runtimeOnly "curse.maven:terra-curio-1027625:6254391"
-
-//    implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}"
-
-//    implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
-
-    // carry on
-//    compileOnly"curse.maven:carry-on-274259:5649344"
-//    runtimeOnly "curse.maven:carry-on-274259:5649344"
 
 }
 

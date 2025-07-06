@@ -36,6 +36,9 @@ public class PotionApplyPacketC2S {
         context.enqueueWork(() -> {
             if(CommonConfig.AUTO_POTION_OPEN.get()) { // 在服务端进行判断
                 PlayerInventoryManager.apply(packet.attachment, context.getSender());
+            }else{
+                // 清除效果
+                PlayerInventoryManager.apply(new AutoPotionAttachment(), context.getSender());
             }
         });
     }

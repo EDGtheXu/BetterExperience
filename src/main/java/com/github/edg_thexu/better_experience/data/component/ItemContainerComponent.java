@@ -1,6 +1,8 @@
 package com.github.edg_thexu.better_experience.data.component;
 
+import com.github.edg_thexu.better_experience.init.ModDataComponentTypes;
 import com.github.edg_thexu.cafelib.api.datacomponent.IDataComponentType;
+import com.github.edg_thexu.cafelib.data.codec.DataComponentProvider;
 import com.mojang.serialization.*;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
@@ -62,7 +64,7 @@ public class ItemContainerComponent extends SimpleContainer implements IDataComp
     }
 
     @Override
-    public Codec<ItemContainerComponent> codec() {
-        return CODEC.get();
+    public DataComponentProvider<ItemContainerComponent> provider() {
+        return ModDataComponentTypes.ITEM_CONTAINER_COMPONENT.get();
     }
 }

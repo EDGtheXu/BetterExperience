@@ -33,6 +33,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static net.minecraft.client.gui.screens.inventory.AbstractContainerScreen.INVENTORY_LOCATION;
+
 @OnlyIn(Dist.CLIENT)
 public class PotionScreenManager {
 
@@ -133,7 +135,8 @@ public class PotionScreenManager {
                     guiGraphics.setColor(0.3f, 0.3f, 0.3f, 1.0f);
                 }
 
-//                guiGraphics.blitSprite(EFFECT_BACKGROUND_SMALL_SPRITE, ii, jj, 12, 12);
+//                guiGraphics.blit(EFFECT_BACKGROUND_SMALL_SPRITE, ii, jj, 12, 12, 12, 12);
+                guiGraphics.blitNineSliced(INVENTORY_LOCATION, ii, jj, 12, 12, 2, 24,24,165,166);
 
                 MobEffect holder = mobeffectinstance.getEffect();
                 TextureAtlasSprite textureatlassprite = mobeffecttexturemanager.get(holder);
