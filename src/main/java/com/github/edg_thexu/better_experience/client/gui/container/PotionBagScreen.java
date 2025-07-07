@@ -1,23 +1,19 @@
 package com.github.edg_thexu.better_experience.client.gui.container;
 
 import com.github.edg_thexu.better_experience.client.gui.widget.FloatButton;
+import com.github.edg_thexu.better_experience.data.component.ItemContainerComponent;
 import com.github.edg_thexu.better_experience.init.ModDataComponentTypes;
 import com.github.edg_thexu.better_experience.menu.PotionBagMenu;
 import com.github.edg_thexu.better_experience.networks.c2s.ServerBoundPacketC2S;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.confluence.terraentity.utils.AdapterUtils;
-
-import java.util.List;
 
 public class PotionBagScreen extends AbstractContainerScreen<PotionBagMenu> {
     private static final ResourceLocation CONTAINER_BACKGROUND = ResourceLocation.withDefaultNamespace("textures/gui/container/generic_54.png");
@@ -37,14 +33,13 @@ public class PotionBagScreen extends AbstractContainerScreen<PotionBagMenu> {
         super.init();
         collectButton = (FloatButton) FloatButton.builder(Component.literal("A"), p->{
             PacketDistributor.sendToServer(new ServerBoundPacketC2S(5));
-                }).setTooltips(List.of(
-                        ClientTooltipComponent.create(Component.translatable("better_experience.gui.potion_screen.auto_collect.message")
-                        .withStyle(Style.EMPTY.withColor(0xFFFFFF)).getVisualOrderText())
+                }).tooltip(Tooltip.create(Component.translatable("better_experience.gui.potion_screen.auto_collect.message")
+                .withStyle(Style.EMPTY.withColor(0xFFFFFF))
         )).bounds(this.leftPos - 32, this.topPos, 30, 15).build();
         this.addRenderableWidget(collectButton);
         ItemStack stack = minecraft.player.getMainHandItem();
 
-        var data = stack.get(ModDataComponentTypes.ITEM_CONTAINER_COMPONENT);
+        ItemContainerComponent data = stack.get(ModDataComponentTypes.ITEM_CONTAINER_COMPONENT);
         if(data != null){
             collectButton.setSelected(data.isAutoCollect());
         }

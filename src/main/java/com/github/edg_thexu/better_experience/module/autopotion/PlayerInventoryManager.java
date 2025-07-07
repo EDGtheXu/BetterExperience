@@ -7,6 +7,7 @@ import com.github.edg_thexu.better_experience.init.ModAttachments;
 import com.github.edg_thexu.better_experience.init.ModDataComponentTypes;
 import com.github.edg_thexu.better_experience.init.ModItems;
 import com.github.edg_thexu.better_experience.intergration.confluence.ConfluenceHelper;
+import com.github.edg_thexu.better_experience.intergration.curios.CuriosHelper;
 import com.github.edg_thexu.better_experience.menu.PotionBagMenu;
 import com.github.edg_thexu.better_experience.utils.ModUtils;
 import net.minecraft.client.Minecraft;
@@ -32,21 +33,17 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.lib.common.PlayerContainer;
 import org.confluence.mod.client.gui.container.ExtraInventoryScreen;
-import org.confluence.mod.common.block.functional.PiggyBankBlock;
 import org.confluence.mod.common.init.ModAttachmentTypes;
 import org.confluence.mod.common.init.ModTags;
 import org.confluence.mod.common.init.block.FunctionalBlocks;
 import org.confluence.mod.common.init.item.FoodItems;
 import org.confluence.mod.common.item.potion.EffectPotionItem;
-import org.confluence.terra_guns.api.event.GunEvent;
 import org.jetbrains.annotations.Nullable;
 import oshi.util.tuples.Pair;
 import top.theillusivec4.curios.client.gui.CuriosScreen;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 /**
  * 客户端遍历玩家背包，检测药水续杯等效果
@@ -296,7 +293,7 @@ public class PlayerInventoryManager {
                 screen instanceof PotionBagScreen || // 药水袋
                 screen instanceof ContainerScreen && (title.contains("enderchest") || title.contains("piggy_bank") || title.contains("safe")) ||
                         ConfluenceHelper.isLoaded() && screen instanceof ExtraInventoryScreen||  // 额外栏
-                        screen instanceof CuriosScreen  // 饰品栏
+                        CuriosHelper.isLoaded() && screen instanceof CuriosScreen  // 饰品栏
         )
                 && canApply(stack)){
 

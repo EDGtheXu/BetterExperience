@@ -11,6 +11,7 @@
     "PlayerMixin",
     "ProjectileWeaponItemMixin",
     "RecipeManagerMixin",
+    "integration.confluence.AbstractPotionItemMixin",
     "integration.jei.RecipeGuiLayoutsMixin",
     "integration.jei.RecipeLayoutWithButtonsMixin"
   ],

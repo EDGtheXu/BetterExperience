@@ -1,5 +1,6 @@
 package com.github.edg_thexu.better_experience.item;
 
+import com.github.edg_thexu.better_experience.data.component.ItemContainerComponent;
 import com.github.edg_thexu.better_experience.init.ModDataComponentTypes;
 import com.github.edg_thexu.better_experience.menu.PotionBagMenu;
 import net.minecraft.network.chat.Component;
@@ -24,7 +25,7 @@ public class PotionBag extends Item {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         ItemStack stack = player.getItemInHand(usedHand);
         if(!level.isClientSide() && usedHand == InteractionHand.MAIN_HAND) {
-            var data = stack.get(ModDataComponentTypes.ITEM_CONTAINER_COMPONENT);
+            ItemContainerComponent data = stack.get(ModDataComponentTypes.ITEM_CONTAINER_COMPONENT);
             if (data != null) {
                 player.openMenu(new SimpleMenuProvider((id, inventory, p) -> new PotionBagMenu(id, inventory, data), Component.translatable(stack.getDescriptionId()).withColor(0x333333)));
             }

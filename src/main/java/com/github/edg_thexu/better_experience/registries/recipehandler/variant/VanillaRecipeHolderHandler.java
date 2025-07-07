@@ -1,6 +1,5 @@
 package com.github.edg_thexu.better_experience.registries.recipehandler.variant;
 
-import com.github.edg_thexu.better_experience.intergration.jei.SearchCache;
 import com.github.edg_thexu.better_experience.registries.recipehandler.IRecipeHandler;
 import com.github.edg_thexu.better_experience.registries.recipehandler.RecipeHandlerProvider;
 import com.github.edg_thexu.better_experience.registries.recipehandler.RecipeHandlerProviderTypes;

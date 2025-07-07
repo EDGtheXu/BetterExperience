@@ -116,7 +116,7 @@ public class JeiHelper {
                         .min(Comparator.comparing(a -> a.getValue().priority()))
                         .map(Map.Entry::getValue)
                         .ifPresent(handler-> {
-                            IRecipeHandler<?> handler1 = handler.create((RecipeLayout<?>) lay.recipeLayout(), count);
+                            IRecipeHandler<?> handler1 = handler.create((RecipeLayout<?>) lay.recipeLayout(), recipe, count);
                             if(handler1!= null) {
                                 PacketDistributor.sendToServer(new SearchJeiIngredientsPacketC2S(handler1));
                             }

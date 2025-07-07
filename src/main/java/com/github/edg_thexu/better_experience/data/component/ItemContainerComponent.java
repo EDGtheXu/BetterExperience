@@ -1,11 +1,10 @@
 package com.github.edg_thexu.better_experience.data.component;
 
-import com.github.edg_thexu.better_experience.data.codec.CodecUtil;
 import com.mojang.serialization.*;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.component.DataComponentType;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -22,19 +21,23 @@ public class ItemContainerComponent extends SimpleContainer implements DataCompo
             Codec.INT.fieldOf("size").forGetter(ItemContainerComponent::getContainerSize),
             Codec.BOOL.optionalFieldOf("autoCollect").forGetter(ins->Optional.of(ins.autoCollect)),
             Codec.STRING.optionalFieldOf("uuid").forGetter(ins-> Optional.ofNullable(ins.id.toString())),
-            CodecUtil.TAG_CODEC.fieldOf("tag").forGetter(ins->{
-                if(ServerLifecycleHooks.getCurrentServer() == null){
-                    return ins.createTag(null);
+            CompoundTag.CODEC.fieldOf("tag").forGetter(ins->{
+                CompoundTag tag = new CompoundTag();
+                if(ServerLifecycleHooks.getCurrentServer() != null){
+                    tag.put("Items", ins.createTag(ServerLifecycleHooks.getCurrentServer().registryAccess()));
+                    return tag;
+                }else{
+                    tag.put("Items", null);
                 }
-                return ins.createTag(ServerLifecycleHooks.getCurrentServer().registryAccess());
+                return tag;
             })
     ).apply(instance, (size, autoCollect, id, tag)->{
         boolean collect = autoCollect.orElse(true);
         ItemContainerComponent itemContainerComponent = id.map(s -> new ItemContainerComponent(size, collect, UUID.fromString(s))).orElseGet(() -> new ItemContainerComponent(size));
         if(ServerLifecycleHooks.getCurrentServer() == null){
-            itemContainerComponent.fromTag((ListTag) tag, null);
+            itemContainerComponent.fromTag(tag.getList("Items", 10), null);
         }else{
-            itemContainerComponent.fromTag((ListTag) tag, ServerLifecycleHooks.getCurrentServer().registryAccess());
+            itemContainerComponent.fromTag(tag.getList("Items", 10), ServerLifecycleHooks.getCurrentServer().registryAccess());
         }
         return itemContainerComponent;
     }));
