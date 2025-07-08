@@ -56,7 +56,7 @@ public record ServerBoundPacketC2S(int code) implements CustomPacketPayload {
                 StorageManager.saveAll(player);
             }else if(packet.code == 5){
                 // 改变药水收纳状态
-                if(player.containerMenu instanceof PotionBagMenu  menu &&  menu.container instanceof ItemContainerComponent component){
+                if(player.containerMenu instanceof PotionBagMenu  menu &&  menu.component instanceof ItemContainerComponent component){
                     component.setAutoCollect(!component.isAutoCollect());
                 }
 

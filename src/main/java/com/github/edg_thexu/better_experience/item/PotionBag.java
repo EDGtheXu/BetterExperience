@@ -39,7 +39,7 @@ public class PotionBag extends Item {
         tooltipComponents.add(Component.translatable("better_experience.tooltip.potion_bag.info"));
         var data = stack.get(ModDataComponentTypes.ITEM_CONTAINER_COMPONENT);
         if (data != null) {
-            int size = data.getContainerSize();
+            int size = data.size;
             int filled = 0;
             for( var item : data.getItems()){
                 if(!item.isEmpty()){

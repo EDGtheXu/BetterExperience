@@ -41,7 +41,7 @@ public class PotionBagScreen extends AbstractContainerScreen<PotionBagMenu> {
 
         ItemContainerComponent data = stack.get(ModDataComponentTypes.ITEM_CONTAINER_COMPONENT);
         if(data != null){
-            collectButton.setSelected(data.isAutoCollect());
+            collectButton.setSelectedDirectly(data.isAutoCollect());
         }
     }
 

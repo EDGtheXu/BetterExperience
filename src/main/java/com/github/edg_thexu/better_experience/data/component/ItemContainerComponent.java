@@ -3,58 +3,46 @@ package com.github.edg_thexu.better_experience.data.component;
 import com.mojang.serialization.*;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponentType;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.SimpleContainer;
-import net.neoforged.neoforge.server.ServerLifecycleHooks;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemContainerContents;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
-public class ItemContainerComponent extends SimpleContainer implements DataComponentType<ItemContainerComponent>{
+public class ItemContainerComponent implements DataComponentType<ItemContainerComponent>{
 
     public static Codec<ItemContainerComponent> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codec.INT.fieldOf("size").forGetter(ItemContainerComponent::getContainerSize),
+            ItemContainerContents.CODEC.fieldOf("container").forGetter(ins->ins.container),
             Codec.BOOL.optionalFieldOf("autoCollect").forGetter(ins->Optional.of(ins.autoCollect)),
-            Codec.STRING.optionalFieldOf("uuid").forGetter(ins-> Optional.ofNullable(ins.id.toString())),
-            CompoundTag.CODEC.fieldOf("tag").forGetter(ins->{
-                CompoundTag tag = new CompoundTag();
-                if(ServerLifecycleHooks.getCurrentServer() != null){
-                    tag.put("Items", ins.createTag(ServerLifecycleHooks.getCurrentServer().registryAccess()));
-                    return tag;
-                }else{
-                    tag.put("Items", null);
-                }
-                return tag;
-            })
-    ).apply(instance, (size, autoCollect, id, tag)->{
-        boolean collect = autoCollect.orElse(true);
-        ItemContainerComponent itemContainerComponent = id.map(s -> new ItemContainerComponent(size, collect, UUID.fromString(s))).orElseGet(() -> new ItemContainerComponent(size));
-        if(ServerLifecycleHooks.getCurrentServer() == null){
-            itemContainerComponent.fromTag(tag.getList("Items", 10), null);
-        }else{
-            itemContainerComponent.fromTag(tag.getList("Items", 10), ServerLifecycleHooks.getCurrentServer().registryAccess());
-        }
-        return itemContainerComponent;
+            Codec.INT.fieldOf("size").forGetter(ins->ins.size)
+    ).apply(instance, (container, autoCollect,size)->{
+        boolean autoCollectValue = autoCollect.orElse(true);
+        return new ItemContainerComponent(container, autoCollectValue,size);
     }));
 
     public static StreamCodec<ByteBuf, ItemContainerComponent> STREAM_CODEC = ByteBufCodecs.fromCodec(CODEC);
 
-    UUID id; // 只是为了hashCode
     private boolean autoCollect;
+    public ItemContainerContents container;
+
+    public int size;
 
     public ItemContainerComponent(int size) {
-        this(size,true,  UUID.randomUUID());
+        this(ItemContainerContents.fromItems(List.of()),true,size);
     }
-    public ItemContainerComponent(int size, boolean autoCollect, UUID id) {
-        super(size);
-        this.id = id;
+
+    public ItemContainerComponent(ItemContainerContents container, boolean autoCollect, int size) {
         this.autoCollect = autoCollect;
+        this.container = container;
+        this.size = size;
     }
+
     @Override
     public @Nullable Codec<ItemContainerComponent> codec() {
         return CODEC;
@@ -72,7 +60,7 @@ public class ItemContainerComponent extends SimpleContainer implements DataCompo
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return container.hashCode();
     }
 
     public boolean isAutoCollect() {
@@ -83,4 +71,12 @@ public class ItemContainerComponent extends SimpleContainer implements DataCompo
         this.autoCollect = autoCollect;
     }
 
+    public List<ItemStack> getItems() {
+        NonNullList<ItemStack> list = NonNullList.withSize(size, ItemStack.EMPTY);
+        List<ItemStack> items = container.stream().toList();
+        for (int i = 0; i < items.size(); i++) {
+            list.set(i, items.get(i));
+        }
+        return list;
+    }
 }

@@ -137,6 +137,10 @@ public class FloatButton extends TooltipButton {
         this.selected = selected;
     }
 
+    public void setSelectedDirectly(boolean selected) {
+        this.selected = selected;
+    }
+
     public static class Builder extends TooltipButton.Builder {
 
         private List<ClientTooltipComponent> tooltips;

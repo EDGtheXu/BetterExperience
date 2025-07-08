@@ -3,6 +3,7 @@ package com.github.edg_thexu.better_experience.module.autopotion;
 import com.github.edg_thexu.better_experience.attachment.AutoPotionAttachment;
 import com.github.edg_thexu.better_experience.client.gui.container.PotionBagScreen;
 import com.github.edg_thexu.better_experience.config.CommonConfig;
+import com.github.edg_thexu.better_experience.data.component.ItemContainerComponent;
 import com.github.edg_thexu.better_experience.init.ModAttachments;
 import com.github.edg_thexu.better_experience.init.ModDataComponentTypes;
 import com.github.edg_thexu.better_experience.init.ModItems;
@@ -29,6 +30,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.lib.common.PlayerContainer;
@@ -129,6 +131,7 @@ public class PlayerInventoryManager {
         if(--detectInternal > 0){
             return;
         }
+        detectInternal = (int) (_detectInternal * 0.1f);
         if(!player.level().isClientSide()) {
             // 服务端检测
             this.detectServer(player);
@@ -144,7 +147,7 @@ public class PlayerInventoryManager {
             return;
         }
 
-        detectInternal = (int) (_detectInternal * 0.1f);
+
 
 
         List<Pair<Holder<MobEffect>, Integer>> effects = new ArrayList<>();
@@ -224,12 +227,17 @@ public class PlayerInventoryManager {
             }
 
         }
+        if(player.containerMenu instanceof PotionBagMenu){
+            return;
+        }
         for(ItemStack stack : items){
             if(PotionBagMenu.canPlace(stack)) {
                 for (ItemStack potionBag : potionBags) {
-                    var data = potionBag.get(ModDataComponentTypes.ITEM_CONTAINER_COMPONENT);
+                    ItemContainerComponent data = potionBag.get(ModDataComponentTypes.ITEM_CONTAINER_COMPONENT);
                     if(data == null) continue;
-                    if(ModUtils.tryPlaceBackItemStackToItemStacks(stack, data.getItems())){
+                    List<ItemStack> items1 =  data.getItems();
+                    if(ModUtils.tryPlaceBackItemStackToItemStacks(stack, items1)){
+                        potionBag.set(ModDataComponentTypes.ITEM_CONTAINER_COMPONENT, new ItemContainerComponent(ItemContainerContents.fromItems(items1), data.isAutoCollect(), data.size));
                         break;
                     }
                 }
