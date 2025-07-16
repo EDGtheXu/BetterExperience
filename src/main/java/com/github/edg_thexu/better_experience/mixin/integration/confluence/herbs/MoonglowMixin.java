@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Pseudo
-@Mixin(targets = "org.confluence.mod.common.block.natural.Moonglow")
+@Mixin(targets = "org.confluence.mod.common.block.natural.herbs.Moonglow")
 //@Mixin(Moonglow.class)
 public class MoonglowMixin {
 

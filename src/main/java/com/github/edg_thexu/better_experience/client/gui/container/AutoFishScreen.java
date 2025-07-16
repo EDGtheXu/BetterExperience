@@ -31,10 +31,10 @@ public class AutoFishScreen extends ContainerScreen {
                 List.of(Better_experience.space("minecraft","item/fishing_rod"));
 //        minecraft\textures\gui\sprites\spectator\close.png
         iconList2 = ConfluenceHelper.isLoaded()? List.of(Better_experience.space("confluence","item/bait/worm")) : List.of(
-                Better_experience.space("minecraft","textures\\gui\\sprites\\spectator\\close")
+                Better_experience.space("minecraft","textures/gui/sprites/spectator/close")
         );
         iconList3 = TCHelper.isLoaded()? List.of(Better_experience.space("terra_curio","item/curio/angler_earring")) : List.of(
-                Better_experience.space("minecraft","textures\\gui\\sprites\\spectator\\close")
+                Better_experience.space("minecraft","textures/gui/sprites/spectator/close")
         );
 
     }

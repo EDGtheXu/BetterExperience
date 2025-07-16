@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Pseudo
-@Mixin(targets = "org.confluence.mod.common.block.natural.Waterleaf")
+@Mixin(targets = "org.confluence.mod.common.block.natural.herbs.Waterleaf")
 //@Mixin(Waterleaf.class)
 public class WaterleafMixin {
 

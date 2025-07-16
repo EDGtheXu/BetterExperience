@@ -108,7 +108,7 @@ public class FloatButton extends TooltipButton {
 
         }else{
             guiGraphics.blitSprite(SPRITES.get(this.active, false), this.getX() + 1 + width, this.getY() + 1, (int) (this.getWidth() * 0.45f), this.getHeight() - 2);
-
+            guiGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
         }
 
 //        this.renderScrollingString(guiGraphics, minecraft.font, width, i | Mth.ceil(this.alpha * 255.0F) << 24);

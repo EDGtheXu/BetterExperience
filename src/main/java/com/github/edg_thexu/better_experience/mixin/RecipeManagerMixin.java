@@ -16,7 +16,7 @@ import java.util.Map;
 @Mixin(value = RecipeManager.class, priority = 900)
 public abstract class RecipeManagerMixin {
     @Inject(method = "apply(Ljava/util/Map;Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)V", at = @At("HEAD"))
-    private void removeTerraCurio(Map<ResourceLocation, JsonElement> object, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo ci) {
+    private void removeBE(Map<ResourceLocation, JsonElement> object, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo ci) {
         ModRemoval.processRecipes(object);
     }
 }

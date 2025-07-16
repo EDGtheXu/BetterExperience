@@ -135,17 +135,17 @@ dependencies {
 //    implementation "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
 //    implementation "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
 
-    implementation(files("libs/ConfluenceOtherworld-1.1.4-alpha.jar"))
-    implementation(files("libs/terra_entity-1.1.14.jar"))
-    implementation(files("libs/confluence_magic_lib-0.0.1.jar"))
-    implementation(files("libs/terra_guns-1.21.1-1.0.jar"))
-    implementation(files("libs/terra_curio-1.1.0.jar"))
+//    implementation(files("libs/ConfluenceOtherworld-1.1.4-alpha.jar"))
+//    implementation(files("libs/terra_entity-1.1.14.jar"))
+//    implementation(files("libs/confluence_magic_lib-0.0.1.jar"))
+//    implementation(files("libs/terra_guns-1.21.1-1.0.jar"))
+//    implementation(files("libs/terra_curio-1.1.0.jar"))
 
-//    compileOnly(files("libs/ConfluenceOtherworld-1.1.4-alpha.jar"))
-//    compileOnly(files("libs/terra_entity-1.1.14.jar"))
-//    compileOnly(files("libs/confluence_magic_lib-0.0.1.jar"))
-//    compileOnly(files("libs/terra_guns-1.21.1-1.0.jar"))
-//    compileOnly(files("libs/terra_curio-1.1.0.jar"))
+    compileOnly(files("libs/ConfluenceOtherworld-1.1.4-beta.jar"))
+    compileOnly(files("libs/terra_entity-1.1.14.jar"))
+    compileOnly(files("libs/confluence_magic_lib-0.0.1.jar"))
+    compileOnly(files("libs/terra_guns-1.21.1-1.0.jar"))
+    compileOnly(files("libs/terra_curio-1.1.0.jar"))
 
 //    implementation "curse.maven:confluence-1209464:6343042"
 ////    compileOnly "curse.maven:confluence-1209464:6343042"

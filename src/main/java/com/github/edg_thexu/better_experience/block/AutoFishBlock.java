@@ -161,11 +161,8 @@ public class AutoFishBlock extends BaseEntityBlock {
 
                         try {
                             float power = AutoFishManager.computeFishingPower(null, poleStack, bait.getItem(), curios);
-
                             if (ConfluenceLibHelper.isLoaded() && pole instanceof AbstractFishingPole pole1) {
-                                Method funcField = AbstractFishingPole.class.getDeclaredMethod("getHook", ItemStack.class, Player.class, Level.class, int.class, int.class);
-                                funcField.setAccessible(true);
-                                hook = (FishingHook) funcField.invoke(pole, poleStack, player, level, (int) power, 5);
+                                hook = pole1.getHook(poleStack, player, level, (int) power, 5);
                             } else {
                                 hook = new FishingHook(player, level, (int) power, 5);
                             }
@@ -178,14 +175,7 @@ public class AutoFishBlock extends BaseEntityBlock {
                         ((IFishingHook) hook).betterExperience$setSimulation(true);
 
                         hook.setPos(entity.target);
-
-                        try {
-                            Field nibbleField = FishingHook.class.getDeclaredField("nibble");
-                            nibbleField.setAccessible(true);
-                            nibbleField.setInt(hook, 10);
-                        } catch (NoSuchFieldException | IllegalAccessException e) {
-                            Better_experience.LOGGER.error("Failed to set nibble field for fishing hook", e);
-                        }
+                        hook.nibble = 10;
 
                         // 模拟收杆
                         hook.retrieve(poleStack);

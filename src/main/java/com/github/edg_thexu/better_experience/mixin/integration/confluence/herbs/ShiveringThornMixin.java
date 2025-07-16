@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Pseudo
-@Mixin(targets = "org.confluence.mod.common.block.natural.ShiveringThorn")
+@Mixin(targets = "org.confluence.mod.common.block.natural.herbs.ShiveringThorn")
 //@Mixin(ShiveringThorn.class)
 public class ShiveringThornMixin {
 
