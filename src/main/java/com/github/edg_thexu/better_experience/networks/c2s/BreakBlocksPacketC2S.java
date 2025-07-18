@@ -11,11 +11,14 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Tuple;
+import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.EndPortalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -70,7 +73,7 @@ public record BreakBlocksPacketC2S(BlockPos p1, BlockPos p2) implements CustomPa
                         BlockPos pos = new BlockPos(x, y, z);
                         BlockState state = level.getBlockState(pos);
                         Block block = state.getBlock();
-                        if(state.isAir() || state.is(Blocks.BEDROCK)) continue;
+                        if(state.isAir() || state.is(BlockTags.FEATURES_CANNOT_REPLACE)) continue;
                         boolean isDrop = true;
                         if(state.requiresCorrectToolForDrops() && !player.getOffhandItem().isCorrectToolForDrops(state)){
                             if(block != Blocks.SNOW_BLOCK){
@@ -79,7 +82,7 @@ public record BreakBlocksPacketC2S(BlockPos p1, BlockPos p2) implements CustomPa
                             isDrop = false;
                         }
                         BlockEntity entity2 = level.getBlockEntity(pos);
-                        if(entity2 instanceof ChestBlockEntity entity1 && !entity1.isEmpty()){
+                        if(entity2 instanceof Container entity1 && !entity1.isEmpty()){
                             continue;
                         }
                         blocks.add(new Tuple<>(pos, isDrop));
