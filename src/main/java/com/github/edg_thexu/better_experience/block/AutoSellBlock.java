@@ -46,7 +46,7 @@ public class AutoSellBlock extends BaseEntityBlock {
     public static final EnumProperty<ChestType> TYPE = BlockStateProperties.CHEST_TYPE;
 
     @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
+    protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
         return CODEC;
     }
 
@@ -57,8 +57,14 @@ public class AutoSellBlock extends BaseEntityBlock {
 
 
     @Override
-    public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
+    public @Nullable BlockEntity newBlockEntity(@NotNull BlockPos blockPos, @NotNull BlockState blockState) {
         return new AutoSellBlockEntity(blockPos, blockState);
+    }
+
+    @Override
+    protected void onRemove(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState newState, boolean isMoving) {
+        Containers.dropContentsOnDestroy(state, newState, level, pos);
+        super.onRemove(state, level, pos, newState, isMoving);
     }
 
     @Override
@@ -156,19 +162,19 @@ public class AutoSellBlock extends BaseEntityBlock {
             super(ModBlocks.AUTO_SELL_BLOCK_ENTITY.get(), pos, blockState);
             face = IntStream.range(0, 27).toArray();
             this.openersCounter = new ContainerOpenersCounter() {
-                protected void onOpen(Level level, BlockPos blockPos, BlockState state) {
+                protected void onOpen(@NotNull Level level, @NotNull BlockPos blockPos, @NotNull BlockState state) {
 
                 }
 
-                protected void onClose(Level level, BlockPos blockPos, BlockState state) {
+                protected void onClose(@NotNull Level level, @NotNull BlockPos blockPos, @NotNull BlockState state) {
 
                 }
 
-                protected void openerCountChanged(Level level, BlockPos blockPos, BlockState state, int id, int param) {
+                protected void openerCountChanged(@NotNull Level level, @NotNull BlockPos blockPos, @NotNull BlockState state, int id, int param) {
                     signalOpenCount(level, blockPos, state, id, param);
                 }
 
-                protected boolean isOwnContainer(Player player) {
+                protected boolean isOwnContainer(@NotNull Player player) {
                     if (!(player.containerMenu instanceof ChestMenu)) {
                         return false;
                     } else {
@@ -180,21 +186,21 @@ public class AutoSellBlock extends BaseEntityBlock {
         }
 
         @Override
-        public int[] getSlotsForFace(Direction direction) {
+        public int @NotNull [] getSlotsForFace(@NotNull Direction direction) {
             return face;
         }
 
         @Override
-        public boolean canPlaceItemThroughFace(int i, ItemStack itemStack, @Nullable Direction direction) {
+        public boolean canPlaceItemThroughFace(int i, @NotNull ItemStack itemStack, @Nullable Direction direction) {
             return direction != Direction.DOWN && !itemStack.is(ModTags.Items.COINS);
         }
 
         @Override
-        public boolean canTakeItemThroughFace(int i, ItemStack itemStack, Direction direction) {
+        public boolean canTakeItemThroughFace(int i, @NotNull ItemStack itemStack, @NotNull Direction direction) {
             return direction == Direction.DOWN && itemStack.is(ModTags.Items.COINS);
         }
 
-        public NonNullList<ItemStack> getItems() {
+        public @NotNull NonNullList<ItemStack> getItems() {
             return super.getItems();
         }
 

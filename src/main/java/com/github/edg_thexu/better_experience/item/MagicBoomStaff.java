@@ -26,6 +26,7 @@ public class MagicBoomStaff extends Item {
         this.maxRange = maxRange;
     }
 
+    @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
 
         if(level.isClientSide()){
@@ -37,6 +38,7 @@ public class MagicBoomStaff extends Item {
         return InteractionResultHolder.success(player.getItemInHand(usedHand));
     }
 
+    @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         tooltipComponents.add(Component.translatable("better_experience.tooltip.magic_boom_staff.info"));
 
