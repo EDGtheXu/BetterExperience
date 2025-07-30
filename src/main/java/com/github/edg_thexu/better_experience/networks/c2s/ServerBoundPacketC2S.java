@@ -3,6 +3,7 @@ package com.github.edg_thexu.better_experience.networks.c2s;
 import com.github.edg_thexu.better_experience.Better_experience;
 import com.github.edg_thexu.better_experience.block.AutoFishBlock;
 import com.github.edg_thexu.better_experience.data.component.ItemContainerComponent;
+import com.github.edg_thexu.better_experience.init.ModAttachments;
 import com.github.edg_thexu.better_experience.menu.PotionBagMenu;
 import com.github.edg_thexu.better_experience.mixed.IPlayer;
 import com.github.edg_thexu.better_experience.module.faststorage.StorageManager;
@@ -59,7 +60,9 @@ public record ServerBoundPacketC2S(int code) implements CustomPacketPayload {
                 if(player.containerMenu instanceof PotionBagMenu  menu &&  menu.component instanceof ItemContainerComponent component){
                     component.setAutoCollect(!component.isAutoCollect());
                 }
-
+            }else if(packet.code == 6){
+                // 改变更好重铸状态
+                player.getData(ModAttachments.TEMP_DATA).setBetterReforge(!player.getData(ModAttachments.TEMP_DATA).enableBetterReforge());
             }
         });
     }

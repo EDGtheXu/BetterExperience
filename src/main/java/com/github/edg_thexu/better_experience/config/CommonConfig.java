@@ -117,7 +117,7 @@ public class CommonConfig {
                 .define("no_consume_summoner", false);
         BETTER_REINFORCED_TOOL = BUILDER
                 .comment("Better reinforced tool.")
-                .define("better_reinforced_tool", false);
+                .define("better_reinforced_tool", true);
         MODIFY_MAX_STACK_SIZE = BUILDER
                 .comment("Modify Max Stack Size")
                 .define("modify_max_stack_size", false);

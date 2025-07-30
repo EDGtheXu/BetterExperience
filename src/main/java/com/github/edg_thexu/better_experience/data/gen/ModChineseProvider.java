@@ -32,7 +32,7 @@ public class ModChineseProvider extends LanguageProvider {
         add("better_experience.tooltip.magic_boom_staff.info", "左手物品决定镐力 [按住shift+鼠标滚轮调整大小]");
         add("better_experience.tooltip.potion_bag.info", "可以存储一些药水和食物");
         add("better_experience.tooltip.jei.fetch_ingredients", "从周围箱子取出材料");
-
+        add("better_experience.tooltip.better_reforge.enable", "启用更好的重铸");
 
         add("better_experience.gui.fast_storage", "一键存储");
         add("better_experience.gui.potion_screen.auto_collect.message", "自动收集药水");

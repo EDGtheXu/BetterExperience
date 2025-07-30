@@ -29,6 +29,7 @@
     "accessor.ScreenAccessor",
     "client.AbstractContainerScreenMixin",
     "client.ScreenMixin",
+    "integration.confluence.NPCReforgeScreenMixin",
     "integration.jei.RecipeGuiMixin"
   ],
   "injectors": {

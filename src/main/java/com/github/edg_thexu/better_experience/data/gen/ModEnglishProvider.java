@@ -43,6 +43,7 @@ public class ModEnglishProvider extends LanguageProvider {
         add("better_experience.tooltip.potion_bag.info", "Can store potions and food");
         add("better_experience.tooltip.jei.fetch_ingredients", "Fetch ingredients from nearby chests");
 
+        add("better_experience.tooltip.better_reforge.enable", "Enable Better Reforging");
 
 
         add("better_experience.gui.fast_storage", "Fast Storage");

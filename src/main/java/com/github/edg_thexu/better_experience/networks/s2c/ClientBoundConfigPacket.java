@@ -2,8 +2,10 @@ package com.github.edg_thexu.better_experience.networks.s2c;
 
 import com.github.edg_thexu.better_experience.Better_experience;
 import com.github.edg_thexu.better_experience.config.CommonConfig;
+import com.github.edg_thexu.better_experience.init.ModAttachments;
 import com.github.edg_thexu.better_experience.module.autopotion.PlayerInventoryManager;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -11,6 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
+import org.jetbrains.annotations.NotNull;
 
 public record ClientBoundConfigPacket(int message) implements CustomPacketPayload {
 
@@ -21,7 +24,7 @@ public record ClientBoundConfigPacket(int message) implements CustomPacketPayloa
     public static final Type<ClientBoundConfigPacket> TYPE =
             new Type<>(ResourceLocation.fromNamespaceAndPath(Better_experience.MODID, "client_bound_config_packet_s2c"));
 
-    public Type<? extends CustomPacketPayload> type() {
+    public @NotNull Type<? extends CustomPacketPayload> type() {
         return TYPE;
 
     }
@@ -32,6 +35,10 @@ public record ClientBoundConfigPacket(int message) implements CustomPacketPayloa
                 PlayerInventoryManager.getInstance().serverOpenAutoPotion = false;
             }else if(packet.message == 1) {
                 PlayerInventoryManager.getInstance().serverOpenAutoPotion = true;
+            } else if(packet.message == 2) { // 更好重铸开启
+                Minecraft.getInstance().player.getData(ModAttachments.TEMP_DATA).setBetterReforge(true);
+            } else if(packet.message == 3) { // 更好重铸关闭
+                Minecraft.getInstance().player.getData(ModAttachments.TEMP_DATA).setBetterReforge(false);
             }
 
         });
