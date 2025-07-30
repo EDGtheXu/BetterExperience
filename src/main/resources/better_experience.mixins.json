@@ -26,6 +26,7 @@
     "integration.jei.RecipeLayoutWithButtonsMixin"
   ],
   "client": [
+    "accessor.ScreenAccessor",
     "client.AbstractContainerScreenMixin",
     "client.ScreenMixin",
     "integration.jei.RecipeGuiMixin"

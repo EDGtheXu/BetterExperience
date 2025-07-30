@@ -39,6 +39,14 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
 
     }
 
+    @Inject(method = "init", at = @At("RETURN"))
+    private void initMixin(CallbackInfo ci) {
+        AbstractContainerScreen screen = (AbstractContainerScreen) (Object) this;
+        if(PotionScreenManager.shouldShowPotionManager(screen)){
+            betterExperience$potionScreenManager.init();
+        }
+
+    }
     @Inject(method = "render", at = @At("RETURN"))
     private void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick, CallbackInfo ci) {
         if(betterExperience$potionScreenManager!= null){
