@@ -48,4 +48,4 @@ jobs:
           automatic_release_tag: test
           prerelease: true
           title: "Better Experience Test Build"
-          files: ./BetterExperience/test/build/*.jar
+          files: ./build/libs/*.jar
