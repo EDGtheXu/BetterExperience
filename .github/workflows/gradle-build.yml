@@ -32,6 +32,9 @@ jobs:
           settings-path: ${{ github.workspace }} # location for the settings.xml file
           cache: "gradle"
 
+      - name: Add permissions for gradlew
+        run: chmod +x gradlew
+
       - name: Generate assets
         run: ./gradlew runData
 
