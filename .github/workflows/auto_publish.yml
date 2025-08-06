@@ -19,6 +19,9 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    environment:
+      name: mc
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -53,4 +56,11 @@ jobs:
           # your assets on CurseForge.
           curseforge-id: 1216800
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+
+          version-type: alpha
+          changelog-file: CHANGELOG.*
+          name: ""
+          github-tag: 1.1.4-neo
+          github-token: ${{ secrets.GIT_TOKEN }}
+
 
