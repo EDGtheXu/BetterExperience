@@ -6,26 +6,23 @@ import com.github.edg_thexu.better_experience.intergration.confluence.Confluence
 import com.github.edg_thexu.better_experience.module.reforge.BetterReforgeManager;
 import com.github.edg_thexu.better_experience.networks.s2c.ClientBoundConfigPacket;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
-import org.confluence.mod.common.component.prefix.ModPrefix;
 import org.confluence.mod.common.component.prefix.PrefixType;
-import org.confluence.mod.util.PlayerUtils;
-import org.confluence.mod.util.PrefixUtils;
 import org.confluence.terraentity.utils.AdapterUtils;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.*;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Pseudo;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Pseudo
 @Mixin(targets = "org.confluence.mod.common.menu.NPCReforgeMenu")
@@ -40,6 +37,7 @@ public abstract class NPCReforgeMenuMixin extends AbstractContainerMenu {
 
     protected NPCReforgeMenuMixin(@Nullable MenuType<?> menuType, int containerId) {
         super(menuType, containerId);
+
     }
 
     @Inject(method = "<init>", at = @At("RETURN"))

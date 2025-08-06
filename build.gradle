@@ -6,7 +6,7 @@ plugins {
     id 'maven-publish'
     id 'idea'
     id 'net.neoforged.moddev' version '2.0.78'
-    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'com.github.johnrengelman.shadow' version '8.1.1' // 使用最新版本
     id "com.modrinth.minotaur" version "2.8.8"
     id 'net.darkhax.curseforgegradle' version '1.1.15'
 }
@@ -14,6 +14,10 @@ plugins {
 
 version = mod_version
 group = mod_group_id
+
+shadowJar {
+    zip64 = true
+}
 
 // 创建 sources jar 任务
 tasks.register('sourcesJar', Jar) {
@@ -32,8 +36,8 @@ modrinth {
     projectId = "lFj5EvnT" // This can be the project ID or the slug. Either will work!
     versionNumber = "1.1.4-hotfix2" // You don't need to set this manually. Will fail if Modrinth has this version already
     versionType = "release" // This is the default -- can also be `beta` or `alpha`
-//    uploadFile = remapJar // With Loom, this MUST be set to `remapJar` instead of `jar`!
-    uploadFile = "build/libs/${mod_id}-${mod_version}.jar" // With Loom, this MUST be set to `remapJar` instead of `jar`!
+    uploadFile = jar // With Loom, this MUST be set to `remapJar` instead of `jar`!
+//    uploadFile = "build/libs/${mod_id}-${mod_version}.jar" // With Loom, this MUST be set to `remapJar` instead of `jar`!
     gameVersions = ["1.21.1"] // Must be an array, even with only one version
     loaders = ["neoforge"] // Must also be an array - no need to specify this if you're using Loom or ForgeGradle
     changelog = "changelog.md"
