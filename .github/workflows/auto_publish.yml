@@ -11,9 +11,6 @@ permissions: write-all
 on:
   workflow_dispatch:
 
-  release:
-    types: [created]
-
 jobs:
   build:
 
@@ -47,20 +44,20 @@ jobs:
       - name: Publish to PlantForm
         uses: Kir-Antipov/mc-publish@v3.3
         with:
-          # Only include this section if you wish to publish
-          # your assets on Modrinth.
-          modrinth-id: lFj5EvnT
+
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
-
-          # Only include this section if you wish to publish
-          # your assets on CurseForge.
-          curseforge-id: 1216800
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
-
-          version-type: alpha
-          changelog-file: CHANGELOG.*
-          name: ""
-          github-tag: 1.1.4-neo
           github-token: ${{ secrets.GIT_TOKEN }}
+          changelog-file: CHANGELOG.*
 
+
+          name: ""
+#          curseforge-name: "better_experience-1.1.4"
+          modrinth-id: lFj5EvnT
+          curseforge-id: 1216800
+          github-tag: 1.1.4-neo
+
+
+          java: Java 21
+          version-type: alpha
 

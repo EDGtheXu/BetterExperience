@@ -2,6 +2,7 @@ package com.github.edg_thexu.better_experience.client.event;
 
 import com.github.edg_thexu.better_experience.Better_experience;
 import com.github.edg_thexu.better_experience.client.buffer.AABBBuffer;
+import com.github.edg_thexu.better_experience.client.gui.container.PotionBagScreen;
 import com.github.edg_thexu.better_experience.config.ClientConfig;
 import com.github.edg_thexu.better_experience.init.ModAttachments;
 import com.github.edg_thexu.better_experience.intergration.confluence.ConfluenceHelper;
@@ -60,7 +61,9 @@ public class ClientGameEvent {
 
     @SubscribeEvent
     public static void closeScreen(ScreenEvent.Closing event){
-        if(ConfluenceHelper.isLoaded() && event.getScreen() instanceof ExtraInventoryScreen){
+        if(ConfluenceHelper.isLoaded() && event.getScreen() instanceof ExtraInventoryScreen
+         || event.getScreen() instanceof PotionBagScreen
+        ){
             if (Minecraft.getInstance().player != null) {
                 Minecraft.getInstance().player.getData(ModAttachments.AUTO_POTION).sync(true);
             }

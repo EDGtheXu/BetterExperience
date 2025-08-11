@@ -3,6 +3,7 @@ package com.github.edg_thexu.better_experience.block;
 import com.github.edg_thexu.better_experience.init.ModBlocks;
 import com.github.edg_thexu.better_experience.utils.ModUtils;
 import com.mojang.serialization.MapCodec;
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -111,9 +112,10 @@ public class AutoSellBlock extends BaseEntityBlock {
                             int money = ValueComponent.getValue(stack,0) / stack.getCount();
                             if (money > 0) {
                                 entity.getItem(i).shrink(1);
-                                int[] coins = PlayerUtils.decodeCoin(money);
+                                IntList coins = PlayerUtils.decodeCoin(money).copper2Platinum();
                                 for (int j = 0; j < 4; j++) {
-                                    if (coins[j] <= 0) {
+                                    int count = coins.getInt(j);
+                                    if (count <= 0) {
                                         continue;
                                     }
                                     Item item = PlayerUtils.INDEX_2_COIN.apply(j);
@@ -128,20 +130,20 @@ public class AutoSellBlock extends BaseEntityBlock {
                                         }
 
                                         if (candidate.isEmpty()) {
-                                            entity.setItem(k, new ItemStack(item, coins[j]));
+                                            entity.setItem(k, new ItemStack(item, count));
                                             break;
                                         }
                                         if (candidate.getItem() == item) {
-                                            int shrink = Math.min(coins[j], candidate.getMaxStackSize() - candidate.getCount());
+                                            int shrink = Math.min(count, candidate.getMaxStackSize() - candidate.getCount());
                                             candidate.grow(shrink);
-                                            coins[j] -= shrink;
-                                            if (coins[j] == 0) {
+                                            coins.set(j, shrink);
+                                            if (coins.getInt(j) == 0) {
                                                 break;
                                             }
                                         }
                                     }
                                     if (k == 27) {
-                                        level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY() - 1, pos.getZ(), new ItemStack(item, coins[j])));
+                                        level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY() - 1, pos.getZ(), new ItemStack(item, coins.getInt(j))));
                                     }
                                 }
                                 break;

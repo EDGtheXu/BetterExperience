@@ -11,7 +11,6 @@ import com.github.edg_thexu.better_experience.intergration.confluence.Confluence
 import com.github.edg_thexu.better_experience.intergration.curios.CuriosHelper;
 import com.github.edg_thexu.better_experience.menu.PotionBagMenu;
 import com.github.edg_thexu.better_experience.utils.ModUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
@@ -137,18 +136,10 @@ public class PlayerInventoryManager {
             this.detectServer(player);
             return;
         }
-        // 客户端检测
-        try {
-            if(Minecraft.getInstance().player != player) return;
-        }catch (NoClassDefFoundError ignored){
 
-        }
         if(!serverOpenAutoPotion){
             return;
         }
-
-
-
 
         List<Pair<Holder<MobEffect>, Integer>> effects = new ArrayList<>();
         var data = player.getData(ModAttachments.AUTO_POTION);

@@ -11,13 +11,9 @@ import net.neoforged.neoforge.common.util.INBTSerializable;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.UnknownNullability;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class AutoPotionAttachment implements INBTSerializable<CompoundTag> {
-
 
     Map<Holder<MobEffect>, Integer> potions = new HashMap<>();
     Map<Holder<MobEffect>, Integer> _potions = new HashMap<>();
@@ -35,6 +31,15 @@ public class AutoPotionAttachment implements INBTSerializable<CompoundTag> {
         for (int i = 0; i < size; i++) {
             tag.putString("potion" + i, list.get(i));
             tag.putInt("amp" + i, amps.get(i));
+        }
+        tag.putInt("forbiddenSize", forbiddens.size());
+        List<Holder<MobEffect>> forbiddenList = forbiddens.stream().toList();
+        for (int i = 0; i < forbiddens.size(); i++) {
+            ResourceLocation location = BuiltInRegistries.MOB_EFFECT.getKey(forbiddenList.get(i).value());
+            if (location == null) {
+                continue;
+            }
+            tag.putString("forbidden" + i, location.toString());
         }
         return tag;
     }
@@ -55,6 +60,19 @@ public class AutoPotionAttachment implements INBTSerializable<CompoundTag> {
                 continue;
             }
             potions.put(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(effect), amp);
+        }
+        int forbiddenSize = tag.getInt("forbiddenSize");
+        for (int i = 0; i < forbiddenSize; i++) {
+            String potion = tag.getString("forbidden" + i);
+            ResourceLocation location = ResourceLocation.tryParse(potion);
+            if (location == null) {
+                continue;
+            }
+            MobEffect effect = BuiltInRegistries.MOB_EFFECT.get(location);
+            if (effect == null) {
+                continue;
+            }
+            forbiddens.add(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(effect));
         }
     }
 
@@ -101,21 +119,34 @@ public class AutoPotionAttachment implements INBTSerializable<CompoundTag> {
     }
 
     public void sync(boolean force){
-        // 防止地址相等时数据始终一致
+
         if(force || dirty ||  !_potions.equals(potions) || _potions == potions) {
-            if(_potions != potions)
-                _potions.clear();
-            _potions = new HashMap<>(potions);
+
+            if(_potions == potions){
+                // 防止地址相等时数据始终一致
+                _potions = new HashMap<>(potions);
+            }
 
             AutoPotionAttachment attachment = new AutoPotionAttachment();
-
             for(var potion : potions.entrySet()){
                 if(!forbiddens.contains(potion.getKey()))
                     attachment.potions.put(potion.getKey(), potion.getValue());
             }
+            // 比较两个map是否相等，避免无意义的同步
+            if (attachment.potions.size() == _potions.size() && attachment.potions.entrySet().stream()
+                    .allMatch(entry -> _potions.containsKey(entry.getKey())
+                            && Objects.equals(_potions.get(entry.getKey()), entry.getValue()))) {
+                return;
+            }
+            _potions = new HashMap<>(attachment.potions);
+            attachment.forbiddens = new HashSet<>(forbiddens);
             PacketDistributor.sendToServer(new PotionApplyPacketC2S(attachment));
             dirty = false;
         }
+    }
+
+    public void copyFromServer(AutoPotionAttachment attachment){
+        this.forbiddens = new HashSet<>(attachment.forbiddens);
     }
 
 }

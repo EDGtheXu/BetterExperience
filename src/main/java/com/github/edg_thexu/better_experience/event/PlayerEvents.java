@@ -3,10 +3,12 @@ package com.github.edg_thexu.better_experience.event;
 import com.github.edg_thexu.better_experience.Better_experience;
 import com.github.edg_thexu.better_experience.attachment.EnderChestAttachment;
 import com.github.edg_thexu.better_experience.config.CommonConfig;
+import com.github.edg_thexu.better_experience.init.ModAttachments;
 import com.github.edg_thexu.better_experience.module.autofish.FishBugRepetition;
 import com.github.edg_thexu.better_experience.module.autopotion.PlayerAttribute;
 import com.github.edg_thexu.better_experience.module.autopotion.PlayerInventoryManager;
 import com.github.edg_thexu.better_experience.module.faststorage.StorageManager;
+import com.github.edg_thexu.better_experience.networks.c2s.PotionApplyPacketC2S;
 import com.github.edg_thexu.better_experience.networks.s2c.ClientBoundConfigPacket;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -18,6 +20,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 @EventBusSubscriber(modid = Better_experience.MODID, bus = EventBusSubscriber.Bus.GAME)
 public class PlayerEvents {
@@ -43,6 +46,7 @@ public class PlayerEvents {
             EnderChestAttachment.syncAll(player);
 //            player.getInventory().add(ModItems.MagicBoomStaff.toStack());
             ClientBoundConfigPacket.sync(player);
+            PacketDistributor.sendToPlayer(player, new PotionApplyPacketC2S(player.getData(ModAttachments.AUTO_POTION)));
         }
     }
 

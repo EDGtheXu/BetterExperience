@@ -98,6 +98,14 @@ repositories {
             includeGroup("software.bernie.geckolib")
         }
     }
+    maven {
+        name "org.confluenceReleases"
+        url "https://maven.confluence.ink/releases"
+    }
+    maven {
+        name "org.confluenceSnapshots"
+        url "https://maven.confluence.ink/snapshots"
+    }
 }
 
 base {
@@ -214,11 +222,14 @@ dependencies {
 //    implementation "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
 //    implementation "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
 
-    implementation(files("libs/ConfluenceOtherworld-1.1.4-beta.jar"))
-    implementation(files("libs/terra_entity-1.1.15.jar"))
-    implementation(files("libs/confluence_magic_lib-0.0.1.jar"))
+//    implementation(files("libs/ConfluenceOtherworld-1.1.4-beta.jar"))
+    implementation(files("libs/terra_entity-1.1.17.jar"))
     implementation(files("libs/terra_guns-1.21.1-1.0.jar"))
     implementation(files("libs/terra_curio-1.1.1.jar"))
+
+    implementation "curse.maven:confluence-1209464:6867835"
+//    implementation("org.confluence.lib:Confluence-Magic-Lib:0.0.2a-SNAPSHOT")
+    implementation(files("libs/confluence_magic_lib-0.0.2a-SNAPSHOT.jar"))
 
 //    compileOnly(files("libs/ConfluenceOtherworld-1.1.4-beta.jar"))
 //    compileOnly(files("libs/terra_entity-1.1.15.jar"))
