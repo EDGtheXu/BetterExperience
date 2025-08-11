@@ -207,7 +207,7 @@ public class PlayerInventoryManager {
                 addAllItems(consumerQueue, player);
                 effects.clear();
             }
-
+            maxHandleItemPerTick = CommonConfig.AUTO_POTION_SCAN_ITEM_PER_TICK.get();
             for(int i = 0; i < maxHandleItemPerTick && !consumerQueue.isEmpty(); i++){
                 ItemStack stack = consumerQueue.poll();
                 effects.addAll(getApplyEffect(stack));

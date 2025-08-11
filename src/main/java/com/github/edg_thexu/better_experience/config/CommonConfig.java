@@ -9,9 +9,13 @@ public class CommonConfig {
      */
     public static ModConfigSpec.BooleanValue AUTO_POTION_OPEN;
     /**
-     * 无线续杯数量
+     * 无限续杯数量
      */
     public static ModConfigSpec.IntValue AUTO_POTION_STACK_SIZE;
+    /**
+     * 无限续杯每刻扫描物品数量
+     */
+    public static ModConfigSpec.IntValue AUTO_POTION_SCAN_ITEM_PER_TICK;
     /**
      * 瞬间喝药
      */
@@ -96,11 +100,15 @@ public class CommonConfig {
 
         // 药水无线续杯
         AUTO_POTION_OPEN = BUILDER
-                .comment("Apply potion automatically without consuming. Support Inventory and Ender Chest.")
+                .comment("Apply potion automatically without consuming. Support Inventory, Safe, Piggy Bank and Ender Chest.")
                 .define("auto_potion_open", true);
         AUTO_POTION_STACK_SIZE = BUILDER
                 .comment("How many potion stack could apply without consuming automatically?")
                 .defineInRange("auto_potion_stack_size", 10, 1, 9999);
+        AUTO_POTION_SCAN_ITEM_PER_TICK = BUILDER
+                .comment("How many items to scan per tick for infinite potion?")
+                .defineInRange("auto_potion_scan_item_per_tick", 2, 1, 10);
+
         INSTANTLY_DRINK = BUILDER
                 .comment("Instantly Drink")
                 .define("instantly_drink", false);

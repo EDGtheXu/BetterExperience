@@ -1,13 +1,11 @@
 package com.github.edg_thexu.better_experience.data.gen;
 
 import com.github.edg_thexu.better_experience.Better_experience;
-import com.github.edg_thexu.better_experience.init.ModBlocks;
 import com.github.edg_thexu.better_experience.init.ModItems;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 import net.neoforged.neoforge.registries.DeferredHolder;
-import org.confluence.terraentity.init.item.TESpawnEggItems;
 
 import java.util.Arrays;
 import java.util.function.Consumer;
@@ -58,8 +56,10 @@ public class ModEnglishProvider extends LanguageProvider {
 
 
         add("better_experience.configuration.show_outlines", "Magic Boom Staff Show Outlines");
-        add("better_experience.configuration.auto_potion_open", "Open Auto-Potion");
-        add("better_experience.configuration.auto_potion_stack_size", "Auto-Potion Stack Size");
+        add("better_experience.configuration.auto_potion_open", "Open Infinite-Potion");
+        add("better_experience.configuration.auto_potion_stack_size", "Infinite-Potion Stack Size");
+        add("better_experience.configuration.auto_potion_scan_item_per_tick", "Infinite-Potion Scan Item Per Tick");
+
         add("better_experience.configuration.instantly_drink", "Instantly Drink");
         add("better_experience.configuration.infinite_ammo", "Infinite Ammo");
         add("better_experience.configuration.infinite_ammo_stack_size", "Infinite Ammo Stack Size");
