@@ -26,7 +26,7 @@ public class TerraGunEvents {
 //            }
 //        }
 
-        if(event.getBulletStack().getCount() >= CommonConfig.INFINITE_AMMO_STACK_SIZE.get()){
+        if(CommonConfig.INFINITE_AMMO.get() && event.getBulletStack().getCount() >= CommonConfig.INFINITE_AMMO_STACK_SIZE.get()){
             event.setCanceled(true);
         }
     }

@@ -5,6 +5,7 @@ import com.github.edg_thexu.better_experience.attachment.EnderChestAttachment;
 import com.github.edg_thexu.better_experience.config.CommonConfig;
 import com.github.edg_thexu.better_experience.init.ModAttachments;
 import com.github.edg_thexu.better_experience.module.autofish.FishBugRepetition;
+import com.github.edg_thexu.better_experience.module.autopotion.ForbiddenConfig;
 import com.github.edg_thexu.better_experience.module.autopotion.PlayerAttribute;
 import com.github.edg_thexu.better_experience.module.autopotion.PlayerInventoryManager;
 import com.github.edg_thexu.better_experience.module.faststorage.StorageManager;
@@ -47,6 +48,14 @@ public class PlayerEvents {
 //            player.getInventory().add(ModItems.MagicBoomStaff.toStack());
             ClientBoundConfigPacket.sync(player);
             PacketDistributor.sendToPlayer(player, new PotionApplyPacketC2S(player.getData(ModAttachments.AUTO_POTION)));
+
+        }
+    }
+
+    @SubscribeEvent
+    public static void playerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        if(event.getEntity() instanceof ServerPlayer player) {
+            ForbiddenConfig.sync(player);
         }
     }
 

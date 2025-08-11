@@ -6,14 +6,9 @@ import com.github.edg_thexu.better_experience.init.ModBlocks;
 import com.github.edg_thexu.better_experience.init.ModItems;
 import com.github.edg_thexu.better_experience.intergration.confluence.ConfluenceHelper;
 import com.github.edg_thexu.better_experience.intergration.confluence_lib.ConfluenceLibHelper;
-import com.github.edg_thexu.better_experience.intergration.jei.JeiHelper;
 import com.github.edg_thexu.better_experience.module.autopotion.PlayerAttribute;
-import com.github.edg_thexu.better_experience.networks.c2s.BreakBlocksPacketC2S;
-import com.github.edg_thexu.better_experience.networks.c2s.PotionApplyPacketC2S;
-import com.github.edg_thexu.better_experience.networks.c2s.SearchJeiIngredientsPacketC2S;
-import com.github.edg_thexu.better_experience.networks.c2s.ServerBoundPacketC2S;
+import com.github.edg_thexu.better_experience.networks.NetworkHandler;
 import com.github.edg_thexu.better_experience.networks.s2c.ClientBoundConfigPacket;
-import com.github.edg_thexu.better_experience.networks.s2c.EnderChestItemsS2C;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -30,7 +25,6 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.event.ModifyDefaultComponentsEvent;
 import net.neoforged.neoforge.items.wrapper.SidedInvWrapper;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.confluence.lib.ConfluenceMagicLib;
 import org.confluence.lib.common.component.ModRarity;
@@ -45,17 +39,7 @@ import java.util.Map;
 public class ModEvent {
     @SubscribeEvent
     public static void registerPayloadHandlers(RegisterPayloadHandlersEvent event) {
-        PayloadRegistrar registrar = event.registrar("1");
-        registrar.playBidirectional(PotionApplyPacketC2S.TYPE, PotionApplyPacketC2S.STREAM_CODEC, PotionApplyPacketC2S::handle);
-        registrar.playToServer(BreakBlocksPacketC2S.TYPE, BreakBlocksPacketC2S.STREAM_CODEC, BreakBlocksPacketC2S::handle);
-        registrar.playToServer(ServerBoundPacketC2S.TYPE, ServerBoundPacketC2S.STREAM_CODEC, ServerBoundPacketC2S::handle);
-        if(JeiHelper.isLoaded()) {
-            registrar.playToServer(SearchJeiIngredientsPacketC2S.TYPE, SearchJeiIngredientsPacketC2S.STREAM_CODEC, SearchJeiIngredientsPacketC2S::handle);
-        }
-
-        registrar.playToClient(EnderChestItemsS2C.TYPE, EnderChestItemsS2C.STREAM_CODEC, EnderChestItemsS2C::handle);
-        registrar.playToClient(ClientBoundConfigPacket.TYPE, ClientBoundConfigPacket.STREAM_CODEC, ClientBoundConfigPacket::handle);
-
+        NetworkHandler.register(event);
     }
 
     @SubscribeEvent

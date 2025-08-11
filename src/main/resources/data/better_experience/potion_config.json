@@ -1,0 +1,20 @@
+{
+  "forbidden_items" : [
+    "confluence:floating_wheat_seed"
+  ],
+  "forbidden_effects" :[
+    {
+      "effect" : "minecraft:regeneration",
+      "amp" : 1
+    },
+    {
+      "effect" : "minecraft:saturation"
+    },
+    {
+      "effect" : "minecraft:absorption"
+    }
+  ],
+  "forbidden_modid_effect" : [
+    "better_experience"
+  ]
+}

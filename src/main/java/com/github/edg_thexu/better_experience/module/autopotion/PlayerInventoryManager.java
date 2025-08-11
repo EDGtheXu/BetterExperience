@@ -19,16 +19,17 @@ import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.Container;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -37,14 +38,12 @@ import org.confluence.mod.client.gui.container.ExtraInventoryScreen;
 import org.confluence.mod.common.init.ModAttachmentTypes;
 import org.confluence.mod.common.init.ModTags;
 import org.confluence.mod.common.init.block.FunctionalBlocks;
-import org.confluence.mod.common.init.item.FoodItems;
 import org.confluence.mod.common.item.potion.EffectPotionItem;
 import org.jetbrains.annotations.Nullable;
 import oshi.util.tuples.Pair;
 import top.theillusivec4.curios.client.gui.CuriosScreen;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * 客户端遍历玩家背包，检测药水续杯等效果
@@ -59,12 +58,15 @@ public class PlayerInventoryManager {
      */
     private static boolean canApplyEffect(MobEffectInstance effect)  {
         Holder<MobEffect> effect1 = effect.getEffect();
-        int time = effect.getDuration();
-        if(
-                // 饱和效果不应该应用，过于超模
-                effect1 == MobEffects.SATURATION || effect1 == MobEffects.ABSORPTION || effect1 == MobEffects.REGENERATION){
+        int amp = effect.getAmplifier();
+        if(ForbiddenConfig.getInstance().isEffectForbidden(effect1.value(), amp)){
+            // 数据包配置文件
             return false;
         }
+        if(effect1.getKey() != null && ForbiddenConfig.getInstance().isModForbidden(effect1.getKey().location().getNamespace())) {
+            return false;
+        }
+//        if(ForbiddenConfig.getInstance().isModForbidden(effect1.getKey().location().getNamespace()))
         if(effect1.value().getCategory() == MobEffectCategory.HARMFUL){
             // 负面效果不应该应用
             return false;
@@ -76,22 +78,25 @@ public class PlayerInventoryManager {
      */
     public static List<Pair<Holder<MobEffect>, Integer>> getApplyEffect(ItemStack stack, boolean ignoreCount){
         Item item = stack.getItem();
+
         List<Pair<Holder<MobEffect>, Integer>> effects = new ArrayList<>();
+        if(ForbiddenConfig.getInstance().isItemForbidden(item)){
+            // 数据包配置文件
+            return effects;
+        }
         if(!ignoreCount && stack.getCount() < CommonConfig.AUTO_POTION_STACK_SIZE.get()) {
             // 配置文件
             return effects;
         }
         if(ConfluenceHelper.isLoaded() && item instanceof EffectPotionItem potion) {
             // 效果类药水
-            effects.add(new Pair<>(potion.mobEffect, potion.amplifier));
+            if(canApplyEffect(new MobEffectInstance(potion.mobEffect, potion.duration, potion.amplifier))){
+                effects.add(new Pair<>(potion.mobEffect, potion.amplifier));
+            }
             return effects;
         }
-        if(item instanceof Item food)
-        {
+        if(item instanceof Item food) {
             //食物类
-                // 排除飘飘麦
-            if(ConfluenceHelper.isLoaded() && food == FoodItems.FLOATING_WHEAT_SEED.get()) return effects;
-
             var foodProperties = food.getFoodProperties(stack, null);
             if (foodProperties != null) {
                 for (FoodProperties.PossibleEffect foodproperties$possibleeffect : foodProperties.effects()) {
@@ -100,6 +105,18 @@ public class PlayerInventoryManager {
                         effects.add(new Pair<>(mobEffect.getEffect(), mobEffect.getAmplifier()));
                     }
                 }
+            }
+        }
+        if(item instanceof PotionItem potionItem){
+            var data = stack.get(DataComponents.POTION_CONTENTS);
+            if(data != null){
+                data.potion().ifPresent(potion -> {
+                    potion.value().getEffects().forEach(effect -> {
+                        if(canApplyEffect(effect)){
+                            effects.add(new Pair<>(effect.getEffect(), effect.getAmplifier()));
+                        }
+                    });
+                });
             }
         }
         return effects;
@@ -121,70 +138,84 @@ public class PlayerInventoryManager {
         return instance;
     }
 
+    // 采用队列限制每 tick 处理的物品数量
+    Queue<ItemStack> consumerQueue = new LinkedList<>();
+    List<Pair<Holder<MobEffect>, Integer>> effects = new ArrayList<>();
+
+    int maxHandleItemPerTick = 2;
+
+    private void addAllItems(Collection<ItemStack> consumerQueue, Player player){
+        // 背包的药水
+        Inventory inventory = player.getInventory();
+        for (int i = 0; i < inventory.getContainerSize(); i++) {
+            try {
+                ItemStack stack = inventory.getItem(i);
+                var data1 = stack.get(ModDataComponentTypes.ITEM_CONTAINER_COMPONENT);
+                if(data1 == null){
+                    consumerQueue.add(stack);
+                }else {
+                    // 药水袋
+                    consumerQueue.addAll(data1.getItems());
+                }
+            } catch (Exception ignored) {}
+        }
+        // 末影箱的药水
+        addTargetItemStackList(player.getData(ModAttachments.ENDER_CHEST).getItems(), consumerQueue);
+
+        // 存钱罐
+        addTargetItemStackList(player.getData(ModAttachments.PIG_CHEST.get()).getItems(), consumerQueue);
+
+        // 保险箱
+        addTargetItemStackList(player.getData(ModAttachments.PIG_CHEST.get()).getItems(), consumerQueue);
+
+    }
+
     /**
      * 客户端 检测可以作用的容器
-     * @param player
      */
     public void detect(Player player){
         // 检测间隔
-        if(--detectInternal > 0){
-            return;
-        }
-        detectInternal = (int) (_detectInternal * 0.1f);
+
         if(!player.level().isClientSide()) {
             // 服务端检测
+            if(--detectInternal > 0){
+                return;
+            }
+            detectInternal = (int) (_detectInternal * 0.1f);
             this.detectServer(player);
             return;
         }
+//        if(--detectInternal > 0){
+//            return;
+//        }
+//        detectInternal = 5;
 
         if(!serverOpenAutoPotion){
             return;
         }
 
-        List<Pair<Holder<MobEffect>, Integer>> effects = new ArrayList<>();
-        var data = player.getData(ModAttachments.AUTO_POTION);
-        data.getPotions().clear();
         if(CommonConfig.AUTO_POTION_OPEN.get()) { // 客户端可自行选择是否启用
-
-            // 背包的药水
-            Inventory inventory = player.getInventory();
-            for (int i = 0; i < inventory.getContainerSize(); i++) {
-                try {
-                    ItemStack stack = inventory.getItem(i);
-                    var data1 = stack.get(ModDataComponentTypes.ITEM_CONTAINER_COMPONENT);
-                    if(data1 == null){
-                        effects.addAll(getApplyEffect(stack));
-                    }else {
-                        // 药水袋
-                        for(var item : data1.getItems()){
-                            effects.addAll(getApplyEffect(item));
-                        }
-                    }
-                } catch (Exception ignored) {
-
-                }
+            if(consumerQueue.isEmpty()){
+                // 扫描数据发送到服务器, 清空数据，开始下一轮检测
+                AutoPotionAttachment data = player.getData(ModAttachments.AUTO_POTION);
+                data.getPotions().clear();
+                // 重新生成缓存
+                effects.forEach(effect_amp -> {
+                    data.addPotion(effect_amp.getA(), effect_amp.getB());
+                });
+                data.sync();
+                addAllItems(consumerQueue, player);
+                effects.clear();
             }
 
-            // 末影箱的药水
-            addApplyItemList(player.getData(ModAttachments.ENDER_CHEST).getItems(), effects);
-
-            // 存钱罐
-            addApplyItemList(player.getData(ModAttachments.PIG_CHEST.get()).getItems(), effects);
-
-            // 保险箱
-            addApplyItemList(player.getData(ModAttachments.PIG_CHEST.get()).getItems(), effects);
-
-
-            // 重新生成缓存
-
-            effects.forEach(effect_amp -> {
-                data.addPotion(effect_amp.getA(), effect_amp.getB());
-            });
+            for(int i = 0; i < maxHandleItemPerTick && !consumerQueue.isEmpty(); i++){
+                ItemStack stack = consumerQueue.poll();
+                effects.addAll(getApplyEffect(stack));
+            }
         }
-
-        // 同步数据
-        data.sync();
     }
+
+
 
     // 这里自动存钱和存放药水等
     private void detectServer(Player player){
@@ -251,10 +282,17 @@ public class PlayerInventoryManager {
             }
         }
     }
+    private void addTargetItemStackList(List<Item> items, Collection<ItemStack> to){
+        for (Item item : items) {
+            try {
+                ItemStack stack = new ItemStack(item, CommonConfig.AUTO_POTION_STACK_SIZE.get());
+                to.add(stack);
+            } catch (Exception ignored) { }
+        }
+    }
 
     /**
      * 服务端 应用效果
-     * @param player
      */
     public static void apply(AutoPotionAttachment attachment, Player player){
         try {

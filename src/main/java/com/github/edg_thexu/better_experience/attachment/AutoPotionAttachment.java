@@ -114,6 +114,10 @@ public class AutoPotionAttachment implements INBTSerializable<CompoundTag> {
         return potions;
     }
 
+    public Map<Holder<MobEffect>, Integer> getCachedPotions() {
+        return _potions;
+    }
+
     public void sync(){
         sync(false);
     }
