@@ -14,22 +14,19 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.item.Item;
-import net.neoforged.neoforge.resource.ContextAwareReloadListener;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 
-public class ForbiddenConfig extends ContextAwareReloadListener {
+public class ForbiddenConfig extends SimplePreparableReloadListener<ForbiddenConfig> {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
     Set<Item> forbiddenItems;
@@ -88,38 +85,65 @@ public class ForbiddenConfig extends ContextAwareReloadListener {
             .map(strings -> new ForbiddenConfig(new HashSet<>(item), effect, new HashSet<>(strings)))
             .orElseGet(() -> new ForbiddenConfig(new HashSet<>(item), effect, new HashSet<>()))));
 
+//    @Override
+//    public @NotNull CompletableFuture<Void> reload(PreparationBarrier stage,
+//                                                   @NotNull ResourceManager resourceManager,
+//                                                   @NotNull ProfilerFiller preparationsProfiler,
+//                                                   @NotNull ProfilerFiller reloadProfiler,
+//                                                   @NotNull Executor backgroundExecutor,
+//                                                   @NotNull Executor gameExecutor) {
+//        getInstance().forbiddenItems.clear();
+//        getInstance().amplifiers.clear();
+//        getInstance().effectAmps.clear();
+//        return CompletableFuture.supplyAsync(() -> {
+//            ResourceLocation location = Better_experience.space("potion_config.json");
+//            Optional<Resource> file = resourceManager.getResource(location);
+//            if(file.isPresent()){
+//                try (Reader reader = file.get().openAsReader()) {
+//                    JsonObject jsonobject = GsonHelper.fromJson(GSON, reader, JsonObject.class);
+//                    return CODEC.codec().decode(JsonOps.INSTANCE, jsonobject).getOrThrow().getFirst();
+//                } catch (RuntimeException | IOException ioexception) {
+//                    Better_experience.LOGGER.error("Failed to load potion config {}", location, ioexception);
+//                }
+//            }
+//            return new ForbiddenConfig(new HashSet<>(), new HashMap<>());
+//        }, backgroundExecutor).thenCompose(stage::wait).thenAcceptAsync(config->{
+//            this.forbiddenItems.addAll(config.forbiddenItems);
+//            this.amplifiers.putAll(config.amplifiers);
+//            this.effectAmps.addAll(config.effectAmps);
+//            this.modId.addAll(config.modId);
+//            Better_experience.LOGGER.info("ForbiddenConfig reloaded");
+//            if(ServerLifecycleHooks.getCurrentServer() != null) {
+//                SyncDataS2C.syncForbiddenConfig();
+//            }
+//        }, gameExecutor);
+//    }
+
     @Override
-    public @NotNull CompletableFuture<Void> reload(PreparationBarrier  stage,
-                                                   @NotNull ResourceManager resourceManager,
-                                                   @NotNull ProfilerFiller preparationsProfiler,
-                                                   @NotNull ProfilerFiller reloadProfiler,
-                                                   @NotNull Executor backgroundExecutor,
-                                                   @NotNull Executor gameExecutor) {
-        getInstance().forbiddenItems.clear();
-        getInstance().amplifiers.clear();
-        getInstance().effectAmps.clear();
-        return CompletableFuture.supplyAsync(() -> {
-            ResourceLocation location = Better_experience.space("potion_config.json");
-            Optional<Resource> file = resourceManager.getResource(location);
-            if(file.isPresent()){
-                try (Reader reader = file.get().openAsReader()) {
-                    JsonObject jsonobject = GsonHelper.fromJson(GSON, reader, JsonObject.class);
-                    return CODEC.codec().decode(JsonOps.INSTANCE, jsonobject).getOrThrow().getFirst();
-                } catch (RuntimeException | IOException ioexception) {
-                    Better_experience.LOGGER.error("Failed to load potion config {}", location, ioexception);
-                }
+    protected ForbiddenConfig prepare(ResourceManager resourceManager, ProfilerFiller profilerFiller) {
+        ResourceLocation location = Better_experience.space("potion_config.json");
+        Optional<Resource> file = resourceManager.getResource(location);
+        if(file.isPresent()){
+            try (Reader reader = file.get().openAsReader()) {
+                JsonObject jsonobject = GsonHelper.fromJson(GSON, reader, JsonObject.class);
+                return CODEC.codec().decode(JsonOps.INSTANCE, jsonobject).getOrThrow().getFirst();
+            } catch (RuntimeException | IOException ioexception) {
+                Better_experience.LOGGER.error("Failed to load potion config {}", location, ioexception);
             }
-            return new ForbiddenConfig(new HashSet<>(), new HashMap<>());
-        }, backgroundExecutor).thenCompose(stage::wait).thenAcceptAsync(config->{
-            this.forbiddenItems.addAll(config.forbiddenItems);
-            this.amplifiers.putAll(config.amplifiers);
-            this.effectAmps.addAll(config.effectAmps);
-            this.modId.addAll(config.modId);
-            Better_experience.LOGGER.info("ForbiddenConfig reloaded");
-            if(ServerLifecycleHooks.getCurrentServer() != null) {
-                SyncDataS2C.syncForbiddenConfig();
-            }
-        }, gameExecutor);
+        }
+        return new ForbiddenConfig(new HashSet<>(), new HashMap<>());
+    }
+
+    @Override
+    protected void apply(ForbiddenConfig config, ResourceManager resourceManager, ProfilerFiller profilerFiller) {
+        this.forbiddenItems.addAll(config.forbiddenItems);
+        this.amplifiers.putAll(config.amplifiers);
+        this.effectAmps.addAll(config.effectAmps);
+        this.modId.addAll(config.modId);
+        Better_experience.LOGGER.info("ForbiddenConfig reloaded");
+        if(ServerLifecycleHooks.getCurrentServer() != null) {
+            SyncDataS2C.syncForbiddenConfig();
+        }
     }
 
     public static void handleServer(ForbiddenConfig config){
