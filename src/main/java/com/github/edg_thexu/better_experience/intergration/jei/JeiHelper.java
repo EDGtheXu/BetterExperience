@@ -109,14 +109,14 @@ public class JeiHelper {
             if(button1 != null && button1.isMouseOver(mouseX, mouseY) && button == 0){
                 button1.onClick(mouseX, mouseY);
                 button1.playDownSound(Minecraft.getInstance().getSoundManager());
-                var recipe = lay.recipeLayout().getRecipe();
+                var recipe = lay.getRecipeLayout().getRecipe();
 
                 JeiRegistries.RecipeHandlerFactoryProviders.REGISTRY.entrySet().stream()
                         .filter(h -> h.getValue().match(recipe))
                         .min(Comparator.comparing(a -> a.getValue().priority()))
                         .map(Map.Entry::getValue)
                         .ifPresent(handler-> {
-                            IRecipeHandler<?> handler1 = handler.create((RecipeLayout<?>) lay.recipeLayout(), recipe, count);
+                            IRecipeHandler<?> handler1 = handler.create((RecipeLayout<?>) lay.getRecipeLayout(), recipe, count);
                             if(handler1!= null) {
                                 PacketDistributor.sendToServer(new SearchJeiIngredientsPacketC2S(handler1));
                             }
@@ -130,9 +130,9 @@ public class JeiHelper {
     public static void updatePos(RecipeLayoutWithButtons<?> recipeLayoutWithButtons){
         Button button = ((IRecipeLayoutWithButtons) (Object) recipeLayoutWithButtons).betterExperience$getButton();
         if(button != null) {
-            Rect2i rect = recipeLayoutWithButtons.recipeLayout().getRect();
+            Rect2i rect = recipeLayoutWithButtons.getRecipeLayout().getRect();
             button.setPosition(
-                    recipeLayoutWithButtons.recipeLayout().getRect().getX() + rect.getWidth() + 6,
+                    recipeLayoutWithButtons.getRecipeLayout().getRect().getX() + rect.getWidth() + 6,
                     rect.getY());
         }
 
