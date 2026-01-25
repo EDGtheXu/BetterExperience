@@ -2,6 +2,7 @@ package com.github.edg_thexu.better_experience.block;
 
 import com.github.edg_thexu.better_experience.Better_experience;
 import com.github.edg_thexu.better_experience.init.ModBlocks;
+import com.github.edg_thexu.better_experience.intergration.confluence.ConfluenceHelper;
 import com.github.edg_thexu.better_experience.intergration.confluence_lib.ConfluenceLibHelper;
 import com.github.edg_thexu.better_experience.menu.AutoFishMenu;
 import com.github.edg_thexu.better_experience.mixed.IFishingHook;
@@ -46,8 +47,12 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.mod.client.renderer.item.SimpleGeoItemRenderer;
+import org.confluence.mod.common.init.ModTags;
+import org.confluence.mod.common.init.item.AccessoryItems;
+import org.confluence.mod.common.init.item.FishingPoleItems;
 import org.confluence.mod.common.item.fishing.AbstractFishingPole;
 import org.confluence.mod.common.item.fishing.BaitItem;
+import org.confluence.terra_curio.util.TCUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
@@ -172,6 +177,11 @@ public class AutoFishBlock extends BaseEntityBlock {
                         ((IFishingHook) hook).betterExperience$setPos(new Vec3(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5));
                         ((IFishingHook) hook).betterExperience$setSimulation(true);
 
+                        if (pole == FishingPoleItems.HOTLINE_FISHING_HOOK.get() ||
+                                (!bait.isEmpty() && bait.is(ModTags.Items.LAVA_PROOF_BAIT)) ||
+                                TCUtils.hasType(player, AccessoryItems.LAVAPROOF$FISHING$HOOK)
+                        ) org.confluence.mod.mixed.IFishingHook.of(hook).confluence$setIsLavaHook();
+
                         hook.setPos(entity.target);
                         hook.nibble = 10;
 
@@ -245,7 +255,8 @@ public class AutoFishBlock extends BaseEntityBlock {
                         if(ConfluenceLibHelper.isLoaded() && bait.getItem() instanceof BaitItem bait1){
                             entity.cdReduce = (1 - bait1.getBaitBonus() * 0.5f);
                         }
-                        entity.fishingTime = (int) (20 * 10 * entity.cdReduce);
+//                        entity.fishingTime = (int) (20 * 10 * entity.cdReduce);
+                        entity.fishingTime = (int) (20);
                         entity.updateState();
 
                     } else {
@@ -394,13 +405,14 @@ public class AutoFishBlock extends BaseEntityBlock {
             }
         }
 
-        // todo : 寻找水中位置
         private boolean findTarget(){
             BlockPos pos = this.getBlockPos();
             // 水下正下方
             for(int i = 1; i < 4; i++){
-                if (this.level != null && this.level.getBlockState(pos.below(i)).is(Blocks.WATER)) {
-                    target = new Vec3(pos.getX() + 0.5, pos.getY() + i, pos.getZ() + 0.5);
+                BlockState state = this.level.getBlockState(pos.below(i));
+                boolean flag = this.level != null && state.is(Blocks.WATER) || state.is(Blocks.LAVA);
+                if (flag || (ConfluenceHelper.isLoaded() && (state.is(org.confluence.mod.common.init.block.ModBlocks.SHIMMER) || state.is(org.confluence.mod.common.init.block.ModBlocks.HONEY)))) {
+                    target = new Vec3(pos.getX() + 0.5, pos.getY() - i, pos.getZ() + 0.5);
                     return true;
                 }
             }

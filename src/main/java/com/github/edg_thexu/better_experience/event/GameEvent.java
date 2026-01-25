@@ -5,12 +5,14 @@ import com.github.edg_thexu.better_experience.intergration.confluence.Confluence
 import com.github.edg_thexu.better_experience.mixed.IFishingHook;
 import com.github.edg_thexu.better_experience.module.autopotion.ForbiddenConfig;
 import com.github.edg_thexu.better_experience.module.boomstaff.ExplodeManager;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.neoforged.bus.api.EventPriority;
@@ -22,6 +24,7 @@ import net.neoforged.neoforge.event.entity.player.ItemFishedEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import org.confluence.mod.common.init.ModEffects;
 import org.confluence.mod.common.init.ModLootTables;
+import org.confluence.mod.mixed.IMinecraftServer;
 
 import java.util.List;
 
@@ -55,7 +58,8 @@ public class GameEvent {
                 chance += luck / 30f;
 
                 if (level.random.nextFloat() < chance) {
-                    items = serverLevel.getServer().reloadableRegistries().getLootTable(ModLootTables.CRATE)
+                    ResourceKey<LootTable> lootTable = IMinecraftServer.isHardmode(level.getServer()) ? ModLootTables.CRATE_HARDMODE : ModLootTables.CRATE;
+                    items = serverLevel.getServer().reloadableRegistries().getLootTable(lootTable)
                             .getRandomItems(new LootParams.Builder(serverLevel)
                                     .withParameter(LootContextParams.ORIGIN, hook.position())
                                     .withParameter(LootContextParams.THIS_ENTITY, hook)
