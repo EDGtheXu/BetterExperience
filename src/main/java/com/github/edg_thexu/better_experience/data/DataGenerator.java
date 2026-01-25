@@ -1,9 +1,9 @@
 package com.github.edg_thexu.better_experience.data;
 
 import com.github.edg_thexu.better_experience.Better_experience;
-import com.github.edg_thexu.better_experience.data.gen.ModItemModelProvider;
 import com.github.edg_thexu.better_experience.data.gen.ModChineseProvider;
 import com.github.edg_thexu.better_experience.data.gen.ModEnglishProvider;
+import com.github.edg_thexu.better_experience.data.gen.ModItemModelProvider;
 import com.github.edg_thexu.better_experience.data.gen.loot.ModLootTableProvider;
 import com.github.edg_thexu.better_experience.data.gen.recipe.ModRecipeProvider;
 import com.github.edg_thexu.better_experience.data.gen.tag.ModBlockTagsProvider;
@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 
-@EventBusSubscriber(modid = Better_experience.MODID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = Better_experience.MODID)
 public class DataGenerator {
     public static Map<String, DataProvider> PROVIDERS = null;
 

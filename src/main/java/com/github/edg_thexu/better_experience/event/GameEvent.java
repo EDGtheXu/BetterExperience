@@ -25,7 +25,7 @@ import org.confluence.mod.common.init.ModLootTables;
 
 import java.util.List;
 
-@EventBusSubscriber(modid = Better_experience.MODID, bus = EventBusSubscriber.Bus.GAME)
+@EventBusSubscriber(modid = Better_experience.MODID)
 public class GameEvent {
 
     @SubscribeEvent

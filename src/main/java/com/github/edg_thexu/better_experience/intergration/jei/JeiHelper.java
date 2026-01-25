@@ -1,13 +1,7 @@
 package com.github.edg_thexu.better_experience.intergration.jei;
 
 import com.github.edg_thexu.better_experience.config.CommonConfig;
-import com.github.edg_thexu.better_experience.networks.c2s.SearchJeiIngredientsPacketC2S;
 import com.github.edg_thexu.better_experience.registries.recipehandler.IRecipeHandler;
-import mezz.jei.gui.recipes.RecipeLayoutWithButtons;
-import mezz.jei.library.gui.recipes.RecipeLayout;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -17,13 +11,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.fml.ModList;
-import net.neoforged.neoforge.network.PacketDistributor;
 import org.apache.commons.lang3.mutable.MutableInt;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -97,44 +87,44 @@ public class JeiHelper {
 
     }
 
-    // 客户端点击配方，生成handler并发送给服务器
-    @OnlyIn(Dist.CLIENT)
-    public static void notifyFindIntegrations(List<RecipeLayoutWithButtons<?>> recipeLayoutsWithButtons, double mouseX, double mouseY, int button, int count) {
-
-        if(count <= 0){
-            return;
-        }
-        for( var lay : recipeLayoutsWithButtons){
-            Button button1 = ((IRecipeLayoutWithButtons) (Object) lay).betterExperience$getButton();
-            if(button1 != null && button1.isMouseOver(mouseX, mouseY) && button == 0){
-                button1.onClick(mouseX, mouseY);
-                button1.playDownSound(Minecraft.getInstance().getSoundManager());
-                var recipe = lay.recipeLayout().getRecipe();
-
-                JeiRegistries.RecipeHandlerFactoryProviders.REGISTRY.entrySet().stream()
-                        .filter(h -> h.getValue().match(recipe))
-                        .min(Comparator.comparing(a -> a.getValue().priority()))
-                        .map(Map.Entry::getValue)
-                        .ifPresent(handler-> {
-                            IRecipeHandler<?> handler1 = handler.create((RecipeLayout<?>) lay.recipeLayout(), recipe, count);
-                            if(handler1!= null) {
-                                PacketDistributor.sendToServer(new SearchJeiIngredientsPacketC2S(handler1));
-                            }
-                        });
-
-            }
-        }
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public static void updatePos(RecipeLayoutWithButtons<?> recipeLayoutWithButtons){
-        Button button = ((IRecipeLayoutWithButtons) (Object) recipeLayoutWithButtons).betterExperience$getButton();
-        if(button != null) {
-            Rect2i rect = recipeLayoutWithButtons.recipeLayout().getRect();
-            button.setPosition(
-                    recipeLayoutWithButtons.recipeLayout().getRect().getX() + rect.getWidth() + 6,
-                    rect.getY());
-        }
-
-    }
+//    // 客户端点击配方，生成handler并发送给服务器
+//    @OnlyIn(Dist.CLIENT)
+//    public static void notifyFindIntegrations(List<RecipeLayoutWithButtons<?>> recipeLayoutsWithButtons, double mouseX, double mouseY, int button, int count) {
+//
+//        if(count <= 0){
+//            return;
+//        }
+//        for( var lay : recipeLayoutsWithButtons){
+//            Button button1 = ((IRecipeLayoutWithButtons) (Object) lay).betterExperience$getButton();
+//            if(button1 != null && button1.isMouseOver(mouseX, mouseY) && button == 0){
+//                button1.onClick(mouseX, mouseY);
+//                button1.playDownSound(Minecraft.getInstance().getSoundManager());
+//                var recipe = lay.recipeLayout().getRecipe();
+//
+//                JeiRegistries.RecipeHandlerFactoryProviders.REGISTRY.entrySet().stream()
+//                        .filter(h -> h.getValue().match(recipe))
+//                        .min(Comparator.comparing(a -> a.getValue().priority()))
+//                        .map(Map.Entry::getValue)
+//                        .ifPresent(handler-> {
+//                            IRecipeHandler<?> handler1 = handler.create((RecipeLayout<?>) lay.recipeLayout(), recipe, count);
+//                            if(handler1!= null) {
+//                                PacketDistributor.sendToServer(new SearchJeiIngredientsPacketC2S(handler1));
+//                            }
+//                        });
+//
+//            }
+//        }
+//    }
+//
+//    @OnlyIn(Dist.CLIENT)
+//    public static void updatePos(RecipeLayoutWithButtons<?> recipeLayoutWithButtons){
+//        Button button = ((IRecipeLayoutWithButtons) (Object) recipeLayoutWithButtons).betterExperience$getButton();
+//        if(button != null) {
+//            Rect2i rect = recipeLayoutWithButtons.recipeLayout().getRect();
+//            button.setPosition(
+//                    recipeLayoutWithButtons.recipeLayout().getRect().getX() + rect.getWidth() + 6,
+//                    rect.getY());
+//        }
+//
+//    }
 }

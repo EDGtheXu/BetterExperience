@@ -150,6 +150,7 @@ public class ForbiddenConfig extends SimplePreparableReloadListener<ForbiddenCon
         getInstance().forbiddenItems.clear();
         getInstance().amplifiers.clear();
         getInstance().effectAmps.clear();
+        getInstance().modId.clear();
         getInstance().forbiddenItems.addAll(config.forbiddenItems);
 //        getInstance().effectAmps.addAll(config.effectAmps);
 //        config.effectAmps.forEach(effectAmp -> getInstance().amplifiers.put(effectAmp.effect, effectAmp.amp));

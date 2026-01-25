@@ -26,7 +26,8 @@ import java.util.List;
 @Mixin(FishingHook.class)
 public abstract class FishingHookMixin implements IFishingHook, SelfGetter<FishingHook> {
 
-    @Shadow private int nibble;
+    @Shadow
+    public int nibble;
 
     @Shadow public abstract int retrieve(ItemStack stack);
 

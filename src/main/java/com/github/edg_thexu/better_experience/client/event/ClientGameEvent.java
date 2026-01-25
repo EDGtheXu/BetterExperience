@@ -18,9 +18,10 @@ import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.confluence.mod.client.gui.container.ExtraInventoryScreen;
-import org.confluence.mod.common.item.hammer.HammerItem;
+import org.confluence.mod.common.item.common.BaseHammerItem;
 
-@EventBusSubscriber(modid = Better_experience.MODID, bus = EventBusSubscriber.Bus.GAME,value = Dist.CLIENT)
+
+@EventBusSubscriber(modid = Better_experience.MODID,value = Dist.CLIENT)
 public class ClientGameEvent {
 
     @SubscribeEvent
@@ -52,7 +53,7 @@ public class ClientGameEvent {
         if(!ConfluenceHelper.isLoaded()){
             return;
         }
-        if (Minecraft.getInstance().player != null && ClientConfig.MULTI_FISHING.get() &&  event.getButton() == 0 && event.getAction() == 1 && Minecraft.getInstance().player.getMainHandItem().getItem() instanceof HammerItem) {
+        if (Minecraft.getInstance().player != null && ClientConfig.MULTI_FISHING.get() &&  event.getButton() == 0 && event.getAction() == 1 && Minecraft.getInstance().player.getMainHandItem().getItem() instanceof BaseHammerItem) {
             PacketDistributor.sendToServer(new ServerBoundPacketC2S(3));
 
         }

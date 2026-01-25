@@ -10,9 +10,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotDrawable;
-import mezz.jei.api.ingredients.ITypedIngredient;
-import mezz.jei.api.recipe.RecipeIngredientRole;
-import mezz.jei.library.gui.ingredients.RecipeSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
@@ -41,20 +38,20 @@ public record ItemStackUniversalHandler(List<List<ItemStackWrapper>> ingredients
 
     public static ItemStackUniversalHandler create(List<IRecipeSlotDrawable> slotDrawables, IItemMatcher matcher, int count) {
         List<List<ItemStackWrapper>> result = new ArrayList<>();
-        for(var it : slotDrawables){
-            RecipeSlot slot = (RecipeSlot) it;
-            if(slot.getRole() != RecipeIngredientRole.INPUT && slot.getRole() != RecipeIngredientRole.CATALYST) {
-                continue;
-            }
-            List<ITypedIngredient<?>> ingredients = slot.getAllIngredientsList();
-
-            result.add(ingredients.stream().map(ig->new ItemStackWrapper(ig, matcher)).toList());
-
-//            TypedIngredientCodecs.getIngredientCodec(ingredients.get(0).getType(), Internal.getJeiRuntime().getIngredientManager()).encodeStart(Minecraft.getInstance().level.registryAccess().createSerializationContext(JsonOps.INSTANCE), ingredients.get(0)).result().get()
-        }
-        if(result.isEmpty()){
-            return null;
-        }
+//        for(var it : slotDrawables){
+//            RecipeSlot slot = (RecipeSlot) it;
+//            if(slot.getRole() != RecipeIngredientRole.INPUT && slot.getRole() != RecipeIngredientRole.CATALYST) {
+//                continue;
+//            }
+//            List<ITypedIngredient<?>> ingredients = slot.getAllIngredientsList();
+//
+//            result.add(ingredients.stream().map(ig->new ItemStackWrapper(ig, matcher)).toList());
+//
+////            TypedIngredientCodecs.getIngredientCodec(ingredients.get(0).getType(), Internal.getJeiRuntime().getIngredientManager()).encodeStart(Minecraft.getInstance().level.registryAccess().createSerializationContext(JsonOps.INSTANCE), ingredients.get(0)).result().get()
+//        }
+//        if(result.isEmpty()){
+//            return null;
+//        }
         return new ItemStackUniversalHandler(result,count);
     }
 

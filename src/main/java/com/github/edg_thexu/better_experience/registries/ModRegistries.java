@@ -1,10 +1,9 @@
 package com.github.edg_thexu.better_experience.registries;
 
+//import com.github.edg_thexu.better_experience.intergration.jei.JeiHelper;
+
 import com.github.edg_thexu.better_experience.intergration.jei.JeiHelper;
 import com.github.edg_thexu.better_experience.intergration.jei.JeiRegistries;
-import com.github.edg_thexu.better_experience.registries.itemmatcher.ItemMatcherTypes;
-import com.github.edg_thexu.better_experience.registries.recipehandler.RecipeHandlerProviderTypes;
-import com.github.edg_thexu.better_experience.registries.recipehandlerfactory.RecipeHandlerFactoryProviderTypes;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 
@@ -19,11 +18,11 @@ public class ModRegistries {
     }
 
     public static void register(IEventBus bus) {
-        if(JeiHelper.isLoaded()) {
-            RecipeHandlerProviderTypes.TYPES.register(bus);
-            RecipeHandlerFactoryProviderTypes.TYPES.register(bus);
-            ItemMatcherTypes.TYPES.register(bus);
-        }
+//        if(JeiHelper.isLoaded()) {
+//            RecipeHandlerProviderTypes.TYPES.register(bus);
+//            RecipeHandlerFactoryProviderTypes.TYPES.register(bus);
+//            ItemMatcherTypes.TYPES.register(bus);
+//        }
     }
 
 }

@@ -90,8 +90,8 @@ public class PlayerInventoryManager {
         }
         if(ConfluenceHelper.isLoaded() && item instanceof EffectPotionItem potion) {
             // 效果类药水
-            if(canApplyEffect(new MobEffectInstance(potion.mobEffect, potion.duration, potion.amplifier))){
-                effects.add(new Pair<>(potion.mobEffect, potion.amplifier));
+            if(canApplyEffect(new MobEffectInstance(potion.data.effect(), potion.data.duration(), potion.data.amplifier()))){
+                effects.add(new Pair<>(potion.data.effect(), potion.data.amplifier()));
             }
             return effects;
         }

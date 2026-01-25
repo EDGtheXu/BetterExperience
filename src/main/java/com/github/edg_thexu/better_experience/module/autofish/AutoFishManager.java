@@ -9,7 +9,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantments;
-
 import org.confluence.mod.common.init.item.AccessoryItems;
 import org.confluence.mod.common.item.fishing.BaitItem;
 import org.confluence.terra_curio.util.TCUtils;
@@ -33,7 +32,7 @@ public class AutoFishManager {
         // 人物属性
         float base = 2 + EnchantmentUtil.getEnchantmentLevel(Enchantments.LUCK_OF_THE_SEA, pole); // 0 1 2 3
         if (player != null && TCHelper.isLoaded()) {
-            base += TCUtils.getAccessoriesValue(player, AccessoryItems.FISHING$POWER);
+            base += TCUtils.getValue(player, AccessoryItems.FISHING$POWER);
         }
 
         // 鱼竿加成

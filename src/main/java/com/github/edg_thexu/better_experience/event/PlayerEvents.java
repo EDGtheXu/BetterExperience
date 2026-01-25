@@ -23,7 +23,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-@EventBusSubscriber(modid = Better_experience.MODID, bus = EventBusSubscriber.Bus.GAME)
+@EventBusSubscriber(modid = Better_experience.MODID)
 public class PlayerEvents {
     @SubscribeEvent
     public static void playerTick(PlayerTickEvent.Post event) {
