@@ -55,9 +55,9 @@ jobs:
 #          curseforge-name: "better_experience-1.1.4"
           modrinth-id: lFj5EvnT
           curseforge-id: 1216800
-          github-tag: 1.1.4-neo
+          github-tag: 1.2.0-neo
 
 
           java: Java 21
-          version-type: alpha
+          version-type: release
 
