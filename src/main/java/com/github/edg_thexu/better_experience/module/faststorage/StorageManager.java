@@ -1,6 +1,7 @@
 package com.github.edg_thexu.better_experience.module.faststorage;
 
 import com.github.edg_thexu.better_experience.intergration.confluence.ConfluenceHelper;
+import com.github.edg_thexu.better_experience.intergration.sophisticated.SophisticatedHelper;
 import com.github.edg_thexu.better_experience.utils.ModUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -16,6 +17,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import net.p3pp3rf1y.sophisticatedstorage.block.StorageBlockEntity;
 import org.confluence.mod.common.attachment.PlayerPiggyBankContainer;
 import org.confluence.mod.common.attachment.PlayerSafeContainer;
 import org.confluence.mod.common.init.ModAttachmentTypes;
@@ -47,24 +49,39 @@ public class StorageManager {
                         for(ItemStack stack : player.getInventory().items){
                             for(int slot = 0; slot < entity.getContainerSize(); slot++){
                                 ItemStack containerStack = entity.getItem(slot);
-                                if(ItemStack.isSameItemSameComponents(stack, containerStack)){
-                                    int m  = containerStack.getCount() + stack.getCount();
-                                    int n = containerStack.getMaxStackSize();
-                                    if (m <= n) {
-                                        stack.setCount(0);
-                                        containerStack.setCount(m);
-                                    } else if (containerStack.getCount() < k) {
-                                        stack.shrink(n - containerStack.getCount());
-                                        containerStack.setCount(n);
-                                    }
-                                }
+                                saveItemStack(stack, containerStack, k);
                             }
                         }
+                    }else if(SophisticatedHelper.isStorageLoaded() && blockEntity instanceof StorageBlockEntity entity) {
+                        // 兼容精妙存储
+                        for(ItemStack stack : player.getInventory().items){
+                            for(int slot = 0; slot < entity.getStorageWrapper().getNumberOfInventorySlots(); slot++){
+                                ItemStack containerStack = entity.getStorageWrapper().getInventoryHandler().getSlotStack(slot);
+                                saveItemStack(stack, containerStack, k);
+                            }
+                        }
+
+
                     }
                 }
             }
         }
     }
+
+    private static void saveItemStack(ItemStack stack, ItemStack containerStack, int k) {
+        if(ItemStack.isSameItemSameComponents(stack, containerStack)){
+            int m  = containerStack.getCount() + stack.getCount();
+            int n = containerStack.getMaxStackSize();
+            if (m <= n) {
+                stack.setCount(0);
+                containerStack.setCount(m);
+            } else if (containerStack.getCount() < k) {
+                stack.shrink(n - containerStack.getCount());
+                containerStack.setCount(n);
+            }
+        }
+    }
+
 
     /**
      * 猪猪存钱罐自动存钱
