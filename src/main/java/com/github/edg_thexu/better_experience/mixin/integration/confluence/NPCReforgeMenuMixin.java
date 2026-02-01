@@ -53,7 +53,7 @@ public abstract class NPCReforgeMenuMixin extends AbstractContainerMenu {
 
 
     @Inject(method = "slotsChanged", at = @At(value = "INVOKE", target = "Lorg/confluence/mod/util/PrefixUtils;getReforgeCost(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;)I"))
-    private void slotsChanged(Container container, CallbackInfo ci, @Local PrefixType prefixType, @Local ItemStack itemStack) {
+    private void slotsChangedMixin(Container container, CallbackInfo ci, @Local PrefixType prefixType, @Local ItemStack itemStack) {
 
         if(CommonConfig.BETTER_REINFORCED_TOOL.get() && ConfluenceHelper.isLoaded()
                 && this.player.getData(ModAttachments.TEMP_DATA).enableBetterReforge()) {

@@ -8,6 +8,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.mod.client.gui.container.NPCReforgeScreen;
 import org.confluence.mod.common.component.prefix.ModPrefix;
 import org.confluence.mod.common.component.prefix.PrefixComponent;
@@ -40,11 +42,13 @@ public class BetterReforgeManager {
     }
 
 
+    @OnlyIn(Dist.CLIENT)
     public static void initButton(NPCReforgeScreen screen){
 
 
     }
 
+    @OnlyIn(Dist.CLIENT)
     public static void init(NPCReforgeScreen screen){
         FloatButton button = new FloatButton((FloatButton.Builder) FloatButton.builder(Component.literal("B"), (p)->{
             AdapterUtils.sendToServer(new ServerBoundPacketC2S(6));
