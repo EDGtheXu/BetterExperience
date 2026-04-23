@@ -27,6 +27,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PotionItem;
@@ -34,8 +35,11 @@ import net.minecraft.world.item.component.ItemContainerContents;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.lib.common.PlayerContainer;
+import org.confluence.lib.util.MobEffectInstanceData;
 import org.confluence.mod.client.gui.container.ExtraInventoryScreen;
+import org.confluence.mod.common.block.functional.EffectiveCandleBlock;
 import org.confluence.mod.common.init.ModAttachmentTypes;
+import org.confluence.mod.common.init.ModEffects;
 import org.confluence.mod.common.init.ModTags;
 import org.confluence.mod.common.init.block.FunctionalBlocks;
 import org.confluence.mod.common.item.potion.EffectPotionItem;
@@ -69,6 +73,12 @@ public class PlayerInventoryManager {
 //        if(ForbiddenConfig.getInstance().isModForbidden(effect1.getKey().location().getNamespace()))
         if(effect1.value().getCategory() == MobEffectCategory.HARMFUL){
             // 负面效果不应该应用
+            if(ConfluenceHelper.isLoaded()) {
+                // 除了战斗药水和和平效果
+                if(effect.getEffect() == ModEffects.WATER_CANDLE || effect.getEffect() == ModEffects.PEACE_CANDLE) {
+                    return true;
+                }
+            }
             return false;
         }
         return true;
@@ -84,6 +94,27 @@ public class PlayerInventoryManager {
             // 数据包配置文件
             return effects;
         }
+
+        if(ConfluenceHelper.isLoaded()) {
+            // 特殊方块buff, 忽略数量
+            if(item instanceof EffectiveCandleBlock.BItem bitem) {
+                for (MobEffectInstanceData effectDatum : bitem.effectData) {
+                    if(canApplyEffect(effectDatum.create())){
+                        effects.add(new Pair<>(effectDatum.effect(), effectDatum.amplifier()));
+                    }
+                }
+                return effects;
+            }
+
+            if(item instanceof BlockItem blockItem) {
+                if(blockItem.getBlock() == FunctionalBlocks.LIFE_CAMPFIRE.get()) {
+                    effects.add(new Pair<>(ModEffects.COZY_FIRE, 0));
+                }
+                return effects;
+            }
+        }
+
+
         if(!ignoreCount && stack.getCount() < CommonConfig.AUTO_POTION_STACK_SIZE.get()) {
             // 配置文件
             return effects;
@@ -166,7 +197,7 @@ public class PlayerInventoryManager {
         addTargetItemStackList(player.getData(ModAttachments.PIG_CHEST.get()).getItems(), consumerQueue);
 
         // 保险箱
-        addTargetItemStackList(player.getData(ModAttachments.PIG_CHEST.get()).getItems(), consumerQueue);
+        addTargetItemStackList(player.getData(ModAttachments.SAFE_CHEST.get()).getItems(), consumerQueue);
 
     }
 
