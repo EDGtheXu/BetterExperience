@@ -81,6 +81,9 @@ repositories {
     mavenLocal()
     maven {
         url = "https://www.cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
     }
     maven {
         // location of the maven that hosts JEI files since January 2023
@@ -106,6 +109,10 @@ repositories {
         name "org.confluenceSnapshots"
         url "https://maven.confluence.ink/snapshots"
     }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
 }
 
 base {

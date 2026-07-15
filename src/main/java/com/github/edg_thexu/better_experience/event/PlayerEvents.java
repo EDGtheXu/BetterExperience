@@ -8,7 +8,6 @@ import com.github.edg_thexu.better_experience.module.autofish.FishBugRepetition;
 import com.github.edg_thexu.better_experience.module.autopotion.ForbiddenConfig;
 import com.github.edg_thexu.better_experience.module.autopotion.PlayerAttribute;
 import com.github.edg_thexu.better_experience.module.autopotion.PlayerInventoryManager;
-import com.github.edg_thexu.better_experience.module.faststorage.StorageManager;
 import com.github.edg_thexu.better_experience.networks.c2s.PotionApplyPacketC2S;
 import com.github.edg_thexu.better_experience.networks.s2c.ClientBoundConfigPacket;
 import net.minecraft.network.chat.Component;
@@ -33,9 +32,7 @@ public class PlayerEvents {
         if (player.level() instanceof ServerLevel sl) {
             PlayerAttribute.notifyDirty(sl);
             FishBugRepetition.detect(player);
-            StorageManager.saveMoneyToPiggy(player);
         }
-
     }
 
     @SubscribeEvent

@@ -43,6 +43,7 @@ import org.confluence.mod.common.init.ModEffects;
 import org.confluence.mod.common.init.ModTags;
 import org.confluence.mod.common.init.block.FunctionalBlocks;
 import org.confluence.mod.common.item.potion.EffectPotionItem;
+import org.confluence.mod.util.PlayerUtils;
 import org.jetbrains.annotations.Nullable;
 import oshi.util.tuples.Pair;
 import top.theillusivec4.curios.client.gui.CuriosScreen;
@@ -55,7 +56,7 @@ import java.util.*;
 public class PlayerInventoryManager {
 
     public int detectInternal;
-    private static final int _detectInternal = 200;
+    private static final int DETECT_INTERVAL = 60;
     public boolean serverOpenAutoPotion = true;
     /**
      * 食物类 effectInstance 过滤器
@@ -75,14 +76,12 @@ public class PlayerInventoryManager {
             // 负面效果不应该应用
             if(ConfluenceHelper.isLoaded()) {
                 // 除了战斗药水和和平效果
-                if(effect.getEffect() == ModEffects.WATER_CANDLE || effect.getEffect() == ModEffects.PEACE_CANDLE) {
-                    return true;
-                }
+                return effect.getEffect() == ModEffects.WATER_CANDLE || effect.getEffect() == ModEffects.PEACE_CANDLE;
             }
             return false;
         }
         return true;
-    };
+    }
     /**
      * 物品过滤器
      */
@@ -138,7 +137,7 @@ public class PlayerInventoryManager {
                 }
             }
         }
-        if(item instanceof PotionItem potionItem){
+        if(item instanceof PotionItem){
             var data = stack.get(DataComponents.POTION_CONTENTS);
             if(data != null){
                 data.potion().ifPresent(potion -> {
@@ -151,7 +150,7 @@ public class PlayerInventoryManager {
             }
         }
         return effects;
-    };
+    }
 
     public static List<Pair<Holder<MobEffect>, Integer>> getApplyEffect(ItemStack stack) {
         return getApplyEffect(stack, false);
@@ -212,7 +211,7 @@ public class PlayerInventoryManager {
             if(--detectInternal > 0){
                 return;
             }
-            detectInternal = (int) (_detectInternal * 0.1f);
+            detectInternal = DETECT_INTERVAL;
             this.detectServer(player);
             return;
         }
@@ -231,9 +230,7 @@ public class PlayerInventoryManager {
                 AutoPotionAttachment data = player.getData(ModAttachments.AUTO_POTION);
                 data.getPotions().clear();
                 // 重新生成缓存
-                effects.forEach(effect_amp -> {
-                    data.addPotion(effect_amp.getA(), effect_amp.getB());
-                });
+                effects.forEach(effect_amp -> data.addPotion(effect_amp.getA(), effect_amp.getB()));
                 data.sync();
                 addAllItems(consumerQueue, player);
                 effects.clear();
@@ -265,20 +262,38 @@ public class PlayerInventoryManager {
             }
         }
         if(autoSave){
+            var piggyData = player.getData(ModAttachmentTypes.PIGGY_BANK.get());
             for(ItemStack stack : items){
                 if(stack.is(ModTags.Items.COINS)){
-                   ModUtils.tryPlaceBackItemStackToItemStacks(stack, player.getData(ModAttachmentTypes.PIGGY_BANK.get()).getItems());
+                   ModUtils.tryPlaceBackItemStackToItemStacks(stack, piggyData.getItems());
                 }
             }
-            var data = player.getData(ModAttachmentTypes.EXTRA_INVENTORY.get());
-
+            var extraInv = player.getData(ModAttachmentTypes.EXTRA_INVENTORY.get());
             for(int i = 0; i < 4; i++){
-                ItemStack stack = data.getCoins(i);
+                ItemStack stack = extraInv.getCoins(i);
                 if(!stack.isEmpty()){
-                    ModUtils.tryPlaceBackItemStackToItemStacks(stack, player.getData(ModAttachmentTypes.PIGGY_BANK.get()).getItems());
+                    ModUtils.tryPlaceBackItemStackToItemStacks(stack, piggyData.getItems());
                 }
             }
-
+            int slotIdx = 0;
+            boolean dirty = false;
+            for (var item : piggyData.getItems()) {
+                if (item.is(ModTags.Items.COINS) && item.getCount() == 100) {
+                    int index = PlayerUtils.COIN_2_INDEX.applyAsInt(item.getItem()) - 1;
+                    if (index >= 0) {
+                        piggyData.getItems().set(slotIdx, new ItemStack(PlayerUtils.INDEX_2_COIN.apply(3 - index)));
+                        dirty = true;
+                    }
+                }
+                slotIdx++;
+            }
+            if (dirty) {
+                List<ItemStack> coins = new ArrayList<>();
+                for (var item : piggyData.getItems()) {
+                    if (item.is(ModTags.Items.COINS)) coins.add(item);
+                }
+                ModUtils.unionItemStacks(coins);
+            }
         }
         if(player.containerMenu instanceof PotionBagMenu){
             return;
@@ -343,12 +358,6 @@ public class PlayerInventoryManager {
 
     /**
      * 渲染物品应用的背景
-     * @param screen
-     * @param stack
-     * @param guiGraphics
-     * @param x
-     * @param y
-     * @param partialTick
      */
     @OnlyIn(Dist.CLIENT)
     public static void renderApply(AbstractContainerScreen screen, @Nullable Container container, ItemStack stack, GuiGraphics guiGraphics, int x, int y, float partialTick){

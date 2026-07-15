@@ -2,7 +2,6 @@ package com.github.edg_thexu.better_experience.module.faststorage;
 
 import com.github.edg_thexu.better_experience.intergration.confluence.ConfluenceHelper;
 import com.github.edg_thexu.better_experience.intergration.sophisticated.SophisticatedHelper;
-import com.github.edg_thexu.better_experience.utils.ModUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -21,12 +20,7 @@ import net.p3pp3rf1y.sophisticatedstorage.block.StorageBlockEntity;
 import org.confluence.mod.common.attachment.PlayerPiggyBankContainer;
 import org.confluence.mod.common.attachment.PlayerSafeContainer;
 import org.confluence.mod.common.init.ModAttachmentTypes;
-import org.confluence.mod.common.init.ModTags;
 import org.confluence.mod.common.init.block.FunctionalBlocks;
-import org.confluence.mod.util.PlayerUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class StorageManager {
 
@@ -78,56 +72,6 @@ public class StorageManager {
             } else if (containerStack.getCount() < k) {
                 stack.shrink(n - containerStack.getCount());
                 containerStack.setCount(n);
-            }
-        }
-    }
-
-
-    /**
-     * 猪猪存钱罐自动存钱
-     * @param player 玩家
-     */
-    public static void saveMoneyToPiggy(Player player){
-        if(!ConfluenceHelper.isLoaded()){
-            return;
-        }
-        if(player.level().isClientSide || (player.tickCount & 63) != 0){
-            return;
-        }
-        // 当背包中有猪猪存钱罐时
-        if(player.getInventory().hasAnyMatching(it->it.getItem() == FunctionalBlocks.PIGGY_BANK.get().asItem())) {
-            // 将钱存入存钱罐
-            var data = player.getData(ModAttachmentTypes.PIGGY_BANK);
-            for (var itemstack : player.getInventory().items) {
-                if (itemstack.is(ModTags.Items.COINS)) {
-                    ModUtils.tryPlaceBackItemStackToItemStacks(itemstack, data.getItems());
-                }
-            }
-            // 如果存钱罐钱可以升级，则升级
-            int c = 0;
-            boolean dirty = false;
-            for(var item : data.getItems()){
-                if(item.is(ModTags.Items.COINS)) {
-                    if (item.getCount() == 100) {
-                        int index = PlayerUtils.COIN_2_INDEX.applyAsInt(item.getItem()) - 1;
-                        if (index >= 0) {
-                            data.getItems().set(c, new ItemStack(PlayerUtils.INDEX_2_COIN.apply(3 - index)));
-                            dirty = true;
-                        }
-
-                    }
-                }
-                c++;
-            }
-            // 合并所有钱
-            if(dirty){
-                List<ItemStack> coins = new ArrayList<>();
-                for(var item : data.getItems()){
-                    if(item.is(ModTags.Items.COINS)) {
-                        coins.add(item);
-                    }
-                }
-                ModUtils.unionItemStacks(coins);
             }
         }
     }
