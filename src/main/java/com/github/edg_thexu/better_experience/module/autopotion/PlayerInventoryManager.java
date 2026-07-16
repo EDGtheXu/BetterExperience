@@ -125,15 +125,12 @@ public class PlayerInventoryManager {
             }
             return effects;
         }
-        if(item instanceof Item food) {
-            //食物类
-            var foodProperties = food.getFoodProperties(stack, null);
-            if (foodProperties != null) {
-                for (FoodProperties.PossibleEffect foodproperties$possibleeffect : foodProperties.effects()) {
-                    var mobEffect = foodproperties$possibleeffect.effect();
-                    if (canApplyEffect(mobEffect)) {
-                        effects.add(new Pair<>(mobEffect.getEffect(), mobEffect.getAmplifier()));
-                    }
+        var foodProperties = stack.get(DataComponents.FOOD);
+        if (foodProperties != null) {
+            for (FoodProperties.PossibleEffect foodproperties$possibleeffect : foodProperties.effects()) {
+                var mobEffect = foodproperties$possibleeffect.effect();
+                if (canApplyEffect(mobEffect)) {
+                    effects.add(new Pair<>(mobEffect.getEffect(), mobEffect.getAmplifier()));
                 }
             }
         }

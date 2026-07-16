@@ -140,6 +140,7 @@ public class AutoPotionAttachment implements INBTSerializable<CompoundTag> {
             if (attachment.potions.size() == _potions.size() && attachment.potions.entrySet().stream()
                     .allMatch(entry -> _potions.containsKey(entry.getKey())
                             && Objects.equals(_potions.get(entry.getKey()), entry.getValue()))) {
+                dirty = false;
                 return;
             }
             _potions = new HashMap<>(attachment.potions);

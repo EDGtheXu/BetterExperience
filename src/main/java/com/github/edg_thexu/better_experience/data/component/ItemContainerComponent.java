@@ -13,6 +13,7 @@ import net.minecraft.world.item.component.ItemContainerContents;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public class ItemContainerComponent implements DataComponentType<ItemContainerComponent>{
@@ -55,12 +56,14 @@ public class ItemContainerComponent implements DataComponentType<ItemContainerCo
 
     @Override
     public boolean equals(Object obj) {
-        return false;
+        if (this == obj) return true;
+        if (!(obj instanceof ItemContainerComponent that)) return false;
+        return autoCollect == that.autoCollect && size == that.size && that.container.equals(container);
     }
 
     @Override
     public int hashCode() {
-        return container.hashCode();
+        return Objects.hash(autoCollect, size, container);
     }
 
     public boolean isAutoCollect() {
