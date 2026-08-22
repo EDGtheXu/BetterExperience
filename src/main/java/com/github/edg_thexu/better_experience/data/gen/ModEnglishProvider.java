@@ -63,7 +63,7 @@ public class ModEnglishProvider extends LanguageProvider {
         add("better_experience.configuration.instantly_drink", "Instantly Drink");
         add("better_experience.configuration.infinite_ammo", "Infinite Ammo");
         add("better_experience.configuration.infinite_ammo_stack_size", "Infinite Ammo Stack Size");
-        add("better_experience.configuration.modify_max_stack_size", "Modify Item Max Stack Size");
+        add("better_experience.configuration.modify_max_stack_size", "Modify Item Max Stack Size (Restart the game to make it effect)");
         add("better_experience.configuration.no_consume_summoner", "No Consume Summon Item");
         add("better_experience.configuration.slime_die_no_lava", "Slime Dies Without Lava");
         add("better_experience.configuration.additional_fall_distance", "Additional Fall Distance");
