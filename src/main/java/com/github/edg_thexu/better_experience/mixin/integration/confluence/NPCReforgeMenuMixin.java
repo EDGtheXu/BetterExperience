@@ -57,7 +57,10 @@ public abstract class NPCReforgeMenuMixin extends AbstractContainerMenu {
 
         if(CommonConfig.BETTER_REINFORCED_TOOL.get() && ConfluenceHelper.isLoaded()
                 && this.player.getData(ModAttachments.TEMP_DATA).enableBetterReforge()) {
-            data[1] = BetterReforgeManager.getBetterPrefix(prefixType, itemStack);
+            try {
+                data[1] = BetterReforgeManager.getBetterPrefix(prefixType, itemStack);
+            } catch (IllegalStateException ignore) {
+            }
         }
     }
 

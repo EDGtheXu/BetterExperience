@@ -27,25 +27,21 @@ public class BetterReforgeManager {
 
         var available = prefixType.getAvailable();
         PrefixComponent cp = itemStack.get(ModDataComponentTypes.PREFIX);
+        if (cp == null) {
+            throw new IllegalStateException(itemStack + "不能获得前缀");
+        }
         float originalValue = cp.value();
         List<Integer> availableList = new ArrayList<>();
-        for(int i = 1; i < available.length; i++){
-            int ii = ModPrefix.ID_MAP.inverse().getOrDefault(available[i], -1);
+        for (ModPrefix prefix : available) {
+            int ii = ModPrefix.ID_MAP.inverse().getOrDefault(prefix, -1);
             ModPrefix modPrefix = ModPrefix.ID_MAP.get(ii);
-            float value =modPrefix.createComponent(prefixType).value();
-            if(value >= originalValue){
+            float value = modPrefix.createComponent(prefixType).value();
+            if (value >= originalValue) {
                 availableList.add(ii);
             }
         }
         Collections.shuffle(availableList);
         return availableList.getFirst();
-    }
-
-
-    @OnlyIn(Dist.CLIENT)
-    public static void initButton(NPCReforgeScreen screen){
-
-
     }
 
     @OnlyIn(Dist.CLIENT)
